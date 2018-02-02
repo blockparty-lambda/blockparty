@@ -8,26 +8,26 @@ import {
 } from 'react-native';
 import axios from 'axios';
 
-export default class Register extends React.Component {
+export default class SignIn extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             email: '',
             password: ''
         };
-        this.register = this.register.bind(this);
+        this.signIn = this.signIn.bind(this);
     }
 
-    register() {
-        axios.post('http://localhost:3000/register', {
+    signIn() {
+        axios.post('http://localhost:3000/signIn', {
             email: this.state.email,
             password: this.state.password,
         }).then((response) => {
-            if (response.data.code === 11000) {
-                return this.setState({
-                    error: 'Email already taken',
-                });
-            }
+            // if (response.data.code === 11000) {
+            //     return this.setState({
+            //         error: 'Email already taken',
+            //     });
+            // }
             // this.props.navigation.navigate('Home', { token: response.data.token });
         }).catch((error) => {
             console.log(error);
@@ -37,24 +37,27 @@ export default class Register extends React.Component {
     render() {
         return (
             <View style={styles.container}>
-                <Text>Register</Text>
+                <Text>Sign In</Text>
                 <Text>{this.state.error && this.state.error.length ? this.state.error : null}</Text>
                 <TextInput
                     style={styles.textInput}
                     onChangeText={(email) => this.setState({ email })}
                     value={this.state.email}
+                    placeholder="email"
                 />
                 <TextInput
                     style={styles.textInput}
                     onChangeText={(password) => this.setState({ password })}
                     value={this.state.password}
+                    placeholder="password"
+                    secureTextEntry={true}
                 />
                 <Button
                     title={'Submit'}
-                    onPress={this.register}
+                    onPress={this.signIn}
                 />
 
-                <Text onPress={() => alert('yooo')}>Already Registered?</Text>
+                <Text onPress={() => this.props.navigation.navigate('Register')}>Register!</Text>
             </View>
         );
     }
