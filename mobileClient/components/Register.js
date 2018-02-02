@@ -44,23 +44,28 @@ export default class Register extends React.Component {
                     style={styles.textInput}
                     onChangeText={(email) => this.setState({ email })}
                     value={this.state.email}
+                    placeholder="email"
                 />
                 <TextInput
                     style={styles.textInput}
                     onChangeText={(password) => this.setState({ password })}
                     value={this.state.password}
+                    placeholder="password"
+                    secureTextEntry={true}
                 />
                 <TextInput
                     style={styles.textInput}
                     onChangeText={(passwordRepeat) => this.setState({ passwordRepeat })}
                     value={this.state.passwordRepeat}
+                    placeholder="repeat password"
+                    secureTextEntry={true}
                 />
                 <Button
                     title={'Submit'}
                     onPress={this.register}
                 />
 
-                <Text onPress={ () => alert('yooo') }>Already Registered?</Text>
+                <Text onPress={() => this.props.navigation.navigate('SignIn') }>Already Registered?</Text>
             </View>
         );
     }
