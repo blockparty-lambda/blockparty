@@ -1,11 +1,13 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
+import { StackNavigator } from 'react-navigation';
+import Register from './components/Register';
 
-export default class App extends React.Component {
+class App extends React.Component {
   render() {
     return (
       <View style={styles.container}>
-        <Text>Open up App.js to start working on your app!</Text>
+        <Register />
       </View>
     );
   }
@@ -19,3 +21,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
 });
+
+const Routes = StackNavigator({
+  Home: { screen: Home },
+  Register: { screen: Register },
+  SignIn: { screen: SignIn },
+});
+
+export default Routes;
