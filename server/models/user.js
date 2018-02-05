@@ -22,11 +22,11 @@ const UserSchema = new Schema({
     unique: true
   },
   friends: {
-    type: Array,
+    type: [{ type: Schema.Types.ObjectId, ref: 'User' }],
     default: [],
     required: true
   },
-  coins: {
+  wallets: {
     type: Array,
     required: true,
     default: []
