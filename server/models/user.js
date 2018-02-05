@@ -1,11 +1,9 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-require("./coin");
-const Coin = mongoose.model('Coin');
-
 /*
-
+    a simple user schema with NOT using references e.x. reference to friends as other users
+    or coins field references a coin schema
 */
 
 const UserSchema = new Schema({

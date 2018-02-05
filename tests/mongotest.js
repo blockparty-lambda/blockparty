@@ -1,12 +1,10 @@
 const mongoose = require('mongoose');
 
 mongoose.Promise = global.Promise;
-mongoose.connect('mongodb://localhost/test-blockparty');
+mongoose.connect('mongodb://localhost/test-blockparty-simple');
 
 require("../server/models/user");
-require("../server/models/coin");
 const User = mongoose.model('User');
-const Coin = mongoose.model('Coin');
 
 const username = "squeel";
 const password = "1234";
