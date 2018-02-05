@@ -64,6 +64,6 @@ const addCoin = (user, coin) => {
 }
 
 // addFriend('squeel', 'bennybob')
-addCoin('squeel', 'ether')
+// addCoin('squeel', 'ether')
 
 // mongoose.connection.close()

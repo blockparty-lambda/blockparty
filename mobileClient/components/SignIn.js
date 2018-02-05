@@ -57,7 +57,12 @@ export default class SignIn extends React.Component {
                     onPress={this.signIn}
                 />
 
-                <Text onPress={() => this.props.navigation.navigate('Register')}>Register!</Text>
+                <Text 
+                    onPress={() => this.props.navigation.navigate('Register')}
+                    style={styles.registerSignInHereText}
+                >
+                    Register Here!
+                </Text>
             </View>
         );
     }
@@ -76,4 +81,9 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         width: 150,
     },
+    registerSignInHereText: {
+        fontFamily: 'Cochin',
+        fontSize: 20,
+        fontWeight: 'bold',
+    }
 });
