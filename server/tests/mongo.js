@@ -46,6 +46,7 @@ const addFriend = (userId1, userId2) => {
     .catch(err => console.log(err))
 }
 
+// takes in two userIds numbers
 const removeFriend = (userId1, userId2) => {
   // add the second user (userId2) to first users (userId1) friend list
   User.findOneAndUpdate({ _id: ObjectId(userId1) }, { $pull: { friends: ObjectId(userId2) } }, { new: true })
@@ -56,7 +57,6 @@ const removeFriend = (userId1, userId2) => {
         .catch(err1 => console.log(err1))
     })
     .catch(err => console.log(err))
-
 }
 
 const addCoin = (user, coin) => {
