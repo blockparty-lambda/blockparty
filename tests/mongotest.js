@@ -33,17 +33,30 @@ const addUser = (username, password, email) => {
 
 // adds two users to one anothers friends list
 // takes in the users unique mongo object id
-const addFriend = (userObjId, user1ObjId) => {
+const addFriend = (userObjId, userId1) => {
 
-	// add the second user (user2ObjId) to first users (user1ObjId) friend list
-	User.findOneAndUpdate({ _id: ObjectId(user1ObjId) }, { $addToSet: { friends: ObjectId(user2ObjId) }}, { new: true })
+	// add the second user (userId2) to first users (userId1) friend list
+	User.findOneAndUpdate({ _id: ObjectId(userId1) }, { $addToSet: { friends: ObjectId(userId2) }}, { new: true })
 		.then(res => {
-			// add the first user (user1ObjId) to second users (user2ObjId) friend list
-			User.findOneAndUpdate({ _id: ObjectId(user2ObjId) }, { $addToSet: { friends: ObjectId(user1ObjId) } }, { new: true })
+			// add the first user (userId1) to second users (userId2) friend list
+			User.findOneAndUpdate({ _id: ObjectId(userId2) }, { $addToSet: { friends: ObjectId(userId1) } }, { new: true })
 				.then(res1 => console.log(res1))
 				.catch(err1 => console.log(err1))
 		})
 		.catch(err => console.log(err))
+}
+
+const removeFriend = (userId1, userId2) => {
+	// add the second user (userId2) to first users (userId1) friend list
+	User.findOneAndUpdate({ _id: ObjectId(userId1) }, { $pull: { friends: ObjectId(userId2) } }, { new: true })
+		.then(res => {
+			// add the first user (userId1) to second users (userId2) friend list
+			User.findOneAndUpdate({ _id: ObjectId(userId2) }, { $pull: { friends: ObjectId(userId1) } }, { new: true })
+				.then(res1 => console.log(res1))
+				.catch(err1 => console.log(err1))
+		})
+		.catch(err => console.log(err))
+
 }
 
 const addCoin = (user, coin) => {
@@ -71,6 +84,7 @@ const addCoin = (user, coin) => {
 // addUser(username, password, email);
 // addUser(username1, password1, email1);
 // addFriend('5a78d32a0c1ef42ef014e2e6', '5a78d32a0c1ef42ef014e2e7')
-addCoin('steve', 'ether')
+removeFriend('5a78d32a0c1ef42ef014e2e6', '5a78d32a0c1ef42ef014e2e7')
+// addCoin('steve', 'ether')
 
 // mongoose.connection.close()
