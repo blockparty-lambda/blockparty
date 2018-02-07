@@ -8,6 +8,10 @@ const bitcore = require('bitcore-lib')
 // *URGENT*!!!! remember to hash the plain privateKey in the database!!!
 // ********
 
+// maybe move the create<coin>Wallet helpers somewhere else?
+// or make them private methods?
+
+// returns a btc test wallet with its public and private keys
 const createBTCTestWallet = () => {
   let coinObj = {};
 
@@ -24,6 +28,38 @@ const createBTCTestWallet = () => {
   return coinObj;
 }
 
+// returns a btc wallet with its public and private keys
+const createBTCWallet = () => {
+  let coinObj = {};
+
+  const randBuffer = bitcore.crypto.Random.getRandomBuffer(32);
+  const randNumber = bitcore.crypto.BN.fromBuffer(randBuffer);
+  const privateKey = new bitcore.PrivateKey(randNumber);
+  const publicKey = privateKey.toPublicKey();
+  const address = privateKey.toAddress();
+
+  coinObj.privateKey = privateKey.toString();
+  coinObj.publicKey = publicKey.toString();
+  coinObj.address = address.toString();
+
+  return coinObj;
+}
+
+// returns an ether test wallet with its public and private keys
+const createEthTestWallet = () => {
+
+}
+// returns a ether wallet with its public and private keys
+const createETHWallet = () => {
+
+}
+
+// returns a z cash wallet with its public and private keys
+const createZECWallet = () => {
+
+}
+
+
 const createWallet = (req, res) => {
   const { coin } = req.params;
   
@@ -32,8 +68,11 @@ const createWallet = (req, res) => {
 
   // create wallet for coin
   switch (coin) {
-    case 'btc_test':
+    case "btc_test":
       wallet = createBTCTestWallet();
+      break;
+    case "btc":
+      wallet = createBTCWallet();
       break;
     default:
       // throw error of invalid coin
