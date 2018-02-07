@@ -1,7 +1,7 @@
 // import { ObjectId } from '../../../../Library/Caches/typescript/2.6/node_modules/@types/bson';
 const ObjectId = require("mongodb").ObjectId;
-
-const bitcore = require('bitcore-lib')
+const bitcore = require("bitcore-lib");
+const { encrypt, decrypt } = require("../services/utils");
 
 // creates a testnet btc wallet and returns an object with its address, publicKey, and privateKey
 // ********
@@ -80,7 +80,7 @@ const createWallet = (req, res) => {
   }
 
   // hash the privateKey for the wallet
-  wallet.privateKey = bcrypt.hash(wallet.privateKey, 11);
+  wallet.privateKey = encrypt(wallet.privateKey);
 
   // store coin in user document
   // TODO: do we want to check if the user has already has a coins wallet?
