@@ -20,3 +20,5 @@ const createBTCTestWallet = () => {
 
   return coinObj;
 }
+
+module.exports = { createBTCTestWallet };
