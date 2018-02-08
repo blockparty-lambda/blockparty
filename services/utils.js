@@ -1,8 +1,6 @@
 // encrypt and decrypt functions for the private keys of the wallets
 require("dotenv").config({ path: '../../.env' });
 const crypto = require('crypto');
-// const algorithm = 'aes-256-ctr';
-// const salt = process.env.salt;
 
 const encrypt = (text, algorithm, salt) => {
   const cipher = crypto.createCipher(algorithm, salt)
