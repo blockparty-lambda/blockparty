@@ -118,7 +118,7 @@ const createWallet = (req, res) => {
   }
 
   // hash the privateKey for the wallet
-  wallet.privateKey = encrypt(wallet.privateKey);
+  wallet.privateKey = encrypt(wallet.privateKey, 'aes-256-ctr', process.env.salt);
 
   // store coin in user document
   // TODO: do we want to check if the user has already has a coins wallet?
