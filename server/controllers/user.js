@@ -38,7 +38,7 @@ const addFriend = (req, res) => {
     { _id: ObjectId(userId1) },
     { $addToSet: { friends: ObjectId(userId2) } }
   )
-    .then(res => {
+    .then(() => {
       // add the first user (userId1) to second users (userId2) friend list
       User.findOneAndUpdate(
         { _id: ObjectId(userId2) },
@@ -60,7 +60,7 @@ const removeFriend = (req, res) => {
     { _id: ObjectId(userId1) },
     { $pull: { friends: ObjectId(userId2) } }
   )
-    .then(res => {
+    .then(() => {
       // remove the first user (userId1) from second users (userId2) friend list
       User.findOneAndUpdate(
         { _id: ObjectId(userId2) },
