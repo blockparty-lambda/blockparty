@@ -95,22 +95,34 @@ const createZECWallet = () => {};
 const createWallet = (req, res) => {
   const { coin } = req.params;
 
+  // coin abbreviations
+  const coinAbbr = {
+    "btc_test" : "bitcoin test",
+    "btc" : "bitcoin",
+    "eth_test" : "ethereum test",
+    "eth" : "ethereum",
+    "zec_test" : "zcash test",
+    "zec" : "zcash"
+  }
   // instantiate a null wallet
-  let wallet;
+  let wallet = {
+    coin : coinAbbr[coin],
+    coinAbbr : coin
+  }
 
   // create wallet for coin
   switch (coin) {
     case "btc_test":
-      wallet = createBTCTestWallet();
+      wallet = Object.assign(wallet, createBTCTestWallet());
       break;
     case "btc":
-      wallet = createBTCWallet();
+      wallet = Object.assign(wallet, createBTCWallet());
       break;
     case "eth":
-      wallet = createETHWallet();
+      wallet = Object.assign(wallet, createETHWallet());
       break;
     case "eth_test":
-      wallet = createEthTestWallet();
+      wallet = Object.assign(wallet, createEthTestWallet());
       break;
     default:
       // throw error of invalid coin
@@ -121,7 +133,7 @@ const createWallet = (req, res) => {
   }
 
   // hash the privateKey for the wallet
-  wallet.privateKey = encrypt(wallet.privateKey);
+  wallet.privateKey = encrypt(wallet.privateKey, 'aes-256-ctr', process.env.salt);
 
   // store coin in user document
   // TODO: do we want to check if the user has already has a coins wallet?
