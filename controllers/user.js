@@ -34,6 +34,34 @@ const getUsers = async (req, res) => {
   }
 };
 
+const getFriends = async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id);
+    res.json({
+      success: true,
+      friends: user.friends
+    });
+  } catch (error) {
+    return res.json({
+      error: { success: false, message: "Something went wrong on the server" }
+    });
+  }
+};
+
+const getWallets = async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id);
+    res.json({
+      success: true,
+      wallets: user.wallets
+    });
+  } catch (error) {
+    return res.json({
+      error: { success: false, message: "Something went wrong on the server" }
+    });
+  }
+};
+
 const addFriend = (req, res) => {
   const { userId1, userId2 } = req.body;
 
@@ -80,6 +108,8 @@ const removeFriend = (req, res) => {
 
 module.exports = {
   createUser,
+  getFriends,
+  getWallets,
   addFriend,
   removeFriend,
   getUsers
