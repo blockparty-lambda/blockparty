@@ -95,8 +95,20 @@ const createZECWallet = () => {};
 const createWallet = (req, res) => {
   const { coin } = req.params;
 
+  // coin abbreviations
+  const coinAbbr = {
+    "btc_test" : "bitcoin test",
+    "btc" : "bitcoin",
+    "eth_test" : "ethereum test",
+    "eth" : "ethereum",
+    "zec_test" : "zcash test",
+    "zec" : "zcash"
+  }
   // instantiate a null wallet
-  let wallet;
+  let wallet = {
+    coin : coinAbbr[coin],
+    coinAbbr : coin
+  }
 
   // create wallet for coin
   switch (coin) {
