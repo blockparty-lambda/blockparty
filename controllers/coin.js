@@ -113,16 +113,16 @@ const createWallet = (req, res) => {
   // create wallet for coin
   switch (coin) {
     case "btc_test":
-      wallet = createBTCTestWallet();
+      wallet = Object.assign(wallet, createBTCTestWallet());
       break;
     case "btc":
-      wallet = createBTCWallet();
+      wallet = Object.assign(wallet, createBTCWallet());
       break;
     case "eth":
-      wallet = createETHWallet();
+      wallet = Object.assign(wallet, createETHWallet());
       break;
     case "eth_test":
-      wallet = createEthTestWallet();
+      wallet = Object.assign(wallet, createEthTestWallet());
       break;
     default:
       // throw error of invalid coin
