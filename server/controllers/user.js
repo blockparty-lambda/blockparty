@@ -21,8 +21,12 @@ const createUser = async (req, res) => {
 
 const getUsers = async (req, res) => {
   try {
-    const users = await User.find({});
-    res.json(users);
+    const user = await User.findById(req.user.id);
+    res.json({
+      success: true,
+      message: `Successfully retrieved user: ${user.username}`,
+      user
+    });
   } catch (error) {
     return res.json({
       error: { success: false, message: "Something went wrong on the server" }

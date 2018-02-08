@@ -8,8 +8,10 @@ module.exports = app => {
     .route("/signin")
     .post(authController.requireSignIn, authController.signIn);
 
-  app.route("/create-wallet/:coin").post(authController.requireAuth, coinController.createWallet);
+  app
+    .route("/create-wallet/:coin")
+    .post(authController.requireAuth, coinController.createWallet);
 
   // Route to test Auth, can be removed if needed
-  app.route("/users").get(authController.requireAuth, userController.getUsers);
+  app.route("/user").get(authController.requireAuth, userController.getUsers);
 };
