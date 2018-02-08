@@ -1,8 +1,8 @@
 {
   "expo": {
-    "name": "mobileclient",
+    "name": "navbar",
     "description": "This project is really great.",
-    "slug": "mobileclient",
+    "slug": "navbar",
     "privacy": "public",
     "sdkVersion": "25.0.0",
     "platforms": ["ios", "android"],
