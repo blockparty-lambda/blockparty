@@ -4,7 +4,7 @@ const mongoose = require("mongoose");
 
 const routes = require("./routes/routes");
 
-require("dotenv").config();
+require("dotenv").config({ path: "../.env" });
 
 mongoose.Promise = global.Promise;
 mongoose.connect(process.env.DB_PATH);
