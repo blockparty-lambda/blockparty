@@ -14,6 +14,8 @@ module.exports = app => {
 
   app.route("/addfriend").post(authController.requireAuth, userController.addFriend);
   app.route("/removefriend").post(authController.requireAuth, userController.removeFriend);
+  app.route("/getfriends").get(authController.requireAuth, userController.getFriends);
+  app.route("/getwallets").get(authController.requireAuth, userController.getWallets);
 
   // Route to test Auth, can be removed if needed
   app.route("/user").get(authController.requireAuth, userController.getUsers);
