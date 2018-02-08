@@ -44,7 +44,7 @@ const addFriend = (req, res) => {
         { _id: ObjectId(userId2) },
         { $addToSet: { friends: ObjectId(userId1) } }
       )
-        .then(res1 =>
+        .then(() =>
           res.json({ success: true, message: "successfully added friend" })
         )
         .catch(err1 => res.json(err1));
@@ -66,7 +66,7 @@ const removeFriend = (req, res) => {
         { _id: ObjectId(userId2) },
         { $pull: { friends: ObjectId(userId1) } }
       )
-        .then(res1 =>
+        .then(() =>
           res.json({ success: true, message: "successfully removed friend" })
         )
         .catch(err1 => res.json(err1));
