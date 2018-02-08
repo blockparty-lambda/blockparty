@@ -57,9 +57,11 @@ const createEthTestWallet = () => {
     providers.networks.ropsten,
     process.env.infura_API_key
   );
-  const key = keythereum.create().privateKey;
 
-  const wallet = new Wallet(key, provider);
+  // Convert key to hex string so ethers.js create wallet can use it
+  const key = keythereum.create().privateKey.toString("hex");
+
+  const wallet = new Wallet("0x" + key, provider);
 
   coinObj.privateKey = wallet.privateKey;
   coinObj.publicKey = _SigningKey.getPublicKey(wallet.privateKey);
@@ -75,11 +77,12 @@ const createETHWallet = () => {
     providers.networks.homestead,
     process.env.infura_API_key
   );
-  const key = keythereum.create().privateKey;
 
-  const wallet = new Wallet(key, provider);
+  const key = keythereum.create().privateKey.toString("hex");
 
-  coinObj.privateKey = key;
+  const wallet = new Wallet("0x" + key, provider);
+
+  coinObj.privateKey = wallet.privateKey;
   coinObj.publicKey = _SigningKey.getPublicKey(wallet.privateKey);
   coinObj.address = wallet.address;
 
