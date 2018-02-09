@@ -35,17 +35,11 @@ const getUsers = async (req, res) => {
 };
 
 const getFriends = async (req, res) => {
-  try {
-    const user = await User.findById(req.user.id);
-    res.json({
-      success: true,
-      friends: user.friends
-    });
-  } catch (error) {
-    return res.json({
-      error: { success: false, message: "Something went wrong on the server" }
-    });
-  }
+  User.findOne({ _id: ObjectId(req.user.id) })
+    .populate({ path: "friends", select: ["username", "avatarUrl", "_id"] })
+    .exec()
+    .then(results => res.json(results.friends))
+    .catch(err => res.json(err))
 };
 
 const getWallets = async (req, res) => {

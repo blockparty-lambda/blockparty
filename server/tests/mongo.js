@@ -2,7 +2,8 @@ const mongoose = require('mongoose');
 const ObjectId = require('mongodb').ObjectId;
 
 mongoose.Promise = global.Promise;
-mongoose.connect('mongodb://localhost/test-blockparty-references');
+// mongoose.connect('mongodb://localhost/test-blockparty-references');
+mongoose.connect('mongodb://localhost/blockparty');
 
 require("../models/user");
 const User = mongoose.model('User');
@@ -81,10 +82,19 @@ const addCoin = (user, coin) => {
     .catch(err => console.log(err))
 }
 
+const getFriends = (userId) => {
+  User.findOne({ _id: ObjectId(userId) })
+    .populate({ path: 'friends', select: ['username', 'avatarUrl', '_id'] })
+    .exec()
+    .then(res => console.log(res.friends))
+    .catch(err => console.log(err))
+}
+
 // addUser(username, password, email);
 // addUser(username1, password1, email1);
 // addFriend('5a78d32a0c1ef42ef014e2e6', '5a78d32a0c1ef42ef014e2e7')
-removeFriend('5a78d32a0c1ef42ef014e2e6', '5a78d32a0c1ef42ef014e2e7')
+// removeFriend('5a78d32a0c1ef42ef014e2e6', '5a78d32a0c1ef42ef014e2e7')
 // addCoin('steve', 'ether')
+getFriends('5a7c918405b120596b32a916');
 
 // mongoose.connection.close()

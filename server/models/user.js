@@ -30,6 +30,11 @@ const UserSchema = new Schema({
     type: Array,
     required: true,
     default: []
+  },
+  avatarUrl : {
+    type: String,
+    required: true,
+    default: "https://pixabay.com/p-1577909/?no_redirect"
   }
 });
 
