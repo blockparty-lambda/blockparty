@@ -4,28 +4,13 @@ import { SafeAreaView, StackNavigator, TabNavigator } from 'react-navigation';
 
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Entypo from 'react-native-vector-icons/Entypo'
-import SampleText from './SampleText';
-import CustomTabs from './CustomTabs';
+// import SampleText from './SampleText';
+// import CustomTabs from './CustomTabs';
 
 const MyNavScreen = ({ navigation, banner }) => (
   <ScrollView>
     <SafeAreaView forceInset={{ horizontal: 'always' }}>
-      <SampleText>{banner}</SampleText>
-      <Button
-        onPress={() => navigation.navigate('Profile', { name: 'Bitcoin Bobby' })}
-        title="Open profile screen"
-      />
-      <Button
-        onPress={() => navigation.navigate('NotifSettings')}
-        title="Open notifications screen"
-      />
-      <Button
-        onPress={() => navigation.navigate('SettingsTab')}
-        title="Go to settings tab"
-      />
-      <Button onPress={() => navigation.goBack(null)} title="Go back" />
     </SafeAreaView>
-    <StatusBar barStyle="default" />
   </ScrollView>
 );
 

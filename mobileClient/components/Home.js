@@ -8,6 +8,8 @@ import {
   AsyncStorage
 } from "react-native";
 import axios from "axios";
+import { localip } from 'react-native-dotenv';
+
 
 export default class Home extends React.Component {
   constructor(props) {
@@ -22,7 +24,7 @@ export default class Home extends React.Component {
   async componentDidMount() {
     const token = await AsyncStorage.getItem("jwt");
     axios
-      .get("http://192.168.0.3:3000/user", {
+      .get(`http://${localip}:3000/user`, {
         headers: {
           Authorization: token
         }
