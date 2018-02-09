@@ -8,6 +8,7 @@ import {
   AsyncStorage
 } from "react-native";
 import axios from "axios";
+import { localip } from 'react-native-dotenv';
 
 export default class SignIn extends React.Component {
   constructor(props) {
@@ -21,7 +22,7 @@ export default class SignIn extends React.Component {
 
   signIn() {
     axios
-      .post("http://192.168.0.3:3000/signIn", {
+      .post(`http://${localip}:3000/signIn`, {
         username: this.state.username,
         password: this.state.password
       })
@@ -85,7 +86,7 @@ const styles = StyleSheet.create({
     width: 150
   },
   registerSignInHereText: {
-    fontFamily: "sans-serif",
+    // fontFamily: "sans-serif",
     fontSize: 20,
     fontWeight: "bold"
   }
