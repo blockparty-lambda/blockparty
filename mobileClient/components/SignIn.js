@@ -29,7 +29,7 @@ export default class SignIn extends React.Component {
       .then(async response => {
         const token = response.data.token;
         await AsyncStorage.setItem("jwt", token);
-        this.props.navigation.navigate("Home", { token });
+        this.props.navigation.navigate("Main", { token });
       })
       .catch(error => {
         console.log(error);

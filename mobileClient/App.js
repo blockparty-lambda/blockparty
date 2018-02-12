@@ -4,13 +4,15 @@ import { StackNavigator } from 'react-navigation';
 import Register from './components/Register';
 import SignIn from './components/SignIn';
 import Home from './components/Home';
-// import { Register, SignIn, Home } from './components';
+// import RootNavigation from './navigation/RootNavigation';
+import MainTabNavigator from './navigation/MainTabNavigator';
 
 class App extends React.Component {
   render() {
     return (
       <View style={styles.container}>
-        <SignIn />
+        {/* <SignIn /> */}
+        {/* <RootNavigation /> */}
       </View>
     );
   }
@@ -25,10 +27,16 @@ const styles = StyleSheet.create({
   },
 });
 
+// the first index of the stack navigator will be rendered first in the app
+// How do we set up the app so it checks if the user is signed in into react and
+// determines to render signin screen (not signed in) or home screen (signed in)
 const Routes = StackNavigator({
-  SignIn: { screen : SignIn },
+  // Navbar: { screen: Navbar },
+  // Main: { screen: MainTabNavigator },
+  SignIn: { screen: SignIn },
   Register: { screen : Register },
-  Home: { screen: Home }
+  Main: { screen: MainTabNavigator }
+  // Home: { screen: Home },
 });
 
 export default Routes;
