@@ -32,10 +32,10 @@ const styles = StyleSheet.create({
 // determines to render signin screen (not signed in) or home screen (signed in)
 const Routes = StackNavigator({
   // Navbar: { screen: Navbar },
-  // Main: { screen: MainTabNavigator },
+  Main: { screen: MainTabNavigator },
   SignIn: { screen: SignIn },
   Register: { screen : Register },
-  Main: { screen: MainTabNavigator }
+  // Main: { screen: MainTabNavigator }
   // Home: { screen: Home },
 });
 

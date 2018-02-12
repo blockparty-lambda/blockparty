@@ -34,7 +34,7 @@ const UserSchema = new Schema({
   avatarUrl : {
     type: String,
     required: true,
-    default: "https://pixabay.com/p-1577909/?no_redirect"
+    default: "https://impactspace.com/images/uploads/person-default.png"
   }
 });
 
