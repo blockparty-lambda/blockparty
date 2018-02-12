@@ -1,5 +1,6 @@
 import React from 'react';
 import { ScrollView, StyleSheet, Text } from 'react-native';
+import FriendsList from '../components/FriendsList';
 
 export default class FriendsScreen extends React.Component {
   static navigationOptions = {
@@ -8,7 +9,8 @@ export default class FriendsScreen extends React.Component {
 
   render() {
     return (
-      <Text>Hiiii</Text>
+      // <Text>Hiiii</Text>
+      <FriendsList />
       // <ScrollView style={styles.container}>
       //   {/* Go ahead and delete ExpoLinksView and replace it with your
       //      * content, we just wanted to provide you with some helpful links */}

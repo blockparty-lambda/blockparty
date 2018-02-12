@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, Text, View, TextInput, Button } from "react-native";
+import { StyleSheet, Text, View, TextInput, Button, ScrollView, FlatList } from "react-native";
 import axios from "axios";
 import { localip } from 'react-native-dotenv';
 
@@ -8,28 +8,28 @@ export default class FriendsList extends React.Component {
     super(props);
     this.state = {
       token: '',
-      friends: [],
+      friends: [{name: "neil", age: 28}],
     };
   }
 
-  componentDidMount() {
-    const token = this.props.navigation.state.params.token;
-    axios.get(`http://${localip}:3000/getfriends`, {
-      headers: {
-        authorization: token,
-      }
-    }).then((response) => {
-      this.setState({
-        friends: response.data.friends,
-      });
-    }).catch(err => {
-      console.log(err);
-    });
-  }
+  // componentDidMount() {
+  //   const token = this.props.navigation.state.params.token;
+  //   axios.get(`http://${localip}:3000/getfriends`, {
+  //     headers: {
+  //       authorization: token,
+  //     }
+  //   }).then((response) => {
+  //     this.setState({
+  //       friends: response.data.friends,
+  //     });
+  //   }).catch(err => {
+  //     console.log(err);
+  //   });
+  // }
 
   render() {
     return (
-      <View style={container}>
+      <View style={styles.container}>
         <ScrollView>
           <FlatList
             data={this.state.friends}
