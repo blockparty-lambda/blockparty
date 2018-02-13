@@ -91,10 +91,23 @@ const getFriends = (userId) => {
     .catch(err => console.log(err))
 }
 
-const getBTCTestWalletInfo = (address) => {
-  axios.get(`https://api.blocktrail.com/v1/tbtc/address/${address}?api_key=${process.env.blocktrailKey}`)
-    .then(result => console.log(result))
-    .catch(err => console.log(err));
+// const getBTCTestWalletInfo = (address) => {
+//   axios.get(`https://api.blocktrail.com/v1/tbtc/address/${address}?api_key=${process.env.blocktrailKey}`)
+//     .then(result => console.log(result))
+//     .catch(err => console.log(err));
+// };
+
+const getBTCTestWalletInfo = async (address) => {
+  // axios.get(`https://api.blocktrail.com/v1/tbtc/address/${address}?api_key=${process.env.blocktrailKey}`)
+  //   .then(result => console.log(result))
+  //   .catch(err => console.log(err));
+  try {
+    const resp = await axios.get(`https://api.blocktrail.com/v1/tbtc/address/${address}?api_key=${process.env.blocktrailKey}`);
+    return resp.data;
+  } catch(err) {
+    return err;
+  }
+
 };
 
 // addUser(username, password, email);
@@ -103,6 +116,24 @@ const getBTCTestWalletInfo = (address) => {
 // removeFriend('5a78d32a0c1ef42ef014e2e6', '5a78d32a0c1ef42ef014e2e7')
 // addCoin('steve', 'ether')
 // getFriends('5a7c918405b120596b32a916');
-getBTCTestWalletInfo('mz8asbdAssiWgXdcYMxm1VUFihYxqx9Fcn')
+// console.log(getBTCTestWalletInfo('mz8asbdAssiWgXdcYMxm1VUFihYxqx9Fcn'))
+
+let stuff = [{x:null}, {x:null}]
+
+stuff.map(i => {
+  i.x = 5;
+})
+
+
+console.log(stuff)
 
 // mongoose.connection.close()
+
+  // ,
+  // {
+  //   "coin": "ethereum test",
+  //   "coinAbbr": "eth_test",
+  //   "privateKey": "6be89003277034e95638722e39fc9278c3cc9e5bb0d1e7b14e66e18012678970f5860902934939075726ef756bbd253cf205b87f02a8cb9afbccc4e2bfc25365e210",
+  //   "publicKey": "0x0468bc8341df830d24a4e6f7b43ca936335011055a6ee8aef87500c8e08729cf0c5ebaa40d935ba1987e7689db63b903c6d5bfb629f90957d9d8a586dc53fdd8f5",
+  //   "address": "0x0C0E246440df8b36E50087213Eaf7c40A8e545A1"
+  // }

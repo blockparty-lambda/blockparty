@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, Text, View, TextInput, Button, ScrollView, FlatList } from "react-native";
+import { StyleSheet, Text, View, TextInput, Button, AsyncStorage, FlatList } from "react-native";
 import axios from "axios";
 import { localip } from 'react-native-dotenv';
 import { List, ListItem, SearchBar } from "react-native-elements";
@@ -30,6 +30,7 @@ export default class WalletsList extends React.Component {
         }
       })
       .then(response => {
+        // do a request to get the wallets balances and history
         this.setState({ wallets: response.data });
       })
       .catch(error => {
