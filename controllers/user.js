@@ -2,8 +2,6 @@ const User = require("../models/user");
 const ObjectId = require("mongodb").ObjectId; // somewhere we need to place the instantiation of the ObjectId function
 const CoinController = require("./coin");
 
-// console.log(CoinController);
-
 const STATUS_USER_ERROR = 422;
 
 const createUser = async (req, res) => {
