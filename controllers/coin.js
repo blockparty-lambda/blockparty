@@ -146,4 +146,8 @@ const createWallet = (req, res) => {
     .catch(err => res.json(err));
 };
 
+const getBTCTestWalletInfo = (req, res) => {
+
+};
+
 module.exports = { createWallet };
