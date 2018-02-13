@@ -9,10 +9,7 @@ import {
 } from "react-native";
 import axios from "axios";
 import { localip } from "react-native-dotenv";
-
 import { onSignIn } from "../auth";
-
-console.log(localip);
 
 export default class SignIn extends React.Component {
   constructor(props) {
