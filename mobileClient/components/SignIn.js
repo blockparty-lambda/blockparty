@@ -10,6 +10,8 @@ import {
 import axios from "axios";
 import { localip } from 'react-native-dotenv';
 
+console.log(localip);
+
 export default class SignIn extends React.Component {
   constructor(props) {
     super(props);
@@ -22,14 +24,15 @@ export default class SignIn extends React.Component {
 
   signIn() {
     axios
-      .post(`http://${localip}:3000/signIn`, {
+      .post(`http://${localip}:3000/signin`, {
         username: this.state.username,
         password: this.state.password
       })
       .then(async response => {
         const token = response.data.token;
         await AsyncStorage.setItem("jwt", token);
-        this.props.navigation.navigate("Main", { token });
+        // this.props.navigation.navigate("Main", { token });
+        this.props.navigation.navigate("Main");
       })
       .catch(error => {
         console.log(error);

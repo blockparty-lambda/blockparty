@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, Text, View, TextInput, Button, ScrollView, FlatList } from "react-native";
+import { StyleSheet, Text, View, TextInput, Button, FlatList, AsyncStorage } from "react-native";
 import axios from "axios";
 import { localip } from 'react-native-dotenv';
 import { List, ListItem, SearchBar } from "react-native-elements";
@@ -9,30 +9,27 @@ export default class FriendsList extends React.Component {
     super(props);
     this.state = {
       token: '',
-      friends: [
-        { name: "neil", age: 28, _id: '123', avatarUrl: 'https://impactspace.com/images/uploads/person-default.png'},
-        { name: "doug", age: 36, _id: '124', avatarUrl: 'https://impactspace.com/images/uploads/person-default.png'},
-        { name: "joseph", age: 28, _id: '125', avatarUrl: 'https://impactspace.com/images/uploads/person-default.png'},
-      ],
+      friends: []
     };
   }
 
   // call our api to get the users apis
   // set result to state
-  // componentDidMount() {
-  //   const token = this.props.navigation.state.params.token;
-  //   axios.get(`http://${localip}:3000/getfriends`, {
-  //     headers: {
-  //       authorization: token,
-  //     }
-  //   }).then((response) => {
-  //     this.setState({
-  //       friends: response.data.friends,
-  //     });
-  //   }).catch(err => {
-  //     console.log(err);
-  //   });
-  // }
+  async componentDidMount() {
+    const token = await AsyncStorage.getItem("jwt");
+    axios
+      .get(`http://${localip}:3000/getfriends`, {
+        headers: {
+          Authorization: token
+        }
+      })
+      .then(response => {
+        this.setState({ friends: response.data });
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  }
 
 
   renderSeparator = () => {
@@ -76,8 +73,7 @@ export default class FriendsList extends React.Component {
             renderItem={({ item }) => (
               <ListItem
                 roundAvatar
-                title={`${item.name}`}
-                subtitle={item.age}
+                title={`${item.username}`}
                 avatar={{ uri: item.avatarUrl }}
                 containerStyle={{ borderBottomWidth: 0 }}
               />
