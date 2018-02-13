@@ -5,7 +5,7 @@ const passport = require("passport");
 
 const routes = require("./routes/routes");
 
-require("dotenv").config({ path: "../.env" });
+require("dotenv").config();
 
 mongoose.Promise = global.Promise;
 mongoose.connect(process.env.DB_PATH);
