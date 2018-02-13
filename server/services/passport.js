@@ -4,7 +4,7 @@ const JwtStrategy = require("passport-jwt").Strategy;
 const { ExtractJwt } = require("passport-jwt");
 const User = require("../models/user");
 
-require("dotenv").config({ path: "../../.env" });
+require("dotenv").config();
 
 const localOptions = {
   usernameField: "username"

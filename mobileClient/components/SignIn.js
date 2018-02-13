@@ -8,7 +8,9 @@ import {
   AsyncStorage
 } from "react-native";
 import axios from "axios";
-import { localip } from 'react-native-dotenv';
+import { localip } from "react-native-dotenv";
+
+import { onSignIn } from "../auth";
 
 export default class SignIn extends React.Component {
   constructor(props) {
@@ -28,12 +30,11 @@ export default class SignIn extends React.Component {
       })
       .then(async response => {
         const token = response.data.token;
-        await AsyncStorage.setItem("jwt", token);
-        this.props.navigation.navigate("Main", { token });
+        onSignIn(token).then(() => this.props.navigation.navigate("SignedIn"));
       })
       .catch(error => {
         console.log(error);
-        this.props.navigation.navigate("SignIn");
+        this.props.navigation.navigate("SignedOut");
       });
   }
 
