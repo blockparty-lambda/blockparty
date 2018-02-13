@@ -19,7 +19,7 @@ const createUser = async (req, res) => {
   }
 };
 
-const getUsers = async (req, res) => {
+const getUserInfo = async (req, res) => {
   try {
     const user = await User.findById(req.user.id);
     res.json({
@@ -39,7 +39,7 @@ const getFriends = async (req, res) => {
     .populate({ path: "friends", select: ["username", "avatarUrl", "_id"] })
     .exec()
     .then(results => res.json(results.friends))
-    .catch(err => res.json(err))
+    .catch(err => res.json(err));
 };
 
 const getWallets = async (req, res) => {
@@ -106,5 +106,5 @@ module.exports = {
   getWallets,
   addFriend,
   removeFriend,
-  getUsers
+  getUserInfo
 };
