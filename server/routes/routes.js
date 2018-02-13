@@ -27,7 +27,7 @@ module.exports = app => {
 
   app
     .route("/getwalletinfo")
-    .get(coinController.getWalletInfo);
+    .get(authController.requireAuth, coinController.getWalletInfo);
   // Route to test Auth, can be removed if needed
   app
     .route("/user")

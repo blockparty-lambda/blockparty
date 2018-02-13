@@ -1,5 +1,8 @@
 const User = require("../models/user");
 const ObjectId = require("mongodb").ObjectId; // somewhere we need to place the instantiation of the ObjectId function
+const CoinController = require("./coin");
+
+// console.log(CoinController);
 
 const STATUS_USER_ERROR = 422;
 
@@ -45,14 +48,16 @@ const getFriends = async (req, res) => {
 const getWallets = async (req, res) => {
   try {
     const user = await User.findById(req.user.id);
-    res.json({
-      success: true,
-      wallets: user.wallets
-    });
+
+    for (let i = 0; i < user.wallets.length; i++) {
+      const wallet = user.wallets[i];
+      const walletData = await CoinController.getWalletInfo(wallet.coinAbbr, wallet.address);
+
+      user.wallets[i].balance = walletData.data.balance;
+    }
+    res.json({ succes: true, wallets: user.wallets });
   } catch (error) {
-    return res.json({
-      error: { success: false, message: "Something went wrong on the server" }
-    });
+    res.json({ succes: false, message: error.message });
   }
 };
 
