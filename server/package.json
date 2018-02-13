@@ -7,6 +7,7 @@
     "dev": "nodemon server.js"
   },
   "dependencies": {
+    "axios": "^0.17.1",
     "bcryptjs": "^2.4.3",
     "bitcore-lib": "^0.15.0",
     "body-parser": "^1.18.2",
