@@ -5,6 +5,8 @@ const { providers, utils, Wallet, _SigningKey } = require("ethers");
 const keythereum = require("keythereum");
 const { encrypt, decrypt } = require("../services/utils");
 const User = require("../models/user");
+// import axios from "axios";
+const axios = require('axios');
 
 // creates a testnet btc wallet and returns an object with its address, publicKey, and privateKey
 // ********
@@ -146,8 +148,29 @@ const createWallet = (req, res) => {
     .catch(err => res.json(err));
 };
 
-const getBTCTestWalletInfo = (req, res) => {
+const getWalletInfo = (req, res) => {
+  const { coin, address } = req.query;
 
+  if (coin === "btc_test") {
+    axios.get(`https://api.blocktrail.com/v1/tbtc/address/${address}?api_key=${process.env.blocktrail_API_key}`)
+      .then(result => {
+        res.json(result.data)
+      })
+      .catch(err => res.json(err));
+  }
+  else if (coin === "btc_test") {
+    axios.get(`https://api.blocktrail.com/v1/tbtc/address/${address}?api_key=${process.env.blocktrail_API_key}`)
+      .then(result => {
+        res.json(result.data)
+      })
+      .catch(err => res.json(err));
+  }
+  else {
+    res.json({
+      success: false,
+      message: "please provide valid coin and address in query parameters"
+    });
+  }
 };
 
-module.exports = { createWallet };
+module.exports = { createWallet, getWalletInfo };
