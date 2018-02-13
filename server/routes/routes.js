@@ -22,9 +22,12 @@ module.exports = app => {
     .route("/getfriends")
     .get(authController.requireAuth, userController.getFriends);
   app
-    .route("/getwallets")
+    .route("/getwallets") // takes in <coin> and <address> params as query params
     .get(authController.requireAuth, userController.getWallets);
 
+  app
+    .route("/getwalletinfo")
+    .get(coinController.getWalletInfo);
   // Route to test Auth, can be removed if needed
   app
     .route("/user")

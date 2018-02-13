@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const ObjectId = require('mongodb').ObjectId;
+const axios = require('axios');
 
 mongoose.Promise = global.Promise;
 // mongoose.connect('mongodb://localhost/test-blockparty-references');
@@ -90,11 +91,18 @@ const getFriends = (userId) => {
     .catch(err => console.log(err))
 }
 
+const getBTCTestWalletInfo = (address) => {
+  axios.get(`https://api.blocktrail.com/v1/tbtc/address/${address}?api_key=${process.env.blocktrailKey}`)
+    .then(result => console.log(result))
+    .catch(err => console.log(err));
+};
+
 // addUser(username, password, email);
 // addUser(username1, password1, email1);
 // addFriend('5a78d32a0c1ef42ef014e2e6', '5a78d32a0c1ef42ef014e2e7')
 // removeFriend('5a78d32a0c1ef42ef014e2e6', '5a78d32a0c1ef42ef014e2e7')
 // addCoin('steve', 'ether')
-getFriends('5a7c918405b120596b32a916');
+// getFriends('5a7c918405b120596b32a916');
+getBTCTestWalletInfo('mz8asbdAssiWgXdcYMxm1VUFihYxqx9Fcn')
 
 // mongoose.connection.close()

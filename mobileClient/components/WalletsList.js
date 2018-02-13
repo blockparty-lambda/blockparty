@@ -9,31 +9,33 @@ export default class WalletsList extends React.Component {
     super(props);
     this.state = {
       token: '',
-      friends: [
-        { name: "bitcoin", bal: 0.04, _id: '123', avatarUrl: 'https://cdn3.iconfinder.com/data/icons/inficons-currency-set/512/btc-512.png' },
-        { name: "bitcoin test", bal: 2.1, _id: '124', avatarUrl: 'http://bitcoinist.com/wp-content/themes/bitcoinist/img/Bitcoin-price-icon.png' },
-        { name: "ether", bal: 0.005, _id: '125', avatarUrl: 'https://cdn4.iconfinder.com/data/icons/cryptocoins/227/ETH-512.png' },
-      ],
+      wallets: [],
+      // wallets: [
+      //   { name: "bitcoin", bal: 0.04, _id: '123', avatarUrl: 'https://cdn3.iconfinder.com/data/icons/inficons-currency-set/512/btc-512.png' },
+      //   { name: "bitcoin test", bal: 2.1, _id: '124', avatarUrl: 'http://bitcoinist.com/wp-content/themes/bitcoinist/img/Bitcoin-price-icon.png' },
+      //   { name: "ether", bal: 0.005, _id: '125', avatarUrl: 'https://cdn4.iconfinder.com/data/icons/cryptocoins/227/ETH-512.png' },
+      // ],
     };
   }
 
   // call our api to get the users apis
   // set result to state
-  // componentDidMount() {
-  //   const token = this.props.navigation.state.params.token;
-  //   axios.get(`http://${localip}:3000/getwallets`, {
-  //     headers: {
-  //       authorization: token,
-  //     }
-  //   }).then((response) => {
-  //     this.setState({
-  //       wallets: response.data.wallets,
-  //     });
-  //   }).catch(err => {
-  //     console.log(err);
-  //   });
-  // }
-
+  // Example of how to access backend and pass the jwt in headers
+  async componentDidMount() {
+    const token = await AsyncStorage.getItem("jwt");
+    axios
+      .get(`http://${localip}:3000/getwallets`, {
+        headers: {
+          Authorization: token
+        }
+      })
+      .then(response => {
+        this.setState({ wallets: response.data });
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  }
 
   renderSeparator = () => {
     return (

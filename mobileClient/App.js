@@ -44,17 +44,3 @@ const styles = StyleSheet.create({
     justifyContent: "center"
   }
 });
-
-// the first index of the stack navigator will be rendered first in the app
-// How do we set up the app so it checks if the user is signed in into react and
-// determines to render signin screen (not signed in) or home screen (signed in)
-// const Routes = StackNavigator({
-//   // Navbar: { screen: Navbar },
-//   Main: { screen: MainTabNavigator },
-//   SignIn: { screen: SignIn },
-//   Register: { screen: Register }
-//   // Main: { screen: MainTabNavigator }
-//   // Home: { screen: Home },
-// });
-
-// export default Routes;
