@@ -146,29 +146,18 @@ const createWallet = (req, res) => {
     .catch(err => res.json(err));
 };
 
-const getWalletInfo = (req, res) => {
-  const { coin, address } = req.query;
-
+// helper function called in getwallets method for the getwallets api endpoint
+const getWalletInfo = async (coin, address) => {
   if (coin === "btc_test") {
-    axios.get(`https://api.blocktrail.com/v1/tbtc/address/${address}?api_key=${process.env.blocktrail_API_key}`)
-      .then(result => {
-        res.json(result.data)
-      })
-      .catch(err => res.json(err));
+    return await axios.get(`https://api.blocktrail.com/v1/tbtc/address/${address}?api_key=${process.env.blocktrail_API_key}`);
   }
-  else if (coin === "btc_test") {
-    axios.get(`https://api.blocktrail.com/v1/tbtc/address/${address}?api_key=${process.env.blocktrail_API_key}`)
-      .then(result => {
-        res.json(result.data)
-      })
-      .catch(err => res.json(err));
+  else if (coin === "btc") {
+    return await axios.get(`https://api.blocktrail.com/v1/btc/address/${address}?api_key=${process.env.blocktrail_API_key}`);
   }
   else {
-    res.json({
-      success: false,
-      message: "please provide valid coin and address in query parameters"
-    });
+    return { success: true, error: "invalid coin given" };
   }
+
 };
 
 module.exports = { createWallet, getWalletInfo };
