@@ -1,11 +1,9 @@
-// import { ObjectId } from '../../../../Library/Caches/typescript/2.6/node_modules/@types/bson';
 const ObjectId = require("mongodb").ObjectId;
 const bitcore = require("bitcore-lib");
 const { providers, utils, Wallet, _SigningKey } = require("ethers");
 const keythereum = require("keythereum");
 const { encrypt, decrypt } = require("../services/utils");
 const User = require("../models/user");
-// import axios from "axios";
 const axios = require('axios');
 
 // creates a testnet btc wallet and returns an object with its address, publicKey, and privateKey
