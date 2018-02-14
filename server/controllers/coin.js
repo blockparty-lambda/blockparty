@@ -4,7 +4,7 @@ const { providers, utils, Wallet, _SigningKey } = require("ethers");
 const keythereum = require("keythereum");
 const { encrypt, decrypt } = require("../services/utils");
 const User = require("../models/user");
-const axios = require('axios');
+const axios = require("axios");
 
 // creates a testnet btc wallet and returns an object with its address, publicKey, and privateKey
 // ********
@@ -97,18 +97,18 @@ const createWallet = (req, res) => {
 
   // coin abbreviations
   const coinAbbr = {
-    "btc_test" : "bitcoin test",
-    "btc" : "bitcoin",
-    "eth_test" : "ethereum test",
-    "eth" : "ethereum",
-    "zec_test" : "zcash test",
-    "zec" : "zcash"
-  }
+    btc_test: "bitcoin test",
+    btc: "bitcoin",
+    eth_test: "ethereum test",
+    eth: "ethereum",
+    zec_test: "zcash test",
+    zec: "zcash"
+  };
   // instantiate a null wallet
   let wallet = {
-    coin : coinAbbr[coin],
-    coinAbbr : coin
-  }
+    coin: coinAbbr[coin],
+    coinAbbr: coin
+  };
 
   // create wallet for coin
   switch (coin) {
@@ -133,7 +133,11 @@ const createWallet = (req, res) => {
   }
 
   // hash the privateKey for the wallet
-  wallet.privateKey = encrypt(wallet.privateKey, 'aes-256-ctr', process.env.salt);
+  wallet.privateKey = encrypt(
+    wallet.privateKey,
+    "aes-256-ctr",
+    process.env.salt
+  );
 
   // store coin in user document
   // TODO: do we want to check if the user has already has a coins wallet?
@@ -149,15 +153,46 @@ const createWallet = (req, res) => {
 // helper function called in getwallets method for the getwallets api endpoint
 const getWalletInfo = async (coin, address) => {
   if (coin === "btc_test") {
-    return await axios.get(`https://api.blocktrail.com/v1/tbtc/address/${address}?api_key=${process.env.blocktrail_API_key}`);
-  }
-  else if (coin === "btc") {
-    return await axios.get(`https://api.blocktrail.com/v1/btc/address/${address}?api_key=${process.env.blocktrail_API_key}`);
-  }
-  else {
+    return await axios.get(
+      `https://api.blocktrail.com/v1/tbtc/address/${address}?api_key=${
+        process.env.blocktrail_API_key
+      }`
+    );
+  } else if (coin === "btc") {
+    return await axios.get(
+      `https://api.blocktrail.com/v1/btc/address/${address}?api_key=${
+        process.env.blocktrail_API_key
+      }`
+    );
+  } else if (coin === "eth") {
+    const result = {
+      data: {
+        balance: 0
+      }
+    };
+    const provider = new providers.InfuraProvider(
+      providers.networks.homestead,
+      process.env.infura_API_key
+    );
+
+    result.data.balance = utils.formatEther(await provider.getBalance(address));
+    return result;
+  } else if (coin === "eth_test") {
+    const result = {
+      data: {
+        balance: 0
+      }
+    };
+    const provider = new providers.InfuraProvider(
+      providers.networks.ropsten,
+      process.env.infura_API_key
+    );
+
+    result.data.balance = utils.formatEther(await provider.getBalance(address));
+    return result;
+  } else {
     return { success: true, error: "invalid coin given" };
   }
-
 };
 
 module.exports = { createWallet, getWalletInfo };
