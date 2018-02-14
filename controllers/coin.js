@@ -1,6 +1,5 @@
 const ObjectId = require("mongodb").ObjectId;
 const bitcore = require("bitcore-lib");
-const etheres = require("ethers");
 const { providers, utils, Wallet, _SigningKey } = require("ethers");
 const keythereum = require("keythereum");
 const { encrypt, decrypt } = require("../services/utils");
