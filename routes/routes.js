@@ -3,7 +3,9 @@ const authController = require("../controllers/auth");
 const coinController = require("../controllers/coin");
 
 module.exports = app => {
-  app.route("/register").post(userController.createUser);
+  app
+    .route("/register")
+    .post(userController.createUser);
   app
     .route("/signin")
     .post(authController.requireSignIn, authController.signIn);
@@ -32,4 +34,7 @@ module.exports = app => {
   app
     .route("/users")
     .get(authController.requireAuth, userController.getAllUsers);
+  app
+    .route("/partialusers")
+    .get(authController.requireAuth, userController.getPartialUsers);
 };
