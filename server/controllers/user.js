@@ -110,6 +110,26 @@ const removeFriend = async (req, res) => {
   });
 };
 
+const getPartialUsers = async (req, res) => {
+  const query = req.query.query; //dav
+
+  try {
+    const queriedUsers = await User.find({ username: new RegExp(`^${query}`, "i") });
+
+    // potential logic to remove a users friends from queriedUsers
+
+    res.json({
+      success: true,
+      users: queriedUsers
+    });
+  } catch (error) {
+    res.json({
+      success: false,
+      error
+    })
+  }
+}
+
 module.exports = {
   createUser,
   getAllUsers,
@@ -117,5 +137,6 @@ module.exports = {
   getWallets,
   addFriend,
   removeFriend,
-  getUserInfo
+  getUserInfo,
+  getPartialUsers
 };
