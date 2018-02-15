@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const friends = require('mongoose-friends');
 const Schema = mongoose.Schema;
 const bcrypt = require("bcryptjs");
 
@@ -21,11 +22,11 @@ const UserSchema = new Schema({
     type: String,
     unique: true
   },
-  friends: {
-    type: [{ type: Schema.Types.ObjectId, ref: 'User' }],
-    default: [],
-    required: true
-  },
+  // friends: {
+  //   type: [{ type: Schema.Types.ObjectId, ref: 'User' }],
+  //   default: [],
+  //   required: true
+  // },
   wallets: {
     type: Array,
     required: true,
@@ -37,6 +38,8 @@ const UserSchema = new Schema({
     default: "https://impactspace.com/images/uploads/person-default.png"
   }
 });
+
+UserSchema.plugin(friends());
 
 UserSchema.pre("save", async function(next) {
   try {

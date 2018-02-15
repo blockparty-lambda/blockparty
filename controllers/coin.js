@@ -175,7 +175,9 @@ const getWalletInfo = async (coin, address) => {
       process.env.infura_API_key
     );
 
-    result.data.balance = utils.formatEther(await provider.getBalance(address));
+    result.data.balance = parseFloat(
+      utils.formatEther(await provider.getBalance(address))
+    );
     return result;
   } else if (coin === "eth_test") {
     const result = {
@@ -188,7 +190,9 @@ const getWalletInfo = async (coin, address) => {
       process.env.infura_API_key
     );
 
-    result.data.balance = utils.formatEther(await provider.getBalance(address));
+    result.data.balance = parseFloat(
+      utils.formatEther(await provider.getBalance(address))
+    );
     return result;
   } else {
     return { success: true, error: "invalid coin given" };
