@@ -43,6 +43,7 @@ export default class FriendsList extends React.Component {
       })
       .then(response => {
         // Ternary insanity
+        console.log(response.data);
         const {
           acceptedFriends,
           pendingFriends,
@@ -127,7 +128,11 @@ export default class FriendsList extends React.Component {
   };
 
   renderHeader = () => {
-    return <SearchBar placeholder="Search friends..." lightTheme round />;
+    return <SearchBar 
+      placeholder="Search friends..."
+      lightTheme 
+      round 
+    />;
   };
 
   renderFooter = () => {
