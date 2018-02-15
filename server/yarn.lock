@@ -108,6 +108,10 @@ async@2.1.4:
   dependencies:
     lodash "^4.14.0"
 
+async@~0.2.9:
+  version "0.2.10"
+  resolved "https://registry.yarnpkg.com/async/-/async-0.2.10.tgz#b6bbe0b0674b9d719708ca38de8c237cb526c3d1"
+
 asynckit@^0.4.0:
   version "0.4.0"
   resolved "https://registry.yarnpkg.com/asynckit/-/asynckit-0.4.0.tgz#c79ed97f7f34cb8f2ba1bc9790bcc366474b4b79"
@@ -1581,6 +1585,12 @@ mongodb@3.0.1:
   resolved "https://registry.yarnpkg.com/mongodb/-/mongodb-3.0.1.tgz#278ee8006257ec22798594a6259546825d6de1b2"
   dependencies:
     mongodb-core "3.0.1"
+
+mongoose-friends@^0.2.5:
+  version "0.2.5"
+  resolved "https://registry.yarnpkg.com/mongoose-friends/-/mongoose-friends-0.2.5.tgz#82263537cdf953565b6c6aa3722c633f87779a3b"
+  dependencies:
+    async "~0.2.9"
 
 mongoose-legacy-pluralize@1.0.1:
   version "1.0.1"

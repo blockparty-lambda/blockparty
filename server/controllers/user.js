@@ -1,4 +1,5 @@
 const User = require("../models/user");
+const Status = require("mongoose-friends").Status;
 const ObjectId = require("mongodb").ObjectId; // somewhere we need to place the instantiation of the ObjectId function
 const CoinController = require("./coin");
 
@@ -20,6 +21,17 @@ const createUser = async (req, res) => {
   }
 };
 
+const getAllUsers = async (req, res) => {
+  try {
+    const users = await User.find({});
+    res.json({ success: true, users });
+  } catch (error) {
+    return res.json({
+      error: { success: false, message: "Something went wrong on the server" }
+    });
+  }
+};
+
 const getUserInfo = async (req, res) => {
   try {
     const user = await User.findById(req.user.id);
@@ -36,11 +48,16 @@ const getUserInfo = async (req, res) => {
 };
 
 const getFriends = async (req, res) => {
-  User.findOne({ _id: ObjectId(req.user.id) })
-    .populate({ path: "friends", select: ["username", "avatarUrl", "_id"] })
-    .exec()
-    .then(results => res.json(results.friends))
-    .catch(err => res.json(err));
+  User.getFriends(req.user, (err, fships) => {
+    if (err) {
+      return res.json({
+        success: false,
+        message: "Something went wrong on the server"
+      });
+    }
+
+    res.json({ success: true, friends: fships });
+  });
 };
 
 const getWallets = async (req, res) => {
@@ -49,62 +66,53 @@ const getWallets = async (req, res) => {
 
     for (let i = 0; i < user.wallets.length; i++) {
       const wallet = user.wallets[i];
-      const walletData = await CoinController.getWalletInfo(wallet.coinAbbr, wallet.address);
+      const walletData = await CoinController.getWalletInfo(
+        wallet.coinAbbr,
+        wallet.address
+      );
 
       user.wallets[i].balance = walletData.data.balance;
     }
-    res.json({ succes: true, wallets: user.wallets });
+    res.json({ success: true, wallets: user.wallets });
   } catch (error) {
-    res.json({ succes: false, message: error.message });
+    res.json({ success: false, message: error.message });
   }
 };
 
-const addFriend = (req, res) => {
-  const { userId1, userId2 } = req.body;
-
-  // add the second user (userId2) to first users (userId1) friend list
-  User.findOneAndUpdate(
-    { _id: ObjectId(userId1) },
-    { $addToSet: { friends: ObjectId(userId2) } }
-  )
-    .then(() => {
-      // add the first user (userId1) to second users (userId2) friend list
-      User.findOneAndUpdate(
-        { _id: ObjectId(userId2) },
-        { $addToSet: { friends: ObjectId(userId1) } }
-      )
-        .then(() =>
-          res.json({ success: true, message: "successfully added friend" })
-        )
-        .catch(err1 => res.json(err1));
-    })
-    .catch(err => res.json(err));
+const addFriend = async (req, res) => {
+  const { friendId } = req.body;
+  const newFriend = await User.findById(friendId);
+  User.requestFriend(req.user, newFriend, err => {
+    if (err) {
+      console.log(err);
+      return res.json({
+        success: false,
+        message: "Something went wrong on the server"
+      });
+    }
+    res.json({ success: true, message: "Friend request sent" });
+  });
 };
 
-const removeFriend = (req, res) => {
-  const { userId1, userId2 } = req.body;
+const removeFriend = async (req, res) => {
+  const { friendId } = req.body;
 
-  // remove the second user (userId2) from first users (userId1) friend list
-  User.findOneAndUpdate(
-    { _id: ObjectId(userId1) },
-    { $pull: { friends: ObjectId(userId2) } }
-  )
-    .then(() => {
-      // remove the first user (userId1) from second users (userId2) friend list
-      User.findOneAndUpdate(
-        { _id: ObjectId(userId2) },
-        { $pull: { friends: ObjectId(userId1) } }
-      )
-        .then(() =>
-          res.json({ success: true, message: "successfully removed friend" })
-        )
-        .catch(err1 => res.json(err1));
-    })
-    .catch(err => res.json(err));
+  const delFriend = await User.findById(friendId);
+
+  User.removeFriend(req.user, delFriend, err => {
+    if (err) {
+      return res.json({
+        success: false,
+        message: "Something went wrong on the server"
+      });
+    }
+    res.json({ success: true, message: "Friend removed" });
+  });
 };
 
 module.exports = {
   createUser,
+  getAllUsers,
   getFriends,
   getWallets,
   addFriend,

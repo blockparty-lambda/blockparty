@@ -1,36 +1,117 @@
 import React from "react";
-import { StyleSheet, Text, View, TextInput, Button, FlatList, AsyncStorage } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  TextInput,
+  SectionList,
+  AsyncStorage,
+  ActivityIndicator
+} from "react-native";
 import axios from "axios";
-import { localip } from 'react-native-dotenv';
-import { List, ListItem, SearchBar } from "react-native-elements";
+import { localip } from "react-native-dotenv";
+import { List, ListItem, SearchBar, Button, h1 } from "react-native-elements";
 
 export default class FriendsList extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      token: '',
-      friends: []
+      token: "",
+      acceptedFriends: [],
+      requestedFriends: [],
+      pendingFriends: [],
+      refreshing: false,
+      loading: false
     };
   }
 
   // call our api to get the users apis
   // set result to state
   async componentDidMount() {
-    const token = await AsyncStorage.getItem("jwt");
+    this.setState({ token: await AsyncStorage.getItem("jwt") });
+    this.getFriendData();
+  }
+
+  getFriendData = async () => {
+    this.setState({ loading: true });
+
     axios
       .get(`http://${localip}:3000/getfriends`, {
         headers: {
-          Authorization: token
+          Authorization: this.state.token
         }
       })
       .then(response => {
-        this.setState({ friends: response.data });
+        // Ternary insanity
+        const {
+          acceptedFriends,
+          pendingFriends,
+          requestedFriends
+        } = response.data.friends.reduce(
+          (result, friend) =>
+            friend.status === "accepted"
+              ? (result.acceptedFriends.push(friend), result)
+              : friend.status === "pending"
+                ? (result.pendingFriends.push(friend), result)
+                : friend.status === "requested"
+                  ? (result.requestedFriends.push(friend), result)
+                  : result,
+          { acceptedFriends: [], pendingFriends: [], requestedFriends: [] }
+        );
+
+        this.setState({
+          acceptedFriends,
+          pendingFriends,
+          requestedFriends,
+          loading: false,
+          refreshing: false
+        });
       })
       .catch(error => {
         console.log(error);
       });
-  }
+  };
 
+  acceptFriendRequest = async friend => {
+    await axios.post(
+      `http://${localip}:3000/addfriend`,
+      { friendId: friend._id },
+      {
+        headers: {
+          Authorization: this.state.token,
+          "Content-Type": "application/json"
+        }
+      }
+    );
+
+    this.getFriendData();
+  };
+
+  rejectFriendRequest = async friend => {
+    await axios.post(
+      `http://${localip}:3000/removefriend`,
+      { friendId: friend._id },
+      {
+        headers: {
+          Authorization: this.state.token,
+          "Content-Type": "application/json"
+        }
+      }
+    );
+
+    this.getFriendData();
+  };
+
+  handleRefresh = () => {
+    this.setState(
+      {
+        refreshing: true
+      },
+      () => {
+        this.getFriendData();
+      }
+    );
+  };
 
   renderSeparator = () => {
     return (
@@ -65,29 +146,91 @@ export default class FriendsList extends React.Component {
     );
   };
 
+  renderSectionHeader = section => {
+    if (section.data.length) {
+      return (
+        <View>
+          <Text h1>{section.key}</Text>
+        </View>
+      );
+    }
+    return null;
+  };
+
   render() {
     return (
-        <List containerStyle={{ borderTopWidth: 0, borderBottomWidth: 0 }}>
-          <FlatList
-            data={this.state.friends}
-            renderItem={({ item }) => (
-              <ListItem
-                roundAvatar
-                title={`${item.username}`}
-                avatar={{ uri: item.avatarUrl }}
-                containerStyle={{ borderBottomWidth: 0 }}
-              />
-            )}
-            keyExtractor={item => item._id}
-            ItemSeparatorComponent={this.renderSeparator}
-            ListHeaderComponent={this.renderHeader}
-            ListFooterComponent={this.renderFooter}
-            // onRefresh={this.handleRefresh}
-            // refreshing={this.state.refreshing}
-            // onEndReached={this.handleLoadMore}
-            // onEndReachedThreshold={50}
-          />
-        </List>
+      <List containerStyle={{ borderTopWidth: 0, borderBottomWidth: 0 }}>
+        <SectionList
+          keyExtractor={item => item._id}
+          ItemSeparatorComponent={this.renderSeparator}
+          SectionSeparatorComponent={this.renderSeparator}
+          ListHeaderComponent={this.renderHeader}
+          ListFooterComponent={this.renderFooter}
+          onRefresh={this.handleRefresh}
+          refreshing={this.state.refreshing}
+          renderSectionHeader={({ section }) =>
+            this.renderSectionHeader(section)
+          }
+          sections={[
+            {
+              data: this.state.pendingFriends,
+              key: "Friend Requests",
+              renderItem: ({ item }) => {
+                return (
+                  <ListItem
+                    roundAvatar
+                    title={`${item.friend.username}`}
+                    subtitle="Friend Request Received"
+                    avatar={{ uri: item.friend.avatarUrl }}
+                    containerStyle={{ borderBottomWidth: 0 }}
+                    leftIcon={{ name: "thumb-up" }}
+                    leftIconOnPress={() => {
+                      this.acceptFriendRequest(item);
+                    }}
+                    rightIcon={{ name: "thumb-down" }}
+                    onPressRightIcon={() => {
+                      this.rejectFriendRequest(item);
+                    }}
+                  />
+                );
+              }
+            },
+            {
+              data: this.state.requestedFriends,
+              key: "Sent Friend Requests",
+              renderItem: ({ item }) => {
+                return (
+                  <ListItem
+                    roundAvatar
+                    title={`${item.friend.username}`}
+                    subtitle="Friend Request Sent"
+                    avatar={{ uri: item.friend.avatarUrl }}
+                    containerStyle={{ borderBottomWidth: 0 }}
+                    rightIcon={{ name: "thumb-down" }}
+                    onPressRightIcon={() => {
+                      this.rejectFriendRequest(item);
+                    }}
+                  />
+                );
+              }
+            },
+            {
+              data: this.state.acceptedFriends,
+              key: "Friends",
+              renderItem: ({ item }) => {
+                return (
+                  <ListItem
+                    roundAvatar
+                    title={`${item.friend.username}`}
+                    avatar={{ uri: item.friend.avatarUrl }}
+                    containerStyle={{ borderBottomWidth: 0 }}
+                  />
+                );
+              }
+            }
+          ]}
+        />
+      </List>
     );
   }
 }
