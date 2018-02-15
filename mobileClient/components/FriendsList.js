@@ -172,7 +172,7 @@ export default class FriendsList extends React.Component {
                   <ListItem
                     roundAvatar
                     title={`${item.friend.username}`}
-                    subtitle="Pending Friend Request"
+                    subtitle="Friend Request Received"
                     avatar={{ uri: item.friend.avatarUrl }}
                     containerStyle={{ borderBottomWidth: 0 }}
                     leftIcon={{ name: "thumb-up" }}
