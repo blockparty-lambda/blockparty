@@ -43,7 +43,6 @@ export default class FriendsList extends React.Component {
       })
       .then(response => {
         // Ternary insanity
-        console.log(response.data);
         const {
           acceptedFriends,
           pendingFriends,
