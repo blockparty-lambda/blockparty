@@ -42,15 +42,23 @@ export default class FriendsList extends React.Component {
         }
       })
       .then(response => {
-        const acceptedFriends = response.data.friends.filter(
-          friend => friend.status === "accepted"
+        // Ternary insanity
+        const {
+          acceptedFriends,
+          pendingFriends,
+          requestedFriends
+        } = response.data.friends.reduce(
+          (result, friend) =>
+            friend.status === "accepted"
+              ? (result.acceptedFriends.push(friend), result)
+              : friend.status === "pending"
+                ? (result.pendingFriends.push(friend), result)
+                : friend.status === "requested"
+                  ? (result.requestedFriends.push(friend), result)
+                  : result,
+          { acceptedFriends: [], pendingFriends: [], requestedFriends: [] }
         );
-        const pendingFriends = response.data.friends.filter(
-          friend => friend.status === "pending"
-        );
-        const requestedFriends = response.data.friends.filter(
-          friend => friend.status === "requested"
-        );
+
         this.setState({
           acceptedFriends,
           pendingFriends,

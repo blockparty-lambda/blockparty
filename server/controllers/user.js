@@ -56,10 +56,6 @@ const getFriends = async (req, res) => {
       });
     }
 
-    fships.sort(
-      (a, b) => (a.status > b.status ? 1 : b.status > a.status ? -1 : 0)
-    );
-
     res.json({ success: true, friends: fships });
   });
 };
