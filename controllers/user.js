@@ -82,32 +82,45 @@ const getWallets = async (req, res) => {
 
 const addableWallets = async (req, res) => {
   const wallets = [
-    ["eth_test", "Ether Test"],
-    ["btc", "Bitcoin"],
-    ["btc_test", "Bitcoin Test"],
-    ["eth", "Ether"]
+    {
+      id: 1,
+      coinAbbr: "eth_test",
+      coin: "Ether Test"
+    },
+    {
+      id: 2,
+      coinAbbr: "eth",
+      coin: "Ether"
+    },
+    {
+      id: 3,
+      coinAbbr: "btc",
+      coin: "Bitcoin"
+    },
+    {
+      id: 4,
+      coinAbbr: "btc_test",
+      coin: "Bitcoin Test"
+    }
   ];
 
-  const user = await User.findById(req.user.id);
+  await asyncForEach(req.user.wallets, w => {
+    for (let i = 0; i < wallets.length; i++) {
+      let walletObj = wallets[i];
 
-  await asyncForEach(user.wallets, (w) => {
-
-    for (let i=0; i < wallets.length; i++) {
-      let walletTuple = wallets[i];
-
-      if (walletTuple[0] === w.coinAbbr) {
+      if (walletObj.coinAbbr === w.coinAbbr) {
         // remove from wallets
         wallets.splice(i, 1);
       }
     }
-  })
+  });
 
   try {
-    res.json({success: true, wallets});
+    res.json({ success: true, wallets });
   } catch (error) {
-    res.json({success: false, error});
+    res.json({ success: false, error });
   }
-}
+};
 
 const addFriend = async (req, res) => {
   const { friendId } = req.body;
