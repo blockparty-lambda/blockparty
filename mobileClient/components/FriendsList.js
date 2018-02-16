@@ -180,6 +180,19 @@ export default class FriendsList extends React.Component {
     );
   };
 
+  renderSectionSeparator = () => {
+    return (
+      <View
+        style={{
+          height: 1,
+          width: "100%",
+          backgroundColor: "#CED0CE",
+          marginLeft: "14%"
+        }}
+      />
+    );
+  };
+
   renderSectionHeader = section => {
     if (section.data.length) {
       return (
@@ -197,7 +210,7 @@ export default class FriendsList extends React.Component {
         <SectionList
           keyExtractor={item => item._id}
           ItemSeparatorComponent={this.renderSeparator}
-          SectionSeparatorComponent={this.renderSeparator}
+          SectionSeparatorComponent={this.renderSectionSeparator}
           ListHeaderComponent={this.renderHeader}
           ListFooterComponent={this.renderFooter}
           onRefresh={this.handleRefresh}

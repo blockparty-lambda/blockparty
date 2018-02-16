@@ -97,12 +97,12 @@ const createWallet = (req, res) => {
 
   // coin abbreviations
   const coinAbbr = {
-    btc_test: "bitcoin test",
-    btc: "bitcoin",
-    eth_test: "ethereum test",
-    eth: "ethereum",
-    zec_test: "zcash test",
-    zec: "zcash"
+    btc_test: "Bitcoin test",
+    btc: "Bitcoin",
+    eth_test: "Ether test",
+    eth: "Ether",
+    zec_test: "Zcash test",
+    zec: "Zcash"
   };
   // instantiate a null wallet
   let wallet = {
