@@ -1,7 +1,6 @@
 import React from "react";
 import {
   StyleSheet,
-  Text,
   View,
   TextInput,
   SectionList,
@@ -10,16 +9,18 @@ import {
 } from "react-native";
 import axios from "axios";
 import { localip } from "react-native-dotenv";
-import { List, ListItem, SearchBar, Button, h1 } from "react-native-elements";
+import { List, ListItem, SearchBar, Button, Text } from "react-native-elements";
 
 export default class FriendsList extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       token: "",
+      query: "",
       acceptedFriends: [],
       requestedFriends: [],
       pendingFriends: [],
+      searchResults: [],
       refreshing: false,
       loading: false
     };
@@ -105,12 +106,47 @@ export default class FriendsList extends React.Component {
   handleRefresh = () => {
     this.setState(
       {
-        refreshing: true
+        refreshing: true,
+        searchResults: []
       },
       () => {
         this.getFriendData();
       }
     );
+  };
+
+  handleSearch = async () => {
+    const query = this.state.query;
+    try {
+      const searchResults = [
+        {
+          username: "Sam",
+          _id: "1234567",
+          avatarUrl: "https://impactspace.com/images/uploads/person-default.png"
+        },
+        {
+          username: "Sally",
+          _id: "1234765",
+          avatarUrl: "https://impactspace.com/images/uploads/person-default.png"
+        },
+        {
+          username: "John",
+          _id: "12317377",
+          avatarUrl: "https://impactspace.com/images/uploads/person-default.png"
+        }
+      ];
+      // const results = await axios.get(
+      //   `htttp://${localip}:3000?query=${query}`,
+      //   { headers: { token: this.state.token } }
+      // );
+
+      // this.setState({ searchResults: results });
+      console.log(query);
+      this.setState({ query: "", searchResults });
+      return;
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   renderSeparator = () => {
@@ -127,7 +163,18 @@ export default class FriendsList extends React.Component {
   };
 
   renderHeader = () => {
-    return <SearchBar placeholder="Search friends..." lightTheme round />;
+    return (
+      <SearchBar
+        placeholder="Search friends..."
+        onSubmitEditing={this.handleSearch}
+        value={this.state.query}
+        onChangeText={text => {
+          this.setState({ query: text });
+        }}
+        lightTheme
+        round
+      />
+    );
   };
 
   renderFooter = () => {
@@ -150,7 +197,7 @@ export default class FriendsList extends React.Component {
     if (section.data.length) {
       return (
         <View>
-          <Text h1>{section.key}</Text>
+          <Text h4>{section.key}</Text>
         </View>
       );
     }
@@ -168,10 +215,30 @@ export default class FriendsList extends React.Component {
           ListFooterComponent={this.renderFooter}
           onRefresh={this.handleRefresh}
           refreshing={this.state.refreshing}
+          extraData={this.state}
           renderSectionHeader={({ section }) =>
             this.renderSectionHeader(section)
           }
           sections={[
+            {
+              data: this.state.searchResults,
+              key: "Search Results",
+              renderItem: ({ item }) => {
+                return (
+                  <ListItem
+                    roundAvatar
+                    title={`${item.username}`}
+                    avatar={{ uri: item.avatarUrl }}
+                    containerStyle={{ borderBottomWidth: 0 }}
+                    rightTitle="Add Friend"
+                    rightIcon={{ name: "add" }}
+                    onPressRightIcon={() => {
+                      this.acceptFriendRequest(item);
+                    }}
+                  />
+                );
+              }
+            },
             {
               data: this.state.pendingFriends,
               key: "Friend Requests",
