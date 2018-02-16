@@ -46,12 +46,14 @@ export default class Register extends React.Component {
         </Text>
         <TextInput
           style={styles.textInput}
+          autoCapitalize="none"
           onChangeText={email => this.setState({ email })}
           value={this.state.email}
           placeholder="email"
         />
         <TextInput
           style={styles.textInput}
+          autoCapitalize="none"
           onChangeText={username => this.setState({ username })}
           value={this.state.username}
           placeholder="username"

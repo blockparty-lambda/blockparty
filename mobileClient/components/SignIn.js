@@ -51,6 +51,7 @@ export default class SignIn extends React.Component {
           onChangeText={username => this.setState({ username })}
           value={this.state.username}
           placeholder="username"
+          autoCapitalize="none"
         />
         <TextInput
           style={styles.textInput}
