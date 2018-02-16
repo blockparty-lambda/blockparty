@@ -2,6 +2,7 @@ const User = require("../models/user");
 const Status = require("mongoose-friends").Status;
 const ObjectId = require("mongodb").ObjectId; // somewhere we need to place the instantiation of the ObjectId function
 const CoinController = require("./coin");
+const { asyncForEach } = require("../services/utils");
 
 const STATUS_USER_ERROR = 422;
 
@@ -79,6 +80,35 @@ const getWallets = async (req, res) => {
   }
 };
 
+const addableWallets = async (req, res) => {
+  const wallets = [
+    ["eth_test", "Ether Test"],
+    ["btc", "Bitcoin"],
+    ["btc_test", "Bitcoin Test"],
+    ["eth", "Ether"]
+  ];
+
+  const user = await User.findById(req.user.id);
+
+  await asyncForEach(user.wallets, (w) => {
+
+    for (let i=0; i < wallets.length; i++) {
+      let walletTuple = wallets[i];
+
+      if (walletTuple[0] === w.coinAbbr) {
+        // remove from wallets
+        wallets.splice(i, 1);
+      }
+    }
+  })
+
+  try {
+    res.json({success: true, wallets});
+  } catch (error) {
+    res.json({success: false, error});
+  }
+}
+
 const addFriend = async (req, res) => {
   const { friendId } = req.body;
   const newFriend = await User.findById(friendId);
@@ -137,6 +167,7 @@ module.exports = {
   getAllUsers,
   getFriends,
   getWallets,
+  addableWallets,
   addFriend,
   removeFriend,
   getUserInfo,
