@@ -163,6 +163,7 @@ export default class FriendsList extends React.Component {
   };
 
   renderHeader = () => {
+<<<<<<< HEAD
     return (
       <SearchBar
         placeholder="Search friends..."
@@ -175,6 +176,13 @@ export default class FriendsList extends React.Component {
         round
       />
     );
+=======
+    return <SearchBar 
+      placeholder="Search friends..."
+      lightTheme 
+      round 
+    />;
+>>>>>>> master
   };
 
   renderFooter = () => {
