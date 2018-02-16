@@ -1,5 +1,5 @@
 // encrypt and decrypt functions for the private keys of the wallets
-require("dotenv").config({ path: '../../.env' });
+require("dotenv").config({ path: '../.env' });
 const crypto = require('crypto');
 
 const encrypt = (text, algorithm, salt) => {
