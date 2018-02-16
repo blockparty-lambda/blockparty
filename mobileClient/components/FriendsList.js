@@ -195,7 +195,7 @@ export default class FriendsList extends React.Component {
   };
 
   renderSectionHeader = section => {
-    if (section.data && section.data.length) {
+    if (section && section.data.length) {
       return (
         <View>
           <Text h4>{section.key}</Text>

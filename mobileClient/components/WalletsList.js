@@ -58,7 +58,11 @@ export default class WalletsList extends React.Component {
         headers: { Authorization: this.state.token }
       });
       const wallets = result.data.wallets;
-      return this.setState({ addableWallets: wallets });
+      this.setState({
+        addableWallets: wallets,
+        loading: false,
+        refreshing: false
+      });
     } catch (error) {
       console.log(error);
     }
@@ -69,8 +73,7 @@ export default class WalletsList extends React.Component {
       {
         refreshing: true
       },
-      () => {
-        this.getUserWallets();
+      async () => {
         this.getAddableWallets();
       }
     );
@@ -157,7 +160,12 @@ export default class WalletsList extends React.Component {
   };
 
   renderSectionHeader = section => {
-    if (section.data && section.data.length) {
+    if (
+      section !== undefined &&
+      section !== null &&
+      (section.data !== undefined && section.data !== null) &&
+      section.data.length
+    ) {
       return (
         <View>
           <Text h4>{section.key}</Text>
