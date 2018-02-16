@@ -150,6 +150,7 @@ export default class FriendsList extends React.Component {
       <SearchBar
         placeholder="Search friends..."
         onSubmitEditing={this.handleSearch}
+        autoCapitalize="none"
         value={this.state.query}
         onChangeText={text => {
           this.setState({ query: text }, () => {
