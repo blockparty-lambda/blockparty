@@ -26,6 +26,9 @@ module.exports = app => {
   app
     .route("/getwallets") // takes in <coin> and <address> params as query params
     .get(authController.requireAuth, userController.getWallets);
+  app
+    .route("/addablewallets")
+    .get(authController.requireAuth, userController.addableWallets);
 
   // Route to test Auth, can be removed if needed
   app
