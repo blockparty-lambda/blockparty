@@ -13,10 +13,18 @@ export default class SettingsScreen extends React.Component {
 
   render() {
     return (
-      <View>
-        <Text>settings yooo</Text>
+      <View style={styles.container}>
+        <Text>Settings</Text>
         <Button title="Logout" onPress={this.logout} />
       </View>
     );
   }
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    paddingTop: 20,
+    backgroundColor: "#fff"
+  }
+});

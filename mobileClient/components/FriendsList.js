@@ -1,7 +1,6 @@
 import React from "react";
 import {
   StyleSheet,
-  Text,
   View,
   TextInput,
   SectionList,
@@ -10,16 +9,18 @@ import {
 } from "react-native";
 import axios from "axios";
 import { localip } from "react-native-dotenv";
-import { List, ListItem, SearchBar, Button, h1 } from "react-native-elements";
+import { List, ListItem, SearchBar, Button, Text } from "react-native-elements";
 
 export default class FriendsList extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       token: "",
+      query: "",
       acceptedFriends: [],
       requestedFriends: [],
       pendingFriends: [],
+      searchResults: [],
       refreshing: false,
       loading: false
     };
@@ -64,7 +65,8 @@ export default class FriendsList extends React.Component {
           pendingFriends,
           requestedFriends,
           loading: false,
-          refreshing: false
+          refreshing: false,
+          searchResults: []
         });
       })
       .catch(error => {
@@ -113,6 +115,23 @@ export default class FriendsList extends React.Component {
     );
   };
 
+  handleSearch = async () => {
+    const query = this.state.query;
+    try {
+      if (query === "") {
+        return this.setState({ searchResults: [] });
+      }
+      const results = await axios.get(
+        `http://${localip}:3000/partialusers?query=${query}`,
+        { headers: { Authorization: this.state.token } }
+      );
+
+      this.setState({ searchResults: results.data.users });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   renderSeparator = () => {
     return (
       <View
@@ -127,11 +146,22 @@ export default class FriendsList extends React.Component {
   };
 
   renderHeader = () => {
-    return <SearchBar 
-      placeholder="Search friends..."
-      lightTheme 
-      round 
-    />;
+    return (
+      <SearchBar
+        placeholder="Search friends..."
+        onSubmitEditing={this.handleSearch}
+        value={this.state.query}
+        onChangeText={text => {
+          this.setState({ query: text }, () => {
+            this.handleSearch();
+          });
+        }}
+        onClearText={this.getFriendData}
+        clearIcon
+        lightTheme
+        round
+      />
+    );
   };
 
   renderFooter = () => {
@@ -154,7 +184,7 @@ export default class FriendsList extends React.Component {
     if (section.data.length) {
       return (
         <View>
-          <Text h1>{section.key}</Text>
+          <Text h4>{section.key}</Text>
         </View>
       );
     }
@@ -172,10 +202,30 @@ export default class FriendsList extends React.Component {
           ListFooterComponent={this.renderFooter}
           onRefresh={this.handleRefresh}
           refreshing={this.state.refreshing}
+          extraData={this.state}
           renderSectionHeader={({ section }) =>
             this.renderSectionHeader(section)
           }
           sections={[
+            {
+              data: this.state.searchResults,
+              key: "Search Results",
+              renderItem: ({ item }) => {
+                return (
+                  <ListItem
+                    roundAvatar
+                    title={`${item.username}`}
+                    avatar={{ uri: item.avatarUrl }}
+                    containerStyle={{ borderBottomWidth: 0 }}
+                    rightTitle="Add Friend"
+                    rightIcon={{ name: "add" }}
+                    onPressRightIcon={() => {
+                      this.acceptFriendRequest(item);
+                    }}
+                  />
+                );
+              }
+            },
             {
               data: this.state.pendingFriends,
               key: "Friend Requests",
