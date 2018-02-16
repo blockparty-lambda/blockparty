@@ -148,7 +148,6 @@ export default class FriendsList extends React.Component {
   renderHeader = () => {
     return (
       <SearchBar
-        ref={search => (this.search = search)}
         placeholder="Search friends..."
         onSubmitEditing={this.handleSearch}
         value={this.state.query}
@@ -158,7 +157,6 @@ export default class FriendsList extends React.Component {
           });
         }}
         onClearText={this.getFriendData}
-        onCancel={() => this.search.clearText()}
         clearIcon
         lightTheme
         round
