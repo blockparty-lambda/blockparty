@@ -159,6 +159,7 @@ export default class FriendsList extends React.Component {
         }}
         onClearText={this.getFriendData}
         onCancel={() => this.search.clearText()}
+        clearIcon
         lightTheme
         round
       />
