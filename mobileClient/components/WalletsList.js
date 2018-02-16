@@ -157,7 +157,7 @@ export default class WalletsList extends React.Component {
   };
 
   renderSectionHeader = section => {
-    if (section.data.length) {
+    if (section.data && section.data.length) {
       return (
         <View>
           <Text h4>{section.key}</Text>
