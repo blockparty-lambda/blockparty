@@ -65,7 +65,8 @@ export default class FriendsList extends React.Component {
           pendingFriends,
           requestedFriends,
           loading: false,
-          refreshing: false
+          refreshing: false,
+          searchResults: []
         });
       })
       .catch(error => {
@@ -106,8 +107,7 @@ export default class FriendsList extends React.Component {
   handleRefresh = () => {
     this.setState(
       {
-        refreshing: true,
-        searchResults: []
+        refreshing: true
       },
       () => {
         this.getFriendData();
@@ -118,32 +118,15 @@ export default class FriendsList extends React.Component {
   handleSearch = async () => {
     const query = this.state.query;
     try {
-      const searchResults = [
-        {
-          username: "Sam",
-          _id: "1234567",
-          avatarUrl: "https://impactspace.com/images/uploads/person-default.png"
-        },
-        {
-          username: "Sally",
-          _id: "1234765",
-          avatarUrl: "https://impactspace.com/images/uploads/person-default.png"
-        },
-        {
-          username: "John",
-          _id: "12317377",
-          avatarUrl: "https://impactspace.com/images/uploads/person-default.png"
-        }
-      ];
-      // const results = await axios.get(
-      //   `htttp://${localip}:3000?query=${query}`,
-      //   { headers: { token: this.state.token } }
-      // );
+      if (query === "") {
+        return this.setState({ searchResults: [] });
+      }
+      const results = await axios.get(
+        `http://${localip}:3000/partialusers?query=${query}`,
+        { headers: { Authorization: this.state.token } }
+      );
 
-      // this.setState({ searchResults: results });
-      console.log(query);
-      this.setState({ query: "", searchResults });
-      return;
+      this.setState({ searchResults: results.data.users });
     } catch (error) {
       console.log(error);
     }
@@ -163,26 +146,23 @@ export default class FriendsList extends React.Component {
   };
 
   renderHeader = () => {
-<<<<<<< HEAD
     return (
       <SearchBar
+        ref={search => (this.search = search)}
         placeholder="Search friends..."
         onSubmitEditing={this.handleSearch}
         value={this.state.query}
         onChangeText={text => {
-          this.setState({ query: text });
+          this.setState({ query: text }, () => {
+            this.handleSearch();
+          });
         }}
+        onClearText={this.getFriendData}
+        onCancel={() => this.search.clearText()}
         lightTheme
         round
       />
     );
-=======
-    return <SearchBar 
-      placeholder="Search friends..."
-      lightTheme 
-      round 
-    />;
->>>>>>> master
   };
 
   renderFooter = () => {

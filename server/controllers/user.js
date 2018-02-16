@@ -111,10 +111,12 @@ const removeFriend = async (req, res) => {
 };
 
 const getPartialUsers = async (req, res) => {
-  const query = req.query.query; //dav
+  const { query } = req.query; //dav
 
   try {
-    const queriedUsers = await User.find({ username: new RegExp(`^${query}`, "i") });
+    const queriedUsers = await User.find({
+      username: new RegExp(`^${query}`, "i")
+    });
 
     // potential logic to remove a users friends from queriedUsers
 
@@ -126,9 +128,9 @@ const getPartialUsers = async (req, res) => {
     res.json({
       success: false,
       error
-    })
+    });
   }
-}
+};
 
 module.exports = {
   createUser,
