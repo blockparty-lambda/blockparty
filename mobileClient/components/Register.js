@@ -47,6 +47,7 @@ export default class Register extends React.Component {
         <TextInput
           style={styles.textInput}
           autoCapitalize="none"
+          autoCorrect={false}
           onChangeText={email => this.setState({ email })}
           value={this.state.email}
           placeholder="email"
@@ -54,6 +55,7 @@ export default class Register extends React.Component {
         <TextInput
           style={styles.textInput}
           autoCapitalize="none"
+          autoCorrect={false}
           onChangeText={username => this.setState({ username })}
           value={this.state.username}
           placeholder="username"
