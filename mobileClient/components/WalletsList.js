@@ -4,11 +4,13 @@ import {
   View,
   TextInput,
   AsyncStorage,
-  SectionList
+  SectionList,
+  Image
 } from "react-native";
 import axios from "axios";
 import { localip } from "react-native-dotenv";
 import { List, ListItem, SearchBar, Button, Text } from "react-native-elements";
+import { icons } from "../assets/icons";
 
 export default class WalletsList extends React.Component {
   constructor(props) {
@@ -183,15 +185,6 @@ export default class WalletsList extends React.Component {
   };
 
   render() {
-    const coinAvatarUrls = {
-      btc:
-        "https://cdn3.iconfinder.com/data/icons/inficons-currency-set/512/btc-512.png",
-      btc_test:
-        "http://bitcoinist.com/wp-content/themes/bitcoinist/img/Bitcoin-price-icon.png",
-      eth: "https://cdn4.iconfinder.com/data/icons/cryptocoins/227/ETH-512.png",
-      eth_test:
-        "https://cdn4.iconfinder.com/data/icons/cryptocoins/227/ETH-512.png"
-    };
     return (
       <List containerStyle={{ borderTopWidth: 0, borderBottomWidth: 0 }}>
         {this.state.searchResults && this.state.wallets ? (
@@ -221,7 +214,18 @@ export default class WalletsList extends React.Component {
                     <ListItem
                       roundAvatar
                       title={`${item.coin}`}
-                      avatar={{ uri: coinAvatarUrls[item.coinAbbr] }}
+                      leftIcon={
+                        <Image
+                          style={{
+                            height: 42,
+                            width: 42,
+                            marginRight: 5,
+                            marginLeft: -5
+                          }}
+                          source={icons[item.coinAbbr]}
+                          resizeMode="contain"
+                        />
+                      }
                       containerStyle={{ borderBottomWidth: 0 }}
                       rightTitle="Add Wallet"
                       rightIcon={{ name: "add" }}
@@ -244,7 +248,18 @@ export default class WalletsList extends React.Component {
                       subtitle={`Balance: ${
                         item.balance
                       } ${item.coinAbbr.toUpperCase()}`}
-                      avatar={{ uri: coinAvatarUrls[item.coinAbbr] }}
+                      leftIcon={
+                        <Image
+                          style={{
+                            height: 42,
+                            width: 42,
+                            marginRight: 5,
+                            marginLeft: -5
+                          }}
+                          source={icons[item.coinAbbr]}
+                          resizeMode="contain"
+                        />
+                      }
                       containerStyle={{ borderBottomWidth: 0 }}
                     />
                   );
