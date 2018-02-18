@@ -1,15 +1,16 @@
 import React from "react";
 import {
   StyleSheet,
-  Text,
   View,
   TextInput,
   AsyncStorage,
-  SectionList
+  SectionList,
+  Image
 } from "react-native";
 import axios from "axios";
 import { localip } from "react-native-dotenv";
-import { List, ListItem, SearchBar, Button } from "react-native-elements";
+import { List, ListItem, SearchBar, Button, Text } from "react-native-elements";
+import { icons } from "../assets/icons";
 
 export default class WalletsList extends React.Component {
   constructor(props) {
@@ -28,9 +29,9 @@ export default class WalletsList extends React.Component {
   // set result to state
   // Example of how to access backend and pass the jwt in headers
   async componentDidMount() {
-    this.setState({ token: await AsyncStorage.getItem("jwt") });
-    this.getUserWallets();
-    this.getAddableWallets();
+    await this.setState({ token: await AsyncStorage.getItem("jwt") }, () =>
+      this.getUserWallets()
+    );
   }
 
   getUserWallets = () => {
@@ -40,12 +41,15 @@ export default class WalletsList extends React.Component {
           Authorization: this.state.token
         }
       })
-      .then(response => {
-        this.setState({
-          wallets: response.data.wallets,
-          loading: false,
-          refreshing: false
-        });
+      .then(async response => {
+        await this.setState(
+          {
+            wallets: response.data.wallets,
+            loading: false,
+            refreshing: false
+          },
+          () => this.getAddableWallets()
+        );
       })
       .catch(error => {
         console.log(error);
@@ -58,33 +62,39 @@ export default class WalletsList extends React.Component {
         headers: { Authorization: this.state.token }
       });
       const wallets = result.data.wallets;
-      this.setState({
-        addableWallets: wallets,
-        loading: false,
-        refreshing: false
-      });
+      await this.setState(
+        {
+          addableWallets: wallets,
+          loading: false,
+          refreshing: false
+        },
+        () => {
+          if (this.state.wallets && !this.state.wallets.length)
+            this.showAddableWallets();
+        }
+      );
     } catch (error) {
       console.log(error);
     }
   };
 
-  handleRefresh = () => {
-    this.setState(
+  handleRefresh = async () => {
+    await this.setState(
       {
         refreshing: true
       },
-      async () => {
+      () => {
         this.getAddableWallets();
       }
     );
   };
 
-  showAddableWallets = () => {
-    this.setState({ searchResults: this.state.addableWallets });
+  showAddableWallets = async () => {
+    await this.setState({ searchResults: this.state.addableWallets });
   };
 
-  hideAddableWallets = () => {
-    this.setState({ searchResults: [] });
+  hideAddableWallets = async () => {
+    await this.setState({ searchResults: [] });
   };
 
   addWallet = async coin => {
@@ -123,8 +133,7 @@ export default class WalletsList extends React.Component {
         style={{
           height: 1,
           width: "100%",
-          backgroundColor: "#CED0CE",
-          marginLeft: "14%"
+          backgroundColor: "#CED0CE"
         }}
       />
     );
@@ -134,7 +143,7 @@ export default class WalletsList extends React.Component {
     const buttonText = this.state.searchResults.length
       ? "Hide New Wallets"
       : "Add New Wallets";
-    return (
+    return this.state.addableWallets && this.state.addableWallets.length ? (
       <View>
         <Button
           title={buttonText}
@@ -147,32 +156,16 @@ export default class WalletsList extends React.Component {
             marginBottom: 5,
             marginTop: 5
           }}
-          onPress={() => {
+          onPress={async () => {
             if (buttonText === "Add New Wallets") {
-              this.showAddableWallets();
+              await this.showAddableWallets();
             } else {
-              this.hideAddableWallets();
+              await this.hideAddableWallets();
             }
           }}
         />
       </View>
-    );
-  };
-
-  renderSectionHeader = section => {
-    if (
-      section !== undefined &&
-      section !== null &&
-      (section.data !== undefined && section.data !== null) &&
-      section.data.length
-    ) {
-      return (
-        <View>
-          <Text h4>{section.key}</Text>
-        </View>
-      );
-    }
-    return null;
+    ) : null;
   };
 
   renderFooter = () => {
@@ -194,78 +187,90 @@ export default class WalletsList extends React.Component {
   render() {
     return (
       <List containerStyle={{ borderTopWidth: 0, borderBottomWidth: 0 }}>
-        <SectionList
-          sections={[
-            {
-              data: this.state.searchResults,
-              key: "Add a Wallet",
-              keyExtractor: item => item.id,
-              renderItem: ({ item }) => {
-                const coinAvatarUrls = {
-                  btc:
-                    "https://cdn3.iconfinder.com/data/icons/inficons-currency-set/512/btc-512.png",
-                  btc_test:
-                    "http://bitcoinist.com/wp-content/themes/bitcoinist/img/Bitcoin-price-icon.png",
-                  eth:
-                    "https://cdn4.iconfinder.com/data/icons/cryptocoins/227/ETH-512.png",
-                  eth_test:
-                    "https://cdn4.iconfinder.com/data/icons/cryptocoins/227/ETH-512.png"
-                };
-                return (
-                  <ListItem
-                    roundAvatar
-                    title={`${item.coin}`}
-                    avatar={{ uri: coinAvatarUrls[item.coinAbbr] }}
-                    containerStyle={{ borderBottomWidth: 0 }}
-                    rightTitle="Add Wallet"
-                    rightIcon={{ name: "add" }}
-                    onPressRightIcon={() => {
-                      this.addWallet(item.coinAbbr);
-                    }}
-                  />
-                );
+        {this.state.searchResults && this.state.wallets ? (
+          <SectionList
+            ItemSeparatorComponent={this.renderSeparator}
+            SectionSeparatorComponent={this.renderSectionSeparator}
+            ListHeaderComponent={this.renderHeader}
+            ListFooterComponent={this.renderFooter}
+            onRefresh={this.handleRefresh}
+            refreshing={this.state.refreshing}
+            extraData={this.state}
+            renderSectionHeader={({ section }) => {
+              if (!section.data.length) return null;
+              return (
+                <Text h4 style={{ marginLeft: 5 }}>
+                  {section.key}
+                </Text>
+              );
+            }}
+            sections={[
+              {
+                data: this.state.searchResults,
+                key: "Add a Wallet",
+                keyExtractor: item => item.id,
+                renderItem: ({ item }) => {
+                  return (
+                    <ListItem
+                      roundAvatar
+                      title={`${item.coin}`}
+                      leftIcon={
+                        <Image
+                          style={{
+                            height: 42,
+                            width: 42,
+                            marginRight: 5,
+                            marginLeft: -5
+                          }}
+                          source={icons[item.coinAbbr]}
+                          resizeMode="contain"
+                        />
+                      }
+                      containerStyle={{ borderBottomWidth: 0 }}
+                      rightTitle="Add Wallet"
+                      rightIcon={{ name: "add" }}
+                      onPressRightIcon={() => {
+                        this.addWallet(item.coinAbbr);
+                      }}
+                    />
+                  );
+                }
+              },
+              {
+                data: this.state.wallets,
+                key: "Your Wallets",
+                keyExtractor: item => item.coinAbbr,
+                renderItem: ({ item }) => {
+                  return (
+                    <ListItem
+                      roundAvatar
+                      title={`${item.coin}`}
+                      subtitle={`Balance: ${
+                        item.balance
+                      } ${item.coinAbbr.toUpperCase()}`}
+                      leftIcon={
+                        <Image
+                          style={{
+                            height: 42,
+                            width: 42,
+                            marginRight: 5,
+                            marginLeft: -5
+                          }}
+                          source={icons[item.coinAbbr]}
+                          resizeMode="contain"
+                        />
+                      }
+                      containerStyle={{ borderBottomWidth: 0 }}
+                    />
+                  );
+                }
               }
-            },
-            {
-              data: this.state.wallets,
-              key: "Your Wallets",
-              keyExtractor: item => item.coinAbbr,
-              renderItem: ({ item }) => {
-                const coinAvatarUrls = {
-                  btc:
-                    "https://cdn3.iconfinder.com/data/icons/inficons-currency-set/512/btc-512.png",
-                  btc_test:
-                    "http://bitcoinist.com/wp-content/themes/bitcoinist/img/Bitcoin-price-icon.png",
-                  eth:
-                    "https://cdn4.iconfinder.com/data/icons/cryptocoins/227/ETH-512.png",
-                  eth_test:
-                    "https://cdn4.iconfinder.com/data/icons/cryptocoins/227/ETH-512.png"
-                };
-                return (
-                  <ListItem
-                    roundAvatar
-                    title={`${item.coin}`}
-                    subtitle={`${item.balance}`}
-                    avatar={{ uri: coinAvatarUrls[item.coinAbbr] }}
-                    containerStyle={{ borderBottomWidth: 0 }}
-                  />
-                );
-              }
-            }
-          ]}
-          ItemSeparatorComponent={this.renderSeparator}
-          SectionSeparatorComponent={this.renderSectionSeparator}
-          ListHeaderComponent={this.renderHeader}
-          ListFooterComponent={this.renderFooter}
-          onRefresh={this.handleRefresh}
-          refreshing={this.state.refreshing}
-          extraData={this.state}
-          renderSectionHeader={({ section }) =>
-            this.renderSectionHeader(section)
-          }
-          // onEndReached={this.handleLoadMore}
-          // onEndReachedThreshold={50}
-        />
+            ]}
+
+            // onEndReached={this.handleLoadMore}
+            // onEndReachedThreshold={50}
+          />
+        ) : null}
       </List>
     );
   }
