@@ -40,4 +40,10 @@ module.exports = app => {
   app
     .route("/partialusers")
     .get(authController.requireAuth, userController.getPartialUsers);
+
+  app
+    .route("/helloworld")
+    .get((req, res) => {
+      res.send("hello world!");
+    })
 };
