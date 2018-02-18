@@ -44,6 +44,6 @@ module.exports = app => {
   app
     .route("/helloworld")
     .get((req, res) => {
-      res.send("hello world!");
+      res.send("haaayyy guurrrllll haaayyyy!");
     })
 };
