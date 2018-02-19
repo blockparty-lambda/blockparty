@@ -8,7 +8,7 @@ import {
   ActivityIndicator
 } from "react-native";
 import axios from "axios";
-import { localip } from "react-native-dotenv";
+import { apiUrl } from "../config";
 import { List, ListItem, SearchBar, Button, Text } from "react-native-elements";
 
 export default class FriendsList extends React.Component {
@@ -37,7 +37,7 @@ export default class FriendsList extends React.Component {
     this.setState({ loading: true });
 
     axios
-      .get(`http://${localip}:3000/getfriends`, {
+      .get(`${apiUrl}/getfriends`, {
         headers: {
           Authorization: this.state.token
         }
@@ -76,7 +76,7 @@ export default class FriendsList extends React.Component {
 
   acceptFriendRequest = async friend => {
     await axios.post(
-      `http://${localip}:3000/addfriend`,
+      `${apiUrl}/addfriend`,
       { friendId: friend._id },
       {
         headers: {
@@ -91,7 +91,7 @@ export default class FriendsList extends React.Component {
 
   rejectFriendRequest = async friend => {
     await axios.post(
-      `http://${localip}:3000/removefriend`,
+      `${apiUrl}/removefriend`,
       { friendId: friend._id },
       {
         headers: {
@@ -122,7 +122,7 @@ export default class FriendsList extends React.Component {
         return this.setState({ searchResults: [] });
       }
       const results = await axios.get(
-        `http://${localip}:3000/partialusers?query=${query}`,
+        `${apiUrl}/partialusers?query=${query}`,
         { headers: { Authorization: this.state.token } }
       );
 

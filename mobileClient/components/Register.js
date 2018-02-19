@@ -1,7 +1,7 @@
 import React from "react";
 import { StyleSheet, Text, View, TextInput, Button } from "react-native";
 import axios from "axios";
-import { localip } from 'react-native-dotenv';
+import { apiUrl } from "../config";
 
 export default class Register extends React.Component {
   constructor(props) {
@@ -17,7 +17,7 @@ export default class Register extends React.Component {
 
   register() {
     axios
-      .post(`http://${localip}:3000/register`, {
+      .post(`${apiUrl}/register`, {
         email: this.state.email,
         username: this.state.username,
         password: this.state.password

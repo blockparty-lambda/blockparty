@@ -8,7 +8,7 @@ import {
   Image
 } from "react-native";
 import axios from "axios";
-import { localip } from "react-native-dotenv";
+import { apiUrl } from "../config";
 import { List, ListItem, SearchBar, Button, Text } from "react-native-elements";
 import { icons } from "../assets/icons";
 
@@ -36,7 +36,7 @@ export default class WalletsList extends React.Component {
 
   getUserWallets = () => {
     axios
-      .get(`http://${localip}:3000/getwallets`, {
+      .get(`${apiUrl}/getwallets`, {
         headers: {
           Authorization: this.state.token
         }
@@ -58,7 +58,7 @@ export default class WalletsList extends React.Component {
 
   getAddableWallets = async () => {
     try {
-      const result = await axios.get(`http://${localip}:3000/addableWallets`, {
+      const result = await axios.get(`${apiUrl}/addableWallets`, {
         headers: { Authorization: this.state.token }
       });
       const wallets = result.data.wallets;
@@ -99,7 +99,7 @@ export default class WalletsList extends React.Component {
 
   addWallet = async coin => {
     try {
-      await axios.post(`http://${localip}:3000/create-wallet/${coin}`, null, {
+      await axios.post(`${apiUrl}/create-wallet/${coin}`, null, {
         headers: {
           Authorization: this.state.token,
           "Content-Type": "application/json"
