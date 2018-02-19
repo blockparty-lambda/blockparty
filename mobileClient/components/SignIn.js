@@ -8,7 +8,7 @@ import {
   AsyncStorage
 } from "react-native";
 import axios from "axios";
-import { localip } from "react-native-dotenv";
+import { apiUrl } from "../config";
 import { onSignIn } from "../auth";
 
 export default class SignIn extends React.Component {
@@ -23,7 +23,7 @@ export default class SignIn extends React.Component {
 
   signIn() {
     axios
-      .post(`http://${localip}:3000/signin`, {
+      .post(`${apiUrl}/signin`, {
         username: this.state.username,
         password: this.state.password
       })
