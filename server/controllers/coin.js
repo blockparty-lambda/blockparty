@@ -199,4 +199,119 @@ const getWalletInfo = async (coin, address) => {
   }
 };
 
-module.exports = { createWallet, getWalletInfo };
+const sendBtc = (user, address, amount, subject) => {};
+
+const sendBtcTest = (user, address, amount, subject) => {};
+
+const sendEth = async (user, address, amount, subject) => {
+  // Get wallet
+  const wallet = user.wallets.find(w => w.coinAbbr === "eth");
+  if (!wallet) {
+    return { success: false, message: "No ETH wallet found!" };
+  }
+
+  const provider = new providers.InfuraProvider(
+    providers.networks.homestead,
+    process.env.infura_API_key
+  );
+
+  const ethWallet = new Wallet(
+    decrypt(wallet.privateKey, "aes-256-ctr", process.env.salt),
+    provider
+  );
+
+  // Check balance for sufficient funds
+  const ethBal = parseFloat(
+    utils.formatEther(await provider.getBalance(ethWallet.address))
+  );
+
+  if (Number(amount) > ethBal) {
+    return { success: false, message: "Insufficient funds." };
+  }
+
+  const ethAmount = utils.parseEther(amount);
+
+  const transaction = await ethWallet.send(address, ethAmount);
+
+  // TODO: Save transaction in DB.
+
+  return { success: true, transaction };
+};
+
+const sendEthTest = async (user, address, amount, subject) => {
+  // Get wallet
+  const wallet = user.wallets.find(w => w.coinAbbr === "eth_test");
+  if (!wallet) {
+    return { success: false, message: "No ETH_TEST wallet found!" };
+  }
+
+  const provider = new providers.InfuraProvider(
+    providers.networks.ropsten,
+    process.env.infura_API_key
+  );
+
+  const ethWallet = new Wallet(
+    decrypt(wallet.privateKey, "aes-256-ctr", process.env.salt),
+    provider
+  );
+
+  // Check balance for sufficient funds
+  const ethBal = parseFloat(
+    utils.formatEther(await provider.getBalance(ethWallet.address))
+  );
+
+  if (Number(amount) > ethBal) {
+    return { success: false, message: "Insufficient funds." };
+  }
+
+  const ethAmount = utils.parseEther(amount);
+
+  const transaction = await ethWallet.send(address, ethAmount);
+
+  // TODO: Save transaction in DB.
+
+  return { success: true, transaction };
+};
+
+const sendTransaction = async (req, res) => {
+  const { coin, friendId, amount, subject } = req.body;
+
+  // Check if friend has wallet for given coin
+  // return error if they do not
+  const friend = await User.findById(friendId);
+  const toAddress = friend.wallets.find(w => w.coinAbbr === coin).address;
+
+  if (!toAddress) {
+    return res.json({
+      success: false,
+      message: `Friend doesn't have ${coin} wallet.`
+    });
+  }
+
+  let result = null;
+  // Pass friend address to appropriate handler
+  switch (coin) {
+    case "btc_test":
+      result = await sendBtcTest(req.user, toAddress, amount, subject);
+      break;
+    case "btc":
+      result = await sendBtc(req.user, toAddress, amount, subject);
+      break;
+    case "eth":
+      result = await sendEth(req.user, toAddress, amount, subject);
+      break;
+    case "eth_test":
+      result = await sendEthTest(req.user, toAddress, amount, subject);
+      break;
+    default:
+      // throw error of invalid coin
+      res.json({
+        success: false,
+        message: "please provide valid coin in url parameters"
+      });
+  }
+
+  res.json(result);
+};
+
+module.exports = { createWallet, getWalletInfo, sendTransaction };
