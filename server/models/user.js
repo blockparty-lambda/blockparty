@@ -22,11 +22,6 @@ const UserSchema = new Schema({
     type: String,
     unique: true
   },
-  // friends: {
-  //   type: [{ type: Schema.Types.ObjectId, ref: 'User' }],
-  //   default: [],
-  //   required: true
-  // },
   wallets: {
     type: Array,
     required: true,
