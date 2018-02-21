@@ -49,16 +49,21 @@ const getUserInfo = async (req, res) => {
 };
 
 const getFriends = async (req, res) => {
-  User.getFriends(req.user, (err, fships) => {
-    if (err) {
-      return res.json({
-        success: false,
-        message: "Something went wrong on the server"
-      });
-    }
+  User.getFriends(
+    req.user,
+    {},
+    { username: 1, avatarUrl: 1, _id: 1 },
+    (err, fships) => {
+      if (err) {
+        return res.json({
+          success: false,
+          message: "Something went wrong on the server"
+        });
+      }
 
-    res.json({ success: true, friends: fships });
-  });
+      res.json({ success: true, friends: fships });
+    }
+  );
 };
 
 const getWallets = async (req, res) => {
@@ -124,6 +129,9 @@ const addableWallets = async (req, res) => {
 
 const addFriend = async (req, res) => {
   const { friendId } = req.body;
+  if (friendId === req.user.id) {
+    return res.json({ success: false, message: "You can't friend yoursefl." });
+  }
   const newFriend = await User.findById(friendId);
   User.requestFriend(req.user, newFriend, err => {
     if (err) {
@@ -153,26 +161,35 @@ const removeFriend = async (req, res) => {
   });
 };
 
-const getPartialUsers = async (req, res) => {
+const getPartialUsers = (req, res) => {
   const { query } = req.query; //dav
 
-  try {
-    const queriedUsers = await User.find({
-      username: new RegExp(`^${query}`, "i")
-    });
+  User.getFriends(req.user.id, {}, { _id: 1 }, async (err, friends) => {
+    if (err) {
+      return res.json({
+        success: false,
+        error
+      });
+    }
+    try {
+      const queriedUsers = await User.find({
+        username: new RegExp(`^${query}`, "i")
+      })
+        .where("_id")
+        .nin(friends)
+        .select("username avatarUrl _id");
 
-    // potential logic to remove a users friends from queriedUsers
-
-    res.json({
-      success: true,
-      users: queriedUsers
-    });
-  } catch (error) {
-    res.json({
-      success: false,
-      error
-    });
-  }
+      res.json({
+        success: true,
+        users: queriedUsers
+      });
+    } catch (error) {
+      res.json({
+        success: false,
+        error
+      });
+    }
+  });
 };
 
 module.exports = {
