@@ -2,14 +2,27 @@ import React from "react";
 import {
   StyleSheet,
   View,
-  TextInput,
   SectionList,
   AsyncStorage,
-  ActivityIndicator
+  ActivityIndicator,
+  Alert
 } from "react-native";
 import axios from "axios";
+import Modal from "react-native-modal";
 import { apiUrl } from "../config";
-import { List, ListItem, SearchBar, Button, Text } from "react-native-elements";
+import {
+  Header,
+  List,
+  ListItem,
+  SearchBar,
+  Button,
+  Text,
+  Overlay,
+  Input,
+  Icon,
+  Avatar,
+  ButtonGroup
+} from "react-native-elements";
 
 export default class FriendsList extends React.Component {
   constructor(props) {
@@ -17,12 +30,17 @@ export default class FriendsList extends React.Component {
     this.state = {
       token: "",
       query: "",
+      amountToSend: "",
+      reason: "",
+      selectedIndex: 0,
       acceptedFriends: [],
       requestedFriends: [],
       pendingFriends: [],
       searchResults: [],
       refreshing: false,
-      loading: false
+      loading: false,
+      modalVisible: false,
+      selectedFriend: null
     };
   }
 
@@ -121,10 +139,9 @@ export default class FriendsList extends React.Component {
       if (query === "") {
         return this.setState({ searchResults: [] });
       }
-      const results = await axios.get(
-        `${apiUrl}/partialusers?query=${query}`,
-        { headers: { Authorization: this.state.token } }
-      );
+      const results = await axios.get(`${apiUrl}/partialusers?query=${query}`, {
+        headers: { Authorization: this.state.token }
+      });
 
       this.setState({ searchResults: results.data.users });
     } catch (error) {
@@ -194,6 +211,55 @@ export default class FriendsList extends React.Component {
     );
   };
 
+  handleFriendClick = friend => {
+    this.setState({ selectedFriend: friend, modalVisible: true });
+  };
+
+  handleCancel = () => {
+    this.setState({
+      selectedFriend: null,
+      modalVisible: false,
+      amountToSend: "",
+      reason: ""
+    });
+  };
+
+  updateIndex = idx => {
+    this.setState({ selectedIndex: idx });
+  };
+
+  handleSend = async () => {
+    const selectedCoin = ["eth", "btc", "eth_test", "btc_test"];
+
+    const transaction = await axios.post(
+      `${apiUrl}/send`,
+      {
+        friendId: this.state.selectedFriend._id,
+        coin: selectedCoin[this.state.selectedIndex],
+        amount: this.state.amountToSend,
+        subject: this.state.reason
+      },
+      {
+        headers: {
+          Authorization: this.state.token,
+          "Content-Type": "application/json"
+        }
+      }
+    );
+
+    if (transaction.data.success) {
+      Alert.alert(
+        "Transaction Sent",
+        `Transaction ID: ${transaction.data.txId}`,
+        [{ text: "OK", onPress: this.handleCancel }]
+      );
+    } else {
+      Alert.alert("Transaction Failed", transaction.data.message, [
+        { text: "OK", onPress: this.handleCancel }
+      ]);
+    }
+  };
+
   renderSectionHeader = section => {
     if (section && section.data.length) {
       return (
@@ -206,8 +272,15 @@ export default class FriendsList extends React.Component {
   };
 
   render() {
+    const buttons = ["Eth", "Btc", "Eth Test", "Btc Test"];
     return (
-      <List containerStyle={{ borderTopWidth: 0, borderBottomWidth: 0 }}>
+      <List
+        containerStyle={{
+          borderTopWidth: 0,
+          borderBottomWidth: 0,
+          height: "100%"
+        }}
+      >
         <SectionList
           keyExtractor={item => item._id}
           ItemSeparatorComponent={this.renderSeparator}
@@ -232,7 +305,7 @@ export default class FriendsList extends React.Component {
                     avatar={{ uri: item.avatarUrl }}
                     containerStyle={{ borderBottomWidth: 0 }}
                     rightTitle="Add Friend"
-                    rightIcon={{ name: "add" }}
+                    rightIcon={{ type: "entypo", name: "add-user" }}
                     onPressRightIcon={() => {
                       this.acceptFriendRequest(item);
                     }}
@@ -292,12 +365,87 @@ export default class FriendsList extends React.Component {
                     title={`${item.friend.username}`}
                     avatar={{ uri: item.friend.avatarUrl }}
                     containerStyle={{ borderBottomWidth: 0 }}
+                    rightTitle="Send"
+                    onPressRightIcon={() => {
+                      this.handleFriendClick(item.friend);
+                    }}
                   />
                 );
               }
             }
           ]}
         />
+        {this.state.modalVisible &&
+          this.state.selectedFriend && (
+            <Overlay isVisible height="auto">
+              <View>
+                <Header
+                  backgroundColor="white"
+                  outerContainerStyles={{
+                    height: "25%",
+                    paddingVertical: 5,
+                    marginBottom: 5
+                  }}
+                  centerComponent={
+                    <Text style={{ color: "gray", fontSize: 24 }}>
+                      {this.state.selectedFriend.username}
+                    </Text>
+                  }
+                  leftComponent={
+                    <Avatar
+                      medium
+                      rounded
+                      source={{ uri: this.state.selectedFriend.avatarUrl }}
+                    />
+                  }
+                />
+                <View style={{ flexDirection: "column" }}>
+                  <Input
+                    placeholder="0"
+                    leftIcon={
+                      <Icon name="attach-money" size={24} color="black" />
+                    }
+                    value={this.state.amountToSend}
+                    keyboardType="numeric"
+                    onChangeText={text => this.setState({ amountToSend: text })}
+                  />
+                  <Input
+                    placeholder="What's it for?"
+                    value={this.state.reason}
+                    onChangeText={text => this.setState({ reason: text })}
+                  />
+                  <ButtonGroup
+                    onPress={this.updateIndex}
+                    selectedIndex={this.state.selectedIndex}
+                    buttons={buttons}
+                    containerStyle={{ height: 35, marginTop: 5 }}
+                  />
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      justifyContent: "space-around",
+                      marginTop: 5
+                    }}
+                  >
+                    <Button
+                      text="Send"
+                      onPress={() => {
+                        Alert.alert("Confirm Transaction", null, [
+                          {
+                            text: "NO",
+                            onPress: () => this.handleCancel(),
+                            style: "cancel"
+                          },
+                          { text: "YES", onPress: () => this.handleSend() }
+                        ]);
+                      }}
+                    />
+                    <Button text="Cancel" onPress={this.handleCancel} />
+                  </View>
+                </View>
+              </View>
+            </Overlay>
+          )}
       </List>
     );
   }
