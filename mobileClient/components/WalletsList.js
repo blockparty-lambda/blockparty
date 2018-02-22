@@ -186,7 +186,13 @@ export default class WalletsList extends React.Component {
 
   render() {
     return (
-      <List containerStyle={{ borderTopWidth: 0, borderBottomWidth: 0 }}>
+      <List
+        containerStyle={{
+          borderTopWidth: 0,
+          borderBottomWidth: 0,
+          height: "100%"
+        }}
+      >
         {this.state.searchResults && this.state.wallets ? (
           <SectionList
             ItemSeparatorComponent={this.renderSeparator}
