@@ -40,7 +40,12 @@ export default class SignIn extends React.Component {
   render() {
     return (
       <View style={styles.container}>
-        <Text>Sign In</Text>
+        <Text style={styles.headerTxt} >
+          Block Party
+        </Text>
+        <Text style={styles.signInTxt} >
+          Sign In
+        </Text>
         <Text>
           {this.state.error && this.state.error.length
             ? this.state.error
@@ -61,7 +66,11 @@ export default class SignIn extends React.Component {
           placeholder="password"
           secureTextEntry={true}
         />
-        <Button title={"Submit"} onPress={this.signIn} />
+        <Button
+          title={"Submit"}
+          onPress={this.signIn}
+          style={styles.submitBtn}
+        />
 
         <Text
           onPress={() => this.props.navigation.navigate("Register")}
@@ -77,19 +86,36 @@ export default class SignIn extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: "#eff9ff",
     alignItems: "center",
     justifyContent: "center"
   },
   textInput: {
-    height: 20,
+    height: 35,
+    backgroundColor: "white",
     borderColor: "gray",
     borderWidth: 1,
-    width: 150
+    width: 300,
+    marginBottom: 15
   },
   registerSignInHereText: {
     // fontFamily: "sans-serif",
     fontSize: 20,
-    fontWeight: "bold"
-  }
+    fontWeight: "bold",
+    bottom: 150,
+    position: 'absolute'
+  },
+  submitBtn: {
+    marginTop: 140,
+    position: 'relative'
+  },
+  signInTxt: {
+    fontSize: 25,
+  },
+  headerTxt: {
+    fontSize: 35,
+    position: 'absolute',
+    top: 20,
+    marginBottom: 35
+  },
 });
