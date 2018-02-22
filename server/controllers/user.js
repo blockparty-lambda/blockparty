@@ -76,7 +76,6 @@ const getWallets = async (req, res) => {
         wallet.coinAbbr,
         wallet.address
       );
-      console.log(walletData);
 
       user.wallets[i].balance = walletData.data.balance;
     }
