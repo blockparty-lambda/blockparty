@@ -9,8 +9,8 @@ const routes = require("./routes/routes");
 require("dotenv").config();
 
 mongoose.Promise = global.Promise;
-// mongoose.connect(process.env.REMOTE_DB_PATH_TEST);
-mongoose.connect(process.env.DB_PATH);
+mongoose.connect(process.env.REMOTE_DB_PATH_TEST);
+// mongoose.connect(process.env.DB_PATH);
 
 const port = process.env.PORT || 3000;
 

@@ -209,7 +209,7 @@ const sendBtcTest = (user, address, amount, subject) => {
   // Get wallet
   const wallet = user.wallets.find(w => w.coinAbbr === "btc_test");
   if (!wallet) {
-    return { success: false, message: "No ETH_TEST wallet found!" };
+    return { success: false, message: "No BTC_TEST wallet found!" };
   }
 
   const addr = wallet.address;
