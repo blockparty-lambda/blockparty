@@ -1,5 +1,6 @@
 const ObjectId = require("mongodb").ObjectId;
 const bitcore = require("bitcore-lib");
+const Insight = require("bitcore-explorers").Insight;
 const { providers, utils, Wallet, _SigningKey } = require("ethers");
 const keythereum = require("keythereum");
 const { encrypt, decrypt } = require("../services/utils");
@@ -201,7 +202,48 @@ const getWalletInfo = async (coin, address) => {
 
 const sendBtc = (user, address, amount, subject) => {};
 
-const sendBtcTest = (user, address, amount, subject) => {};
+const sendBtcTest = (user, address, amount, subject) => {
+
+  const insight = new Insight("testnet");
+
+  // Get wallet
+  const wallet = user.wallets.find(w => w.coinAbbr === "btc_test");
+  if (!wallet) {
+    return { success: false, message: "No BTC_TEST wallet found!" };
+  }
+
+  const addr = wallet.address;
+  const privateKeyEncrypted = wallet.privateKey;
+  const privateKeyDecrypted = decrypt(privateKeyEncrypted, "aes-256-ctr", process.env.salt);
+
+  // create a new promise that resolves to either:
+  // { success: false, error: <some error message> } or { success: true,  txId: <the txId> }
+  // TODO: use the .toSathosis .fromSatoshis methods
+  return new Promise((resolve, reject) => {
+
+    return insight.getUnspentUtxos(addr, function (error, utxos) {
+      if (error) return reject({ success: false, error });
+      else {
+        let tx = bitcore.Transaction();
+        tx.from(utxos);
+        tx.to(address, amount * 100000000);
+        tx.change(wallet.address);
+        // tx.fee(5000);
+        tx.sign(privateKeyDecrypted);
+        tx.serialize();
+
+        insight.broadcast(tx.toString(), function (error, returnedTxId) {
+          if (error) {
+            return reject({ success: false, error });
+          }
+          else {
+            return resolve({ success: true, txId: returnedTxId });
+          };
+        });
+      };
+    })
+  })
+};
 
 const sendEth = async (user, address, amount, subject) => {
   // Get wallet
@@ -276,42 +318,46 @@ const sendEthTest = async (user, address, amount, subject) => {
 const sendTransaction = async (req, res) => {
   const { coin, friendId, amount, subject } = req.body;
 
-  // Check if friend has wallet for given coin
-  // return error if they do not
-  const friend = await User.findById(friendId);
-  const toAddress = friend.wallets.find(w => w.coinAbbr === coin).address;
+  try {
+    // Check if friend has wallet for given coin
+    // return error if they do not
+    const friend = await User.findById(ObjectId(friendId));
+    const toAddress = friend.wallets.find(w => w.coinAbbr === coin).address;
 
-  if (!toAddress) {
-    return res.json({
-      success: false,
-      message: `Friend doesn't have ${coin} wallet.`
-    });
-  }
-
-  let result = null;
-  // Pass friend address to appropriate handler
-  switch (coin) {
-    case "btc_test":
-      result = await sendBtcTest(req.user, toAddress, amount, subject);
-      break;
-    case "btc":
-      result = await sendBtc(req.user, toAddress, amount, subject);
-      break;
-    case "eth":
-      result = await sendEth(req.user, toAddress, amount, subject);
-      break;
-    case "eth_test":
-      result = await sendEthTest(req.user, toAddress, amount, subject);
-      break;
-    default:
-      // throw error of invalid coin
-      res.json({
+    if (!toAddress) {
+      return res.json({
         success: false,
-        message: "please provide valid coin in url parameters"
+        message: `Friend doesn't have ${coin} wallet.`
       });
+    }
+
+    let result = null;
+    // Pass friend address to appropriate handler
+    switch (coin) {
+      case "btc_test":
+        result = await sendBtcTest(req.user, toAddress, amount, subject);
+        break;
+      case "btc":
+        result = await sendBtc(req.user, toAddress, amount, subject);
+        break;
+      case "eth":
+        result = await sendEth(req.user, toAddress, amount, subject);
+        break;
+      case "eth_test":
+        result = await sendEthTest(req.user, toAddress, amount, subject);
+        break;
+      default:
+        // throw error of invalid coin
+        res.json({
+          success: false,
+          message: "please provide valid coin in url parameters"
+        });
+    }
+    res.json(result);
+  } catch(error) {
+    res.json({ success: false, error })
   }
 
-  res.json(result);
 };
 
 module.exports = { createWallet, getWalletInfo, sendTransaction };
