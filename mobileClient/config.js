@@ -5,4 +5,4 @@ const apiUrl = localip;
 
 module.exports = {
   apiUrl
-}
+};

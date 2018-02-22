@@ -277,7 +277,7 @@ const sendEth = async (user, address, amount, subject) => {
 
   // TODO: Save transaction in DB.
 
-  return { success: true, transaction };
+  return { success: true, txId: transaction.hash };
 };
 
 const sendEthTest = async (user, address, amount, subject) => {
@@ -312,7 +312,7 @@ const sendEthTest = async (user, address, amount, subject) => {
 
   // TODO: Save transaction in DB.
 
-  return { success: true, transaction };
+  return { success: true, txId: transaction.hash };
 };
 
 const sendTransaction = async (req, res) => {
