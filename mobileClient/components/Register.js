@@ -38,7 +38,12 @@ export default class Register extends React.Component {
   render() {
     return (
       <View style={styles.container}>
-        <Text>Register</Text>
+        <Text style={styles.headerTxt} >
+          Block Party
+        </Text>
+        <Text style={styles.registerTxt} >
+          Register
+        </Text>
         <Text>
           {this.state.error && this.state.error.length
             ? this.state.error
@@ -90,19 +95,32 @@ export default class Register extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: "#eff9ff",
     alignItems: "center",
     justifyContent: "center"
   },
   textInput: {
-    height: 20,
+    height: 35,
+    backgroundColor: "white",
     borderColor: "gray",
     borderWidth: 1,
-    width: 150
+    width: 300,
+    marginBottom: 15
   },
   registerSignInHereText: {
     // fontFamily: "sans-serif",
     fontSize: 20,
-    fontWeight: "bold"
-  }
+    fontWeight: "bold",
+    bottom: 150,
+    position: 'absolute'
+  },
+  registerTxt: {
+    fontSize: 25,
+  },
+  headerTxt: {
+    fontSize: 35,
+    position: 'absolute',
+    top: 20,
+    marginBottom: 35
+  },
 });
