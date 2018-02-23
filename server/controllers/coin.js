@@ -32,7 +32,7 @@ const createBTCTestWallet = () => {
   // add coins to test address from faucet function
   // create a fake user that holds your test coins
   const faucetUser = {
-    wallets = [
+    wallets: [
       {
         "coinAbbr": "btc_test",
         "address": "mveugejEYBv7PhFhdJ5quGhRQT36ZmmvPY",
