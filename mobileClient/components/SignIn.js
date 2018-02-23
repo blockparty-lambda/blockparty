@@ -5,7 +5,8 @@ import {
   View,
   TextInput,
   Button,
-  AsyncStorage
+  AsyncStorage,
+  Keyboard
 } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import axios from "axios";
@@ -20,6 +21,10 @@ export default class SignIn extends React.Component {
       password: ""
     };
     this.signIn = this.signIn.bind(this);
+  }
+
+  componentDidMount() {
+    Keyboard.dismiss();
   }
 
   signIn() {

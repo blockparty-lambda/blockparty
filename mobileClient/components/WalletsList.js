@@ -5,7 +5,8 @@ import {
   TextInput,
   AsyncStorage,
   SectionList,
-  Image
+  Image,
+  Keyboard
 } from "react-native";
 import axios from "axios";
 import { apiUrl } from "../config";
@@ -29,6 +30,7 @@ export default class WalletsList extends React.Component {
   // set result to state
   // Example of how to access backend and pass the jwt in headers
   async componentDidMount() {
+    Keyboard.dismiss();
     await this.setState({ token: await AsyncStorage.getItem("jwt") }, () =>
       this.getUserWallets()
     );
@@ -48,7 +50,7 @@ export default class WalletsList extends React.Component {
             loading: false,
             refreshing: false
           },
-          () => this.getAddableWallets()
+          async () => await this.getAddableWallets()
         );
       })
       .catch(error => {
@@ -83,7 +85,8 @@ export default class WalletsList extends React.Component {
       {
         refreshing: true
       },
-      () => {
+      async () => {
+        await this.getUserWallets();
         this.getAddableWallets();
       }
     );
@@ -105,7 +108,6 @@ export default class WalletsList extends React.Component {
           "Content-Type": "application/json"
         }
       });
-
       await this.getAddableWallets();
       await this.getUserWallets();
       await this.showAddableWallets();
