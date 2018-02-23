@@ -18,7 +18,8 @@ export default class SignIn extends React.Component {
     super(props);
     this.state = {
       username: "",
-      password: ""
+      password: "",
+      error: ""
     };
     this.signIn = this.signIn.bind(this);
   }
@@ -38,8 +39,13 @@ export default class SignIn extends React.Component {
         onSignIn(token).then(() => this.props.navigation.navigate("SignedIn"));
       })
       .catch(error => {
-        console.log(error);
-        this.props.navigation.navigate("SignedOut");
+        if (error.response.status === 401) {
+          this.setState({
+            error: "Incorrect username/password combination",
+            password: "",
+            username: ""
+          });
+        }
       });
   }
 

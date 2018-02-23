@@ -6,11 +6,22 @@ import {
   AsyncStorage,
   SectionList,
   Image,
-  Keyboard
+  Keyboard,
+  Alert,
+  Clipboard
 } from "react-native";
 import axios from "axios";
 import { apiUrl } from "../config";
-import { List, ListItem, SearchBar, Button, Text } from "react-native-elements";
+import {
+  List,
+  ListItem,
+  SearchBar,
+  Button,
+  Text,
+  Overlay,
+  Header,
+  Icon
+} from "react-native-elements";
 import { icons } from "../assets/icons";
 
 export default class WalletsList extends React.Component {
@@ -22,7 +33,9 @@ export default class WalletsList extends React.Component {
       addableWallets: [],
       refreshing: false,
       loading: false,
-      searchResults: []
+      modalVisible: false,
+      searchResults: [],
+      selectedWallet: null
     };
   }
 
@@ -185,6 +198,14 @@ export default class WalletsList extends React.Component {
     );
   };
 
+  handleWalletClick = wallet => {
+    this.setState({ selectedWallet: wallet, modalVisible: true });
+  };
+
+  closeModal = () => {
+    this.setState({ selectedWallet: null, modalVisible: false });
+  };
+
   render() {
     return (
       <List
@@ -268,6 +289,9 @@ export default class WalletsList extends React.Component {
                         />
                       }
                       containerStyle={{ borderBottomWidth: 0 }}
+                      onPressRightIcon={() => {
+                        this.handleWalletClick(item);
+                      }}
                     />
                   );
                 }
@@ -278,6 +302,57 @@ export default class WalletsList extends React.Component {
             // onEndReachedThreshold={50}
           />
         ) : null}
+        {this.state.selectedWallet && (
+          <Overlay isVisible height="auto">
+            <View style={{ flexDirection: "column" }}>
+              <Header
+                backgroundColor="white"
+                outerContainerStyles={{
+                  height: "30%",
+                  paddingVertical: 5,
+                  marginBottom: 5
+                }}
+                centerComponent={
+                  <Text style={{ color: "gray", fontSize: 24 }}>
+                    {this.state.selectedWallet.coin}
+                  </Text>
+                }
+                leftComponent={
+                  <Image
+                    style={{
+                      height: 32,
+                      width: 32,
+                      marginRight: 5,
+                      marginLeft: -5
+                    }}
+                    source={icons[this.state.selectedWallet.coinAbbr]}
+                    resizeMode="contain"
+                  />
+                }
+                rightComponent={
+                  <Icon
+                    color="gray"
+                    size={24}
+                    type="entypo"
+                    name="cross"
+                    onPress={this.closeModal}
+                  />
+                }
+              />
+              <Text style={{ marginVertical: 15 }}>
+                Address: {this.state.selectedWallet.address}
+              </Text>
+              <Button
+                // style={{marginTop: 15}}
+                text="Copy Address"
+                onPress={async () => {
+                  await Clipboard.setString(this.state.selectedWallet.address);
+                  alert("Copied Address to Clipboard");
+                }}
+              />
+            </View>
+          </Overlay>
+        )}
       </List>
     );
   }
