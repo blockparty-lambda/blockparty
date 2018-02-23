@@ -13,20 +13,22 @@ import FinancesScreen from "./screens/Finances";
 import FriendsScreen from "./screens/Friends";
 import SettingsScreen from "./screens/SettingsScreen";
 
-export const SignedOut = StackNavigator({
-  Register: {
-    screen: Register,
-    navigationOptions: {
-      title: "Sign Up"
+export const SignedOut = StackNavigator(
+  {
+    Register: {
+      screen: Register
+    },
+    SignIn: {
+      screen: SignIn
     }
   },
-  SignIn: {
-    screen: SignIn,
+  {
+    headerMode: "none",
     navigationOptions: {
-      title: "Sign In"
+      headerVisible: false
     }
   }
-});
+);
 
 export const SignedIn = TabNavigator(
   {

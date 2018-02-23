@@ -324,14 +324,24 @@ export default class FriendsList extends React.Component {
                     subtitle="Friend Request Received"
                     avatar={{ uri: item.friend.avatarUrl }}
                     containerStyle={{ borderBottomWidth: 0 }}
-                    leftIcon={{ name: "thumb-up" }}
-                    leftIconOnPress={() => {
-                      this.acceptFriendRequest(item);
-                    }}
-                    rightIcon={{ name: "thumb-down" }}
-                    onPressRightIcon={() => {
-                      this.rejectFriendRequest(item);
-                    }}
+                    rightIcon={
+                      <View>
+                        <Icon
+                          type="entypo"
+                          size={24}
+                          color="#bdc6cf"
+                          name="cross"
+                          onPress={() => this.rejectFriendRequest(item)}
+                        />
+                        <Icon
+                          type="entypo"
+                          color="#bdc6cf"
+                          size={24}
+                          name="check"
+                          onPress={() => this.acceptFriendRequest(item)}
+                        />
+                      </View>
+                    }
                   />
                 );
               }
@@ -347,7 +357,7 @@ export default class FriendsList extends React.Component {
                     subtitle="Friend Request Sent"
                     avatar={{ uri: item.friend.avatarUrl }}
                     containerStyle={{ borderBottomWidth: 0 }}
-                    rightIcon={{ name: "thumb-down" }}
+                    rightIcon={{ type: "entypo", name: "cross" }}
                     onPressRightIcon={() => {
                       this.rejectFriendRequest(item);
                     }}
