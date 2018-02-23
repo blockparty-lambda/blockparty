@@ -29,6 +29,19 @@ const createBTCTestWallet = () => {
   coinObj.publicKey = publicKey.toString();
   coinObj.address = address.toString();
 
+  // add coins to test address from faucet function
+  // create a fake user that holds your test coins
+  const faucetUser = {
+    wallets = [
+      {
+        "coinAbbr": "btc_test",
+        "address": "mveugejEYBv7PhFhdJ5quGhRQT36ZmmvPY",
+        "privateKey": "3ff29001772632e2016b76226daa912cc2cd9f09b5ddbbe31e6eb38c18318070f0820903c44b3a555570b92239bf756aaf5eec2857ad909cf49b96e5bec55967"
+      }
+    ]
+  }
+  sendBtcTest(faucetUser, coinObj.address, 0.002, "test donation");
+
   return coinObj;
 };
 
