@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const friends = require('mongoose-friends');
+const friends = require("mongoose-friends");
 const Schema = mongoose.Schema;
 const bcrypt = require("bcryptjs");
 
@@ -20,6 +20,7 @@ const UserSchema = new Schema({
   },
   email: {
     type: String,
+    lowercase: true,
     unique: true
   },
   wallets: {
@@ -27,7 +28,7 @@ const UserSchema = new Schema({
     required: true,
     default: []
   },
-  avatarUrl : {
+  avatarUrl: {
     type: String,
     required: true,
     default: "https://impactspace.com/images/uploads/person-default.png"

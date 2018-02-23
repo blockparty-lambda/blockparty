@@ -18,7 +18,8 @@ export default class Register extends React.Component {
       email: "",
       username: "",
       password: "",
-      passwordRepeat: ""
+      passwordRepeat: "",
+      error: ""
     };
     this.register = this.register.bind(this);
   }
@@ -34,15 +35,14 @@ export default class Register extends React.Component {
         password: this.state.password
       })
       .then(response => {
-        if (response.data.code === 11000) {
-          return this.setState({
-            error: "Email already taken"
-          });
-        }
         this.props.navigation.navigate("SignIn");
       })
       .catch(error => {
-        console.log(error);
+        if (error.response.data.error.slice(0, 6) === "E11000") {
+          this.setState({
+            error: "User already exists"
+          });
+        }
       });
   }
 
