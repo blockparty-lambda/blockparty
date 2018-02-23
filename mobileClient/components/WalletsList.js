@@ -146,9 +146,8 @@ export default class WalletsList extends React.Component {
     return this.state.addableWallets && this.state.addableWallets.length ? (
       <View>
         <Button
-          title={buttonText}
+          text={buttonText}
           buttonStyle={{
-            backgroundColor: "rgba(92, 99,216, 1)",
             height: 45,
             borderColor: "transparent",
             borderWidth: 0,

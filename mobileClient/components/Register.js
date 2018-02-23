@@ -1,5 +1,6 @@
 import React from "react";
 import { StyleSheet, Text, View, TextInput, Button } from "react-native";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import axios from "axios";
 import { apiUrl } from "../config";
 
@@ -37,13 +38,15 @@ export default class Register extends React.Component {
 
   render() {
     return (
-      <View style={styles.container}>
-        <Text style={styles.headerTxt} >
-          Block Party
-        </Text>
-        <Text style={styles.registerTxt} >
-          Register
-        </Text>
+      <KeyboardAwareScrollView
+        resetScrollToCoords={{ x: 0, y: 0 }}
+        contentContainerStyle={styles.container}
+        enableOnAndroid
+        keyboardShouldPersistTaps="always"
+        scrollEnabled={false}
+      >
+        <Text style={styles.headerTxt}>Block Party</Text>
+        <Text style={styles.registerTxt}>Register</Text>
         <Text>
           {this.state.error && this.state.error.length
             ? this.state.error
@@ -53,6 +56,7 @@ export default class Register extends React.Component {
           style={styles.textInput}
           autoCapitalize="none"
           autoCorrect={false}
+          returnKeyType="next"
           onChangeText={email => this.setState({ email })}
           value={this.state.email}
           placeholder="email"
@@ -61,6 +65,7 @@ export default class Register extends React.Component {
           style={styles.textInput}
           autoCapitalize="none"
           autoCorrect={false}
+          returnKeyType="next"
           onChangeText={username => this.setState({ username })}
           value={this.state.username}
           placeholder="username"
@@ -69,6 +74,7 @@ export default class Register extends React.Component {
           style={styles.textInput}
           onChangeText={password => this.setState({ password })}
           value={this.state.password}
+          returnKeyType="next"
           placeholder="password"
           secureTextEntry={true}
         />
@@ -77,6 +83,7 @@ export default class Register extends React.Component {
           onChangeText={passwordRepeat => this.setState({ passwordRepeat })}
           value={this.state.passwordRepeat}
           placeholder="repeat password"
+          returnKeyType="done"
           secureTextEntry={true}
         />
         <Button title={"Submit"} onPress={this.register} />
@@ -87,7 +94,7 @@ export default class Register extends React.Component {
         >
           Already Registered?
         </Text>
-      </View>
+      </KeyboardAwareScrollView>
     );
   }
 }
@@ -104,23 +111,19 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     borderColor: "gray",
     borderWidth: 1,
+    paddingLeft: 5,
     width: 300,
     marginBottom: 15
   },
   registerSignInHereText: {
-    // fontFamily: "sans-serif",
     fontSize: 20,
-    fontWeight: "bold",
-    bottom: 150,
-    position: 'absolute'
+    fontWeight: "bold"
   },
   registerTxt: {
-    fontSize: 25,
+    fontSize: 25
   },
   headerTxt: {
     fontSize: 35,
-    position: 'absolute',
-    top: 20,
     marginBottom: 35
-  },
+  }
 });

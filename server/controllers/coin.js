@@ -154,17 +154,21 @@ const createWallet = (req, res) => {
 // helper function called in getwallets method for the getwallets api endpoint
 const getWalletInfo = async (coin, address) => {
   if (coin === "btc_test") {
-    return await axios.get(
+    const result = await axios.get(
       `https://api.blocktrail.com/v1/tbtc/address/${address}?api_key=${
         process.env.blocktrail_API_key
       }`
     );
+    result.data.balance = result.data.balance / 100000000;
+    return result;
   } else if (coin === "btc") {
-    return await axios.get(
+    const result = await axios.get(
       `https://api.blocktrail.com/v1/btc/address/${address}?api_key=${
         process.env.blocktrail_API_key
       }`
     );
+    result.data.balance = result.data.balance / 100000000;
+    return result;
   } else if (coin === "eth") {
     const result = {
       data: {
