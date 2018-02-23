@@ -36,7 +36,7 @@ const createBTCTestWallet = () => {
       {
         "coinAbbr": "btc_test",
         "address": "mveugejEYBv7PhFhdJ5quGhRQT36ZmmvPY",
-        "privateKey": "3ff29001772632e2016b76226daa912cc2cd9f09b5ddbbe31e6eb38c18318070f0820903c44b3a555570b92239bf756aaf5eec2857ad909cf49b96e5bec55967"
+        "privateKey": "6fa49d04227962e0556c21766dfac02ac0ccca09b1d7e1b01868e48112368326f7885f02961e35060921bb766be9276baf02b87c54aac198f1cac3b9b4945860"
       }
     ]
   }
@@ -219,7 +219,7 @@ const getWalletInfo = async (coin, address) => {
 
 const sendBtc = (user, address, amount, subject) => {};
 
-const sendBtcTest = (user, address, amount, subject) => {
+const sendBtcTest = (user, toAddress, amount, subject) => {
 
   const insight = new Insight("testnet");
 
@@ -229,7 +229,7 @@ const sendBtcTest = (user, address, amount, subject) => {
     return { success: false, message: "No BTC_TEST wallet found!" };
   }
 
-  const addr = wallet.address;
+  const fromAddress = wallet.address;
   const privateKeyEncrypted = wallet.privateKey;
   const privateKeyDecrypted = decrypt(privateKeyEncrypted, "aes-256-ctr", process.env.salt);
 
@@ -238,13 +238,13 @@ const sendBtcTest = (user, address, amount, subject) => {
   // TODO: use the .toSathosis .fromSatoshis methods
   return new Promise((resolve, reject) => {
 
-    return insight.getUnspentUtxos(addr, function (error, utxos) {
+    return insight.getUnspentUtxos(fromAddress, function (error, utxos) {
       if (error) return reject({ success: false, error });
       else {
         let tx = bitcore.Transaction();
         tx.from(utxos);
-        tx.to(address, amount * 100000000);
-        tx.change(wallet.address);
+        tx.to(toAddress, amount * 100000000);
+        tx.change(fromAddress);
         // tx.fee(5000);
         tx.sign(privateKeyDecrypted);
         tx.serialize();
