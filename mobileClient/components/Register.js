@@ -1,5 +1,12 @@
 import React from "react";
-import { StyleSheet, Text, View, TextInput, Button } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  TextInput,
+  Button,
+  Keyboard
+} from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import axios from "axios";
 import { apiUrl } from "../config";
@@ -14,6 +21,9 @@ export default class Register extends React.Component {
       passwordRepeat: ""
     };
     this.register = this.register.bind(this);
+  }
+  componentDidMount() {
+    Keyboard.dismiss();
   }
 
   register() {
