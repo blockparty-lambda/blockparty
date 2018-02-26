@@ -1,3 +1,4 @@
-node_modules
-/mobileClient/node_modules
+server/node_modules
+mobileClient/node_modules
 .env
+.README.md
