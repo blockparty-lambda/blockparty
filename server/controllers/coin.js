@@ -168,7 +168,6 @@ const createWallet = (req, res) => {
 // helper function called in getwallets method for the getwallets api endpoint
 const getWalletInfo = async (coin, address) => {
   if (coin === "btc_test") {
-
     const insight = new Insight("testnet");
 
     return new Promise((resolve, reject) => {
