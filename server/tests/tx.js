@@ -11,6 +11,7 @@ const User = mongoose.model('User');
 const bitcore = require("bitcore-lib");
 // const explo = require("bitcore-explorers");
 const Insight = require("bitcore-explorers").Insight;
+const unit = bitcore.Unit;
 const { encrypt, decrypt } = require("../services/utils");
 
 // const insight = new explo.Insight();
@@ -211,5 +212,37 @@ const t = {
 // console.log(t)
 
 // console.log(createTransaction(t));
-console.log(sendBtcTest("5a85fc79a9f11674014767d0","mz8asbdAssiWgXdcYMxm1VUFihYxqx9Fcn",0.0001,""))
+// console.log(sendBtcTest("5a85fc79a9f11674014767d0","mz8asbdAssiWgXdcYMxm1VUFihYxqx9Fcn",0.0001,""))
 // sendBtcTest("5a7e2da3ac8d3161e2adbeb7","mveugejEYBv7PhFhdJ5quGhRQT36ZmmvPY",0.0001,"")
+
+// insight.address("mtfBAcACUnADwJ5ounVgb8SsiBEgWcPMZG", (err, resp) => {
+//   console.log({ data: resp });
+// })
+
+const getData = (address) => {
+  const insight = new Insight("testnet");
+
+  return new Promise((resolve, reject) => {
+    return insight.address(address, (err, resp) => {
+      if (err) return reject({ success: false, error });
+
+      let dataObj = {};
+      dataObj.balance = unit.fromSatoshis(resp.balance).toBTC();
+      // dataObj.totalRecieved = unit.fromSatoshis(resp.totalRecieved).toBTC();
+      // dataObj.unconfirmedBalance = unit.fromSatoshis(resp.unconfirmedBalance).toBTC();
+      // dataObj.totalSent = unit.fromSatoshis(resp.totalSent).toBTC();
+      dataObj.transactionIds = resp.transactionIds;
+
+      return resolve({ data: dataObj });
+    });
+  })
+}
+
+
+
+getData("mtfBAcACUnADwJ5ounVgb8SsiBEgWcPMZG")
+  .then(resp => console.log(resp))
+  .catch(err => console.log(err));
+// console.log(getData("mtfBAcACUnADwJ5ounVgb8SsiBEgWcPMZG"));
+// const x = getData("mtfBAcACUnADwJ5ounVgb8SsiBEgWcPMZG");
+// console.log(x)

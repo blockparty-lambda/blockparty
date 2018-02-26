@@ -1,6 +1,7 @@
 const ObjectId = require("mongodb").ObjectId;
 const bitcore = require("bitcore-lib");
 const Insight = require("bitcore-explorers").Insight;
+const unit = bitcore.Unit;
 const { providers, utils, Wallet, _SigningKey } = require("ethers");
 const keythereum = require("keythereum");
 const { encrypt, decrypt } = require("../services/utils");
@@ -167,13 +168,24 @@ const createWallet = (req, res) => {
 // helper function called in getwallets method for the getwallets api endpoint
 const getWalletInfo = async (coin, address) => {
   if (coin === "btc_test") {
-    const result = await axios.get(
-      `https://api.blocktrail.com/v1/tbtc/address/${address}?api_key=${
-        process.env.blocktrail_API_key
-      }`
-    );
-    result.data.balance = result.data.balance / 100000000;
-    return result;
+
+    const insight = new Insight("testnet");
+
+    return new Promise((resolve, reject) => {
+      return insight.address(address, (err, resp) => {
+        if (err) return reject({ success: false, error });
+
+        let dataObj = {};
+        dataObj.balance = unit.fromSatoshis(resp.balance).toBTC();
+        // other data we can have access to, if need be
+        // dataObj.totalRecieved = unit.fromSatoshis(resp.totalRecieved).toBTC();
+        // dataObj.unconfirmedBalance = unit.fromSatoshis(resp.unconfirmedBalance).toBTC();
+        // dataObj.totalSent = unit.fromSatoshis(resp.totalSent).toBTC();
+        dataObj.transactionIds = resp.transactionIds;
+
+        return resolve({ data: dataObj });
+      });
+    });
   } else if (coin === "btc") {
     const result = await axios.get(
       `https://api.blocktrail.com/v1/btc/address/${address}?api_key=${
