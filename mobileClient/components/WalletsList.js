@@ -275,7 +275,7 @@ export default class WalletsList extends React.Component {
                       title={`${item.coin}`}
                       subtitle={`Balance: ${
                         item.balance
-                      } ${item.coinAbbr.toUpperCase()}`}
+                      } | $${item.usdBalance}`}
                       leftIcon={
                         <Image
                           style={{
