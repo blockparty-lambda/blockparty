@@ -228,6 +228,43 @@ const getWalletInfo = async (coin, address) => {
   }
 };
 
+const coinToFiat = async (wallet, fiat) => {
+  console.log('inside coinToFiat');
+  const coinMap = {
+    btc: "bitcoin",
+    btc_test: "bitcoin",
+    eth: "ethereum",
+    eth_test: "ethereum"
+  }
+
+  // PROMISE SOLUTION 1
+  // return new Promise((resolve, reject) => {
+  //   return axios.get(`https://api.coinmarketcap.com/v1/ticker/${coinMap[wallet.coinAbbr]}`)
+  //     .then(resp => {
+  //       const coinValue = resp.data[0].price_usd;
+  //       const userCoinVal = coinValue * wallet.balance;
+  //       return resolve(userCoinVal);
+  //     })
+  //     .catch(err => err);
+  // })
+
+  // PROMISE SOLUTION 2
+  let resp = await axios.get(`https://api.coinmarketcap.com/v1/ticker/${coinMap[wallet.coinAbbr]}`);
+  const coinValue = resp.data[0].price_usd;
+  const userCoinVal = coinValue * wallet.balance;
+  // toFixed() is a rounding method
+  return userCoinVal.toFixed(2);
+
+  // PROMISE SOLUTION 3
+  // return axios.get(`https://api.coinmarketcap.com/v1/ticker/${coinMap[wallet.coinAbbr]}`)
+  //   .then(resp => {
+  //     const coinValue = resp.data[0].price_usd;
+  //     const userCoinVal = coinValue * wallet.balance;
+  //     return userCoinVal;
+  //   })
+  //   .catch(err => err);
+}
+
 const sendBtc = (user, address, amount, subject) => {};
 
 const sendBtcTest = (user, toAddress, amount, subject) => {
@@ -388,4 +425,4 @@ const sendTransaction = async (req, res) => {
 
 };
 
-module.exports = { createWallet, getWalletInfo, sendTransaction };
+module.exports = { createWallet, getWalletInfo, coinToFiat, sendTransaction };

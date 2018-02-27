@@ -78,6 +78,8 @@ const getWallets = async (req, res) => {
       );
 
       user.wallets[i].balance = walletData.data.balance;
+
+      user.wallets[i].usdBalance = await CoinController.coinToFiat(wallet, "usd");
     }
     res.json({ success: true, wallets: user.wallets });
   } catch (error) {
