@@ -4,6 +4,15 @@ const coinController = require("../controllers/coin");
 
 module.exports = app => {
   app.route("/register").post(userController.createUser);
+
+  app
+    .route("/upload")
+    .post(
+      authController.requireAuth,
+      userController.cloudinaryUpload.single("avatar"),
+      userController.uploadAvatar
+    );
+
   app
     .route("/signin")
     .post(authController.requireSignIn, authController.signIn);
@@ -28,7 +37,6 @@ module.exports = app => {
     .route("/addablewallets")
     .get(authController.requireAuth, userController.addableWallets);
 
-  // Route to test Auth, can be removed if needed
   app
     .route("/user")
     .get(authController.requireAuth, userController.getUserInfo);
