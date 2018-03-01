@@ -1,16 +1,45 @@
 const User = require("../models/user");
 const Status = require("mongoose-friends").Status;
+const multer = require("multer");
+const multerCloudinary = require("multer-cloudinary");
+const Cloudinary = require("cloudinary");
 const ObjectId = require("mongodb").ObjectId; // somewhere we need to place the instantiation of the ObjectId function
 const CoinController = require("./coin");
 const { asyncForEach } = require("../services/utils");
 
 const STATUS_USER_ERROR = 422;
 
+Cloudinary.config({
+  cloud_name: process.env.CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET
+});
+
+const cloudinaryStorage = multerCloudinary({
+  cloudinary: { cloudinary: Cloudinary }
+});
+const cloudinaryUpload = multer({ storage: cloudinaryStorage });
+
+const uploadAvatar = async (req, res) => {
+  const avatarUrl = req.file.url;
+
+  try {
+    await User.findByIdAndUpdate(req.user.id, { $set: { avatarUrl } });
+    res.json({ success: true, message: "Updated profile picture" });
+  } catch (error) {
+    res.json({ success: false, message: "Something went wrong on the server" });
+  }
+};
+
 const createUser = async (req, res) => {
   const { email, password, username } = req.body;
 
   try {
-    const user = await new User({ email, password, username }).save();
+    const user = await new User({
+      email,
+      password,
+      username
+    }).save();
     return res.json({
       success: true,
       message: "Successfully created new user"
@@ -203,5 +232,7 @@ module.exports = {
   addFriend,
   removeFriend,
   getUserInfo,
-  getPartialUsers
+  getPartialUsers,
+  cloudinaryUpload,
+  uploadAvatar
 };
