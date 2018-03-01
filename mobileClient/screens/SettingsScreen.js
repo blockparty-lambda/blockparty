@@ -42,14 +42,21 @@ export default class SettingsScreen extends React.Component {
 
   async componentDidMount() {
     const token = await AsyncStorage.getItem("jwt");
+
+    this.setState({ token });
+
+    this.getUserProfile();
+  }
+
+  getUserProfile = async () => {
     const response = await axios.get(`${apiUrl}/user`, {
       headers: {
-        Authorization: token
+        Authorization: this.state.token
       }
     });
 
-    this.setState({ user: response.data.user, token });
-  }
+    this.setState({ user: response.data.user });
+  };
 
   logout = () => {
     onSignOut().then(() => this.props.navigation.navigate("SignedOut"));
@@ -90,10 +97,13 @@ export default class SettingsScreen extends React.Component {
         }
       });
       if (response.data.success) {
-        this.setState({
-          avatarMessage: response.data.message,
-          pickedImage: null
-        });
+        this.setState(
+          {
+            avatarMessage: response.data.message,
+            pickedImage: null
+          },
+          () => this.getUserProfile()
+        );
       }
     } catch (error) {
       console.log(error);
