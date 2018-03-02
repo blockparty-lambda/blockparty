@@ -30,7 +30,7 @@ export default class FriendsList extends React.Component {
     this.state = {
       token: "",
       query: "",
-      amountToSend: "",
+      transactionAmount: "",
       reason: "",
       selectedIndex: 0,
       acceptedFriends: [],
@@ -39,7 +39,9 @@ export default class FriendsList extends React.Component {
       searchResults: [],
       refreshing: false,
       loading: false,
-      modalVisible: false,
+      sendModalVisible: false,
+      requestModalVisible: false,
+      sendRequestModalVisible: false,
       selectedFriend: null
     };
   }
@@ -212,14 +214,30 @@ export default class FriendsList extends React.Component {
   };
 
   handleFriendClick = friend => {
-    this.setState({ selectedFriend: friend, modalVisible: true });
+    this.setState({ selectedFriend: friend, sendRequestModalVisible: true });
+  };
+
+  handleToSendClick = () => {
+    this.setState({
+      sendModalVisible: true,
+      sendRequestModalVisible: false
+    })
+  };
+
+  handleToRequestClick = () => {
+    this.setState({
+      requestModalVisible: true,
+      sendRequestModalVisible: false
+    })
   };
 
   handleCancel = () => {
     this.setState({
       selectedFriend: null,
-      modalVisible: false,
-      amountToSend: "",
+      requestModalVisible: false,
+      sendModalVisible: false,
+      sendRequestModalVisible: false,
+      transactionAmount: "",
       reason: ""
     });
   };
@@ -236,7 +254,7 @@ export default class FriendsList extends React.Component {
       {
         friendId: this.state.selectedFriend._id,
         coin: selectedCoin[this.state.selectedIndex],
-        amount: this.state.amountToSend,
+        amount: this.state.transactionAmount,
         subject: this.state.reason
       },
       {
@@ -251,6 +269,38 @@ export default class FriendsList extends React.Component {
       Alert.alert(
         "Transaction Sent",
         `Transaction ID: ${transaction.data.txId}`,
+        [{ text: "OK", onPress: this.handleCancel }]
+      );
+    } else {
+      Alert.alert("Transaction Failed", transaction.data.message, [
+        { text: "OK", onPress: this.handleCancel }
+      ]);
+    }
+  };
+
+  handleROF = async () => {
+    const selectedCoin = ["eth", "btc", "eth_test", "btc_test"];
+
+    const transaction = await axios.post(
+      `${apiUrl}/requestfunds`,
+      {
+        receiver: this.state.selectedFriend._id,
+        coin: selectedCoin[this.state.selectedIndex],
+        amount: this.state.transactionAmount,
+        subject: this.state.reason
+      },
+      {
+        headers: {
+          Authorization: this.state.token,
+          "Content-Type": "application/json"
+        }
+      }
+    );
+
+    if (transaction.data.success) {
+      Alert.alert(
+        "Request Sent",
+        `Success: ${transaction.data.message}`,
         [{ text: "OK", onPress: this.handleCancel }]
       );
     } else {
@@ -385,7 +435,51 @@ export default class FriendsList extends React.Component {
             }
           ]}
         />
-        {this.state.modalVisible &&
+
+        {/* send or request funds modal */}
+        {this.state.sendRequestModalVisible &&
+          this.state.selectedFriend && (
+            <Overlay isVisible height="auto">
+              <View>
+                <Header
+                  backgroundColor="white"
+                  outerContainerStyles={{
+                    height: "25%",
+                    paddingVertical: 5,
+                    marginBottom: 5
+                  }}
+                  centerComponent={
+                    <Text style={{ color: "gray", fontSize: 24 }}>
+                      {this.state.selectedFriend.username}
+                    </Text>
+                  }
+                  leftComponent={
+                    <Avatar
+                      medium
+                      rounded
+                      source={{ uri: this.state.selectedFriend.avatarUrl }}
+                    />
+                  }
+                />
+                <View style={{ flexDirection: "column" }}>
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      justifyContent: "space-around",
+                      marginTop: 5
+                    }}
+                  >
+                    <Button text="Send" onPress={this.handleToSendClick} />
+                    <Button text="Request" onPress={this.handleToRequestClick} />
+                    <Button text="Cancel" onPress={this.handleCancel} />
+                  </View>
+                </View>
+              </View>
+            </Overlay>
+          )}
+
+        {/* request money modal */}
+        {this.state.requestModalVisible &&
           this.state.selectedFriend && (
             <Overlay isVisible height="auto">
               <View>
@@ -415,9 +509,82 @@ export default class FriendsList extends React.Component {
                     leftIcon={
                       <Icon name="attach-money" size={24} color="black" />
                     }
-                    value={this.state.amountToSend}
+                    value={this.state.transactionAmount}
                     keyboardType="numeric"
-                    onChangeText={text => this.setState({ amountToSend: text })}
+                    onChangeText={text => this.setState({ transactionAmount: text })}
+                  />
+                  <Input
+                    placeholder="What's it for?"
+                    value={this.state.reason}
+                    onChangeText={text => this.setState({ reason: text })}
+                  />
+                  <ButtonGroup
+                    onPress={this.updateIndex}
+                    selectedIndex={this.state.selectedIndex}
+                    buttons={buttons}
+                    containerStyle={{ height: 35, marginTop: 5 }}
+                  />
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      justifyContent: "space-around",
+                      marginTop: 5
+                    }}
+                  >
+                    <Button
+                      text="Request"
+                      onPress={() => {
+                        Alert.alert("Confirm Request", null, [
+                          {
+                            text: "NO",
+                            onPress: this.handleCancel,
+                            style: "cancel"
+                          },
+                          { text: "YES", onPress: this.handleROF }
+                        ]);
+                      }}
+                    />
+                    <Button text="Cancel" onPress={this.handleCancel} />
+                  </View>
+                </View>
+              </View>
+            </Overlay>
+          )}
+
+          {/* send money modal */}
+        {this.state.sendModalVisible &&
+          this.state.selectedFriend && (
+            <Overlay isVisible height="auto">
+              <View>
+                <Header
+                  backgroundColor="white"
+                  outerContainerStyles={{
+                    height: "25%",
+                    paddingVertical: 5,
+                    marginBottom: 5
+                  }}
+                  centerComponent={
+                    <Text style={{ color: "gray", fontSize: 24 }}>
+                      {this.state.selectedFriend.username}
+                    </Text>
+                  }
+                  leftComponent={
+                    <Avatar
+                      medium
+                      rounded
+                      source={{ uri: this.state.selectedFriend.avatarUrl }}
+                    />
+                  }
+                />
+                <View style={{ flexDirection: "column" }}>
+                  <Input
+                    placeholder="0"
+                    leftIcon={
+                      <Icon name="attach-money" size={24} color="black" />
+                    }
+                    value={this.state.transactionAmount}
+                    keyboardType="numeric"
+                    onChangeText={text => this.setState({ transactionAmount: text })}
                   />
                   <Input
                     placeholder="What's it for?"
@@ -443,10 +610,10 @@ export default class FriendsList extends React.Component {
                         Alert.alert("Confirm Transaction", null, [
                           {
                             text: "NO",
-                            onPress: () => this.handleCancel(),
+                            onPress: this.handleCancel,
                             style: "cancel"
                           },
-                          { text: "YES", onPress: () => this.handleSend() }
+                          { text: "YES", onPress: this.handleSend }
                         ]);
                       }}
                     />
@@ -455,7 +622,7 @@ export default class FriendsList extends React.Component {
                 </View>
               </View>
             </Overlay>
-          )}
+          )} 
       </List>
     );
   }

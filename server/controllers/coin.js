@@ -6,6 +6,7 @@ const { providers, utils, Wallet, _SigningKey } = require("ethers");
 const keythereum = require("keythereum");
 const { encrypt, decrypt } = require("../services/utils");
 const User = require("../models/user");
+const RequestFunds = require("../models/fundRequest");
 const axios = require("axios");
 
 // creates a testnet btc wallet and returns an object with its address, publicKey, and privateKey
@@ -229,40 +230,17 @@ const getWalletInfo = async (coin, address) => {
 };
 
 const coinToFiat = async (wallet, fiat) => {
-  console.log('inside coinToFiat');
   const coinMap = {
     btc: "bitcoin",
     btc_test: "bitcoin",
     eth: "ethereum",
     eth_test: "ethereum"
   }
-
-  // PROMISE SOLUTION 1
-  // return new Promise((resolve, reject) => {
-  //   return axios.get(`https://api.coinmarketcap.com/v1/ticker/${coinMap[wallet.coinAbbr]}`)
-  //     .then(resp => {
-  //       const coinValue = resp.data[0].price_usd;
-  //       const userCoinVal = coinValue * wallet.balance;
-  //       return resolve(userCoinVal);
-  //     })
-  //     .catch(err => err);
-  // })
-
-  // PROMISE SOLUTION 2
+  
   let resp = await axios.get(`https://api.coinmarketcap.com/v1/ticker/${coinMap[wallet.coinAbbr]}`);
   const coinValue = resp.data[0].price_usd;
   const userCoinVal = coinValue * wallet.balance;
-  // toFixed() is a rounding method
-  return userCoinVal.toFixed(2);
-
-  // PROMISE SOLUTION 3
-  // return axios.get(`https://api.coinmarketcap.com/v1/ticker/${coinMap[wallet.coinAbbr]}`)
-  //   .then(resp => {
-  //     const coinValue = resp.data[0].price_usd;
-  //     const userCoinVal = coinValue * wallet.balance;
-  //     return userCoinVal;
-  //   })
-  //   .catch(err => err);
+  return userCoinVal.toFixed(2);   // toFixed() is a rounding method
 }
 
 const sendBtc = (user, address, amount, subject) => {};
@@ -381,19 +359,39 @@ const sendEthTest = async (user, address, amount, subject) => {
 };
 
 const sendTransaction = async (req, res) => {
-  const { coin, friendId, amount, subject } = req.body;
-
   try {
-    // Check if friend has wallet for given coin
-    // return error if they do not
-    const friend = await User.findById(ObjectId(friendId));
-    const toAddress = friend.wallets.find(w => w.coinAbbr === coin).address;
+    // code to determine if sendTransaction is being called when the users directly sends
+    // or sends due to a request of funds
+    let coin, toAddress, amount, subject = "";
 
-    if (!toAddress) {
-      return res.json({
-        success: false,
-        message: `Friend doesn't have ${coin} wallet.`
-      });
+    // if coming from a request of funds
+    if (req.body.rofId) {
+      // set up parameters for executing a transaction
+      const rofObj = await RequestFunds.findById(req.body.rofId);
+      coin = rofObj.coin;
+      amount = rofObj.amount;
+      // toAddress is the senders wallet address
+      const sender = await User.findById(ObjectId(rofObj.sender));
+      toAddress = sender.wallets.find(w => w.coinAbbr === coin).address;
+    }
+    // else request is coming from a normal send transaction
+    else {
+      coin = req.body.coin;
+      friendId = req.body.friendId;
+      amount = req.body.amount;
+      subject = req.body.subject;
+
+      // Check if friend has wallet for given coin
+      // return error if they do not
+      const friend = await User.findById(ObjectId(friendId));
+      toAddress = friend.wallets.find(w => w.coinAbbr === coin).address;
+
+      if (!toAddress) {
+        return res.json({
+          success: false,
+          message: `Friend doesn't have ${coin} wallet.`
+        });
+      }
     }
 
     let result = null;
@@ -418,7 +416,23 @@ const sendTransaction = async (req, res) => {
           message: "please provide valid coin in url parameters"
         });
     }
-    res.json(result);
+
+    // if its from a request of funds, remove the rof mongo obj if the transaction was success
+    if (req.body.rofId) {
+      // this piece of code is a candidate for DRY, its also used acceptFundRequest() in user.js controller
+      RequestFunds.findByIdAndRemove(req.body.rofId)
+        .then(rofObj => {
+          if (rofObj) {
+            res.json(result);
+          }
+          // else res.json({ success: false, message: "no request of funds object found" });
+          else res.json(result);
+        })
+        .catch(err => {
+          res.json({ success: false, message: err });
+        })
+    }
+    else res.json(result);
   } catch(error) {
     res.json({ success: false, error })
   }

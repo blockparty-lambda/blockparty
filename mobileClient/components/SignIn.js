@@ -36,7 +36,7 @@ export default class SignIn extends React.Component {
       })
       .then(async response => {
         const token = response.data.token;
-        onSignIn(token).then(() => this.props.navigation.navigate("SignedIn"));
+        onSignIn(token, this.state.username).then(() => this.props.navigation.navigate("SignedIn"));
       })
       .catch(error => {
         if (error.response.status === 401) {
