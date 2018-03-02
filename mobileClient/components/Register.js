@@ -1,12 +1,6 @@
 import React from "react";
-import {
-  StyleSheet,
-  Text,
-  View,
-  TextInput,
-  Button,
-  Keyboard
-} from "react-native";
+import { StyleSheet, Text, View, TextInput, Keyboard } from "react-native";
+import { Button } from "react-native-elements";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import axios from "axios";
 import { apiUrl } from "../config";
@@ -96,14 +90,19 @@ export default class Register extends React.Component {
           returnKeyType="done"
           secureTextEntry={true}
         />
-        <Button title={"Submit"} onPress={this.register} />
+        <Button
+          text={"Sign Up"}
+          buttonStyle={styles.registerBtn}
+          onPress={this.register}
+        />
 
-        <Text
+        <Text style={styles.registerSignInHereText}>Have an account?</Text>
+
+        <Button
+          text="Sign In"
+          buttonStyle={styles.signInBtn}
           onPress={() => this.props.navigation.navigate("SignIn")}
-          style={styles.registerSignInHereText}
-        >
-          Already Registered?
-        </Text>
+        />
       </KeyboardAwareScrollView>
     );
   }
@@ -126,8 +125,7 @@ const styles = StyleSheet.create({
     marginBottom: 15
   },
   registerSignInHereText: {
-    fontSize: 20,
-    fontWeight: "bold"
+    fontSize: 20
   },
   registerTxt: {
     fontSize: 25
@@ -135,5 +133,11 @@ const styles = StyleSheet.create({
   headerTxt: {
     fontSize: 35,
     marginBottom: 35
+  },
+  signInBtn: {
+    marginTop: 10
+  },
+  registerBtn: {
+    marginBottom: 5
   }
 });

@@ -221,14 +221,14 @@ export default class FriendsList extends React.Component {
     this.setState({
       sendModalVisible: true,
       sendRequestModalVisible: false
-    })
+    });
   };
 
   handleToRequestClick = () => {
     this.setState({
       requestModalVisible: true,
       sendRequestModalVisible: false
-    })
+    });
   };
 
   handleCancel = () => {
@@ -298,11 +298,9 @@ export default class FriendsList extends React.Component {
     );
 
     if (transaction.data.success) {
-      Alert.alert(
-        "Request Sent",
-        `Success: ${transaction.data.message}`,
-        [{ text: "OK", onPress: this.handleCancel }]
-      );
+      Alert.alert("Request Sent", `Success: ${transaction.data.message}`, [
+        { text: "OK", onPress: this.handleCancel }
+      ]);
     } else {
       Alert.alert("Transaction Failed", transaction.data.message, [
         { text: "OK", onPress: this.handleCancel }
@@ -355,7 +353,11 @@ export default class FriendsList extends React.Component {
                     avatar={{ uri: item.avatarUrl }}
                     containerStyle={{ borderBottomWidth: 0 }}
                     rightTitle="Add Friend"
-                    rightIcon={{ type: "entypo", name: "add-user" }}
+                    rightIcon={{
+                      type: "entypo",
+                      name: "add-user",
+                      color: "lime"
+                    }}
                     onPressRightIcon={() => {
                       this.acceptFriendRequest(item);
                     }}
@@ -375,18 +377,18 @@ export default class FriendsList extends React.Component {
                     avatar={{ uri: item.friend.avatarUrl }}
                     containerStyle={{ borderBottomWidth: 0 }}
                     rightIcon={
-                      <View>
+                      <View style={{ flexDirection: "row" }}>
                         <Icon
                           type="entypo"
-                          size={24}
-                          color="#bdc6cf"
+                          size={32}
+                          color="red"
                           name="cross"
                           onPress={() => this.rejectFriendRequest(item)}
                         />
                         <Icon
                           type="entypo"
-                          color="#bdc6cf"
-                          size={24}
+                          color="lime"
+                          size={32}
                           name="check"
                           onPress={() => this.acceptFriendRequest(item)}
                         />
@@ -425,7 +427,26 @@ export default class FriendsList extends React.Component {
                     title={`${item.friend.username}`}
                     avatar={{ uri: item.friend.avatarUrl }}
                     containerStyle={{ borderBottomWidth: 0 }}
-                    rightTitle="Send"
+                    rightIcon={
+                      <View style={{ flexDirection: "row" }}>
+                        <Text
+                          style={{ fontSize: 18, color: "gray" }}
+                          onPress={() => {
+                            this.handleFriendClick(item.friend);
+                          }}
+                        >
+                          Send / Request
+                        </Text>
+                        <Icon
+                          name="chevron-right"
+                          color="gray"
+                          size={24}
+                          onPress={() => {
+                            this.handleFriendClick(item.friend);
+                          }}
+                        />
+                      </View>
+                    }
                     onPressRightIcon={() => {
                       this.handleFriendClick(item.friend);
                     }}
@@ -470,7 +491,10 @@ export default class FriendsList extends React.Component {
                     }}
                   >
                     <Button text="Send" onPress={this.handleToSendClick} />
-                    <Button text="Request" onPress={this.handleToRequestClick} />
+                    <Button
+                      text="Request"
+                      onPress={this.handleToRequestClick}
+                    />
                     <Button text="Cancel" onPress={this.handleCancel} />
                   </View>
                 </View>
@@ -511,7 +535,9 @@ export default class FriendsList extends React.Component {
                     }
                     value={this.state.transactionAmount}
                     keyboardType="numeric"
-                    onChangeText={text => this.setState({ transactionAmount: text })}
+                    onChangeText={text =>
+                      this.setState({ transactionAmount: text })
+                    }
                   />
                   <Input
                     placeholder="What's it for?"
@@ -551,7 +577,7 @@ export default class FriendsList extends React.Component {
             </Overlay>
           )}
 
-          {/* send money modal */}
+        {/* send money modal */}
         {this.state.sendModalVisible &&
           this.state.selectedFriend && (
             <Overlay isVisible height="auto">
@@ -584,7 +610,9 @@ export default class FriendsList extends React.Component {
                     }
                     value={this.state.transactionAmount}
                     keyboardType="numeric"
-                    onChangeText={text => this.setState({ transactionAmount: text })}
+                    onChangeText={text =>
+                      this.setState({ transactionAmount: text })
+                    }
                   />
                   <Input
                     placeholder="What's it for?"
@@ -622,7 +650,7 @@ export default class FriendsList extends React.Component {
                 </View>
               </View>
             </Overlay>
-          )} 
+          )}
       </List>
     );
   }

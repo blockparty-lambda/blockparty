@@ -4,10 +4,10 @@ import {
   Text,
   View,
   TextInput,
-  Button,
   AsyncStorage,
   Keyboard
 } from "react-native";
+import { Button } from "react-native-elements";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import axios from "axios";
 import { apiUrl } from "../config";
@@ -36,7 +36,9 @@ export default class SignIn extends React.Component {
       })
       .then(async response => {
         const token = response.data.token;
-        onSignIn(token, this.state.username).then(() => this.props.navigation.navigate("SignedIn"));
+        onSignIn(token, this.state.username).then(() =>
+          this.props.navigation.navigate("SignedIn")
+        );
       })
       .catch(error => {
         if (error.response.status === 401) {
@@ -85,17 +87,18 @@ export default class SignIn extends React.Component {
           secureTextEntry={true}
         />
         <Button
-          title={"Submit"}
+          text={"Sign In"}
           onPress={this.signIn}
-          style={styles.submitBtn}
+          buttonStyle={styles.submitBtn}
         />
 
-        <Text
+        <Text style={styles.registerSignInHereText}>Need an account?</Text>
+
+        <Button
+          text="Sign Up"
+          buttonStyle={styles.registerButton}
           onPress={() => this.props.navigation.navigate("Register")}
-          style={styles.registerSignInHereText}
-        >
-          Register Here!
-        </Text>
+        />
       </KeyboardAwareScrollView>
     );
   }
@@ -119,11 +122,10 @@ const styles = StyleSheet.create({
   },
   registerSignInHereText: {
     // fontFamily: "sans-serif",
-    fontSize: 20,
-    fontWeight: "bold"
+    fontSize: 20
   },
   submitBtn: {
-    marginTop: 140
+    marginBottom: 5
   },
   signInTxt: {
     fontSize: 25
@@ -131,5 +133,8 @@ const styles = StyleSheet.create({
   headerTxt: {
     fontSize: 35,
     marginBottom: 35
+  },
+  registerButton: {
+    marginTop: 10
   }
 });
