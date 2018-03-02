@@ -29,13 +29,16 @@ export default class WalletsList extends React.Component {
     super(props);
     this.state = {
       token: "",
+      username: "",
       wallets: [],
       addableWallets: [],
+      rofs: [],
       refreshing: false,
       loading: false,
       modalVisible: false,
       searchResults: [],
-      selectedWallet: null
+      selectedWallet: null,
+      focusedROF: null
     };
   }
 
@@ -44,9 +47,11 @@ export default class WalletsList extends React.Component {
   // Example of how to access backend and pass the jwt in headers
   async componentDidMount() {
     Keyboard.dismiss();
-    await this.setState({ token: await AsyncStorage.getItem("jwt") }, () =>
-      this.getUserWallets()
-    );
+    await this.setState({ token: await AsyncStorage.getItem("jwt") });
+    await this.setState({ username: await AsyncStorage.getItem("bpUsername") });
+
+    await this.getUserWallets();
+    await this.getROFS();
   }
 
   getUserWallets = () => {
@@ -93,6 +98,24 @@ export default class WalletsList extends React.Component {
     }
   };
 
+  getROFS = async () => {
+    try {
+      const result = await axios.get(`${apiUrl}/requestfunds`, {
+        headers: { Authorization: this.state.token }
+      });
+      const rofs = result.data;
+      await this.setState(
+        {
+          rofs,
+          loading: false,
+          refreshing: false
+        }
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   handleRefresh = async () => {
     await this.setState(
       {
@@ -101,6 +124,7 @@ export default class WalletsList extends React.Component {
       async () => {
         await this.getUserWallets();
         this.getAddableWallets();
+        this.getROFS();
       }
     );
   };
@@ -206,6 +230,10 @@ export default class WalletsList extends React.Component {
     this.setState({ selectedWallet: null, modalVisible: false });
   };
 
+  closeROFModal = () => {
+    this.setState({ modalVisible: false });
+  };
+
   render() {
     return (
       <List
@@ -214,8 +242,8 @@ export default class WalletsList extends React.Component {
           borderBottomWidth: 0,
           height: "100%"
         }}
-      >
-        {this.state.searchResults && this.state.wallets ? (
+      > 
+        {this.state.searchResults && this.state.wallets && this.state.rofs ? (
           <SectionList
             ItemSeparatorComponent={this.renderSeparator}
             SectionSeparatorComponent={this.renderSectionSeparator}
@@ -295,6 +323,36 @@ export default class WalletsList extends React.Component {
                     />
                   );
                 }
+              },
+              {
+                data: this.state.rofs,
+                key: "Fund Requests",
+                keyExtractor: item => item._id,
+                renderItem: ({ item }) => {
+                  if (item.sender.username === this.state.username) {
+                    return (
+                      <ListItem
+                        roundAvatar
+                        backgroundColor='blue'
+                        title={`To ${item.receiver.username}`}
+                        subtitle={`${item.amount} ${item.coin}`}
+                        containerStyle={{ borderBottomWidth: 0 }}
+                      />
+                    );
+                  }
+                  else {
+                    return (
+                      <ListItem
+                        roundAvatar
+                        backgroundColor='violet'
+                        title={`From ${item.sender.username}`}
+                        subtitle={`${item.amount} ${item.coin}`}
+                        containerStyle={{ borderBottomWidth: 0 }}
+                      />
+                    );
+                  }
+
+                }
               }
             ]}
 
@@ -353,6 +411,7 @@ export default class WalletsList extends React.Component {
             </View>
           </Overlay>
         )}
+
       </List>
     );
   }

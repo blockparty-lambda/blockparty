@@ -1,6 +1,9 @@
 import { AsyncStorage } from "react-native";
 
-export const onSignIn = token => AsyncStorage.setItem("jwt", token);
+export const onSignIn = async (token, username) => {
+  await AsyncStorage.setItem("jwt", token);
+  await AsyncStorage.setItem("bpUsername", username);
+}
 
 export const onSignOut = () => AsyncStorage.removeItem("jwt");
 

@@ -1,4 +1,4 @@
-const userController = require("../controllers/user.js");
+const userController = require("../controllers/user");
 const authController = require("../controllers/auth");
 const coinController = require("../controllers/coin");
 
@@ -42,6 +42,15 @@ module.exports = app => {
   app
     .route("/send")
     .post(authController.requireAuth, coinController.sendTransaction);
+
+  app
+    .route("/requestfunds")
+    .get(authController.requireAuth, userController.getRequestedFunds)
+    .post(authController.requireAuth, userController.sendRequestedFunds)
+
+  app
+    .route("/acceptrequest")
+    .post(authController.requireAuth, userController.acceptFundRequest)
 
   app.route("/helloworld").get((req, res) => {
     res.send("haaayyy guurrrllll haaayyyy!");
