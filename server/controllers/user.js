@@ -1,4 +1,5 @@
 const User = require("../models/user");
+const RequestFunds = require("../models/fundRequest");
 const Status = require("mongoose-friends").Status;
 const multer = require("multer");
 const multerCloudinary = require("multer-cloudinary");
@@ -223,6 +224,60 @@ const getPartialUsers = (req, res) => {
   });
 };
 
+const getRequestedFunds = (req, res) => {
+  // get all users fund requests sent from friends and the users requests to their friends
+  RequestFunds.find()
+    .or([{ sender: req.user.id }, { receiver: req.user.id }])
+    .populate({ path: 'sender', select: 'username' })
+    .populate({ path: 'receiver', select: 'username' })
+    .then(rofs => res.json(rofs))
+    .catch(err => res.json(err))
+}
+
+const sendRequestedFunds = (req, res) => {
+  const { coin, amount, receiver } = req.body;
+
+  // create a new RequestFunds mongo object
+  try {
+    const newROF = new RequestFunds({ coin, amount, sender: req.user.id, receiver }).save();
+    return res.json({
+      success: true,
+      message: "Successfully created a new funds request"
+    });
+  } catch (error) {
+    return res
+      .status(STATUS_USER_ERROR)
+      .json({ success: false, error: error.message });
+  }
+}
+
+const acceptFundRequest = (req, res) => {
+  const { rofId, accepted } = req.body;
+
+  if (accepted === false) {
+    // DRY candidate, this code is also used in coin.js within the the sendTransaction method ~line 424
+    RequestFunds.findByIdAndRemove(rofId)
+      .then(rofObj => {
+        if (rofObj) {
+          res.json({
+            succes: true,
+            message: "fund request successfully rejected",
+            id: rofObj
+          });
+        }
+        else res.json({ success: false, message: "no request of funds object found" });
+      })
+      .catch(err => {
+        res.json({ success: false, message: err });
+      })
+  }
+  else {
+    // execute the transaction and remove the rof object from mongo
+    // do transaction
+    CoinController.sendTransaction(req, res);
+  }
+}
+
 module.exports = {
   createUser,
   getAllUsers,
@@ -233,6 +288,9 @@ module.exports = {
   removeFriend,
   getUserInfo,
   getPartialUsers,
+  getRequestedFunds,
+  sendRequestedFunds,
+  acceptFundRequest,
   cloudinaryUpload,
   uploadAvatar
 };
