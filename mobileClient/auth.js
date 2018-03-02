@@ -5,9 +5,9 @@ export const onSignIn = async (token, username) => {
   await AsyncStorage.setItem("bpUsername", username);
 }
 
-export const onSignOut = () => {
-  AsyncStorage.removeItem("jwt");
-  AsyncStorage.removeItem("bpUsername");
+export const onSignOut = async () => {
+  await AsyncStorage.removeItem("jwt");
+  await AsyncStorage.removeItem("bpUsername");
 }
 
 export const isSignedIn = () => {
