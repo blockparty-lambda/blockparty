@@ -411,7 +411,6 @@ export default class WalletsList extends React.Component {
             </View>
           </Overlay>
         )}
-
       </List>
     );
   }
