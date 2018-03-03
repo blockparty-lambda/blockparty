@@ -307,17 +307,6 @@ export default class FriendsList extends React.Component {
     }
   };
 
-  renderSectionHeader = section => {
-    if (section && section.data.length) {
-      return (
-        <View style={{ marginLeft: 5, marginVertical: 5 }}>
-          <Text h4>{section.key}</Text>
-        </View>
-      );
-    }
-    return null;
-  };
-
   render() {
     const buttons = ["Eth", "Btc", "Eth Test", "Btc Test"];
     return (
