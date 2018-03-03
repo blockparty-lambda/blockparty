@@ -212,7 +212,7 @@ export default class SettingsScreen extends React.Component {
                 }
                 rightComponent={
                   <Icon
-                    color="gray"
+                    color="tomato"
                     size={24}
                     type="entypo"
                     name="cross"
@@ -265,21 +265,31 @@ export default class SettingsScreen extends React.Component {
                       rounded
                       source={{ uri: this.state.pickedImage.uri }}
                     />
-                    <Text>Update profile picture?</Text>
+                    <Text style={{ marginTop: 10 }}>
+                      Update profile picture?
+                    </Text>
                     <View
                       style={{
                         flexDirection: "row",
                         justifyContent: "center",
-                        marginTop: 5
+                        marginTop: 10
                       }}
                     >
                       <Button
-                        buttonStyle={{ marginRight: 5 }}
+                        buttonStyle={{
+                          marginRight: 5,
+                          backgroundColor: "tomato",
+                          width: 70
+                        }}
                         text="No"
                         onPress={() => this.setState({ pickedImage: null })}
                       />
                       <Button
-                        buttonStyle={{ marginLeft: 5 }}
+                        buttonStyle={{
+                          marginLeft: 5,
+                          backgroundColor: "limegreen",
+                          width: 70
+                        }}
                         text="Yes"
                         onPress={this.handleUpload}
                       />

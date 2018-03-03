@@ -8,7 +8,6 @@ import {
   Alert
 } from "react-native";
 import axios from "axios";
-import Modal from "react-native-modal";
 import { apiUrl } from "../config";
 import {
   Header,
@@ -311,7 +310,7 @@ export default class FriendsList extends React.Component {
   renderSectionHeader = section => {
     if (section && section.data.length) {
       return (
-        <View>
+        <View style={{ marginLeft: 5, marginVertical: 5 }}>
           <Text h4>{section.key}</Text>
         </View>
       );
@@ -338,9 +337,14 @@ export default class FriendsList extends React.Component {
           onRefresh={this.handleRefresh}
           refreshing={this.state.refreshing}
           extraData={this.state}
-          renderSectionHeader={({ section }) =>
-            this.renderSectionHeader(section)
-          }
+          renderSectionHeader={({ section }) => {
+            if (!section.data.length) return null;
+            return (
+              <Text h4 style={{ marginLeft: 5, marginVertical: 5 }}>
+                {section.key}
+              </Text>
+            );
+          }}
           sections={[
             {
               data: this.state.searchResults,
@@ -356,7 +360,7 @@ export default class FriendsList extends React.Component {
                     rightIcon={{
                       type: "entypo",
                       name: "add-user",
-                      color: "lime"
+                      color: "limegreen"
                     }}
                     onPressRightIcon={() => {
                       this.acceptFriendRequest(item);
@@ -381,13 +385,13 @@ export default class FriendsList extends React.Component {
                         <Icon
                           type="entypo"
                           size={32}
-                          color="red"
+                          color="tomato"
                           name="cross"
                           onPress={() => this.rejectFriendRequest(item)}
                         />
                         <Icon
                           type="entypo"
-                          color="lime"
+                          color="limegreem"
                           size={32}
                           name="check"
                           onPress={() => this.acceptFriendRequest(item)}
@@ -464,11 +468,6 @@ export default class FriendsList extends React.Component {
               <View>
                 <Header
                   backgroundColor="white"
-                  outerContainerStyles={{
-                    height: "25%",
-                    paddingVertical: 5,
-                    marginBottom: 5
-                  }}
                   centerComponent={
                     <Text style={{ color: "gray", fontSize: 24 }}>
                       {this.state.selectedFriend.username}
@@ -482,7 +481,7 @@ export default class FriendsList extends React.Component {
                     />
                   }
                 />
-                <View style={{ flexDirection: "column" }}>
+                <View style={styles.modalColumn}>
                   <View
                     style={{
                       flexDirection: "row",
@@ -490,12 +489,20 @@ export default class FriendsList extends React.Component {
                       marginTop: 5
                     }}
                   >
-                    <Button text="Send" onPress={this.handleToSendClick} />
+                    <Button
+                      text="Send"
+                      buttonStyle={styles.sendBtn}
+                      onPress={this.handleToSendClick}
+                    />
                     <Button
                       text="Request"
                       onPress={this.handleToRequestClick}
                     />
-                    <Button text="Cancel" onPress={this.handleCancel} />
+                    <Button
+                      text="Cancel"
+                      buttonStyle={styles.cancelBtn}
+                      onPress={this.handleCancel}
+                    />
                   </View>
                 </View>
               </View>
@@ -505,15 +512,10 @@ export default class FriendsList extends React.Component {
         {/* request money modal */}
         {this.state.requestModalVisible &&
           this.state.selectedFriend && (
-            <Overlay isVisible height="auto">
+            <Overlay isVisible height="auto" width="auto">
               <View>
                 <Header
                   backgroundColor="white"
-                  outerContainerStyles={{
-                    height: "25%",
-                    paddingVertical: 5,
-                    marginBottom: 5
-                  }}
                   centerComponent={
                     <Text style={{ color: "gray", fontSize: 24 }}>
                       {this.state.selectedFriend.username}
@@ -527,7 +529,7 @@ export default class FriendsList extends React.Component {
                     />
                   }
                 />
-                <View style={{ flexDirection: "column" }}>
+                <View style={styles.modalColumn}>
                   <Input
                     placeholder="0"
                     leftIcon={
@@ -548,17 +550,12 @@ export default class FriendsList extends React.Component {
                     onPress={this.updateIndex}
                     selectedIndex={this.state.selectedIndex}
                     buttons={buttons}
-                    containerStyle={{ height: 35, marginTop: 5 }}
+                    containerStyle={styles.coinBtns}
                   />
-                  <View
-                    style={{
-                      flexDirection: "row",
-                      justifyContent: "space-around",
-                      marginTop: 5
-                    }}
-                  >
+                  <View style={styles.confirmBtns}>
                     <Button
                       text="Request"
+                      buttonStyle={styles.sendBtn}
                       onPress={() => {
                         Alert.alert("Confirm Request", null, [
                           {
@@ -570,7 +567,11 @@ export default class FriendsList extends React.Component {
                         ]);
                       }}
                     />
-                    <Button text="Cancel" onPress={this.handleCancel} />
+                    <Button
+                      buttonStyle={styles.cancelBtn}
+                      text="Cancel"
+                      onPress={this.handleCancel}
+                    />
                   </View>
                 </View>
               </View>
@@ -584,11 +585,6 @@ export default class FriendsList extends React.Component {
               <View>
                 <Header
                   backgroundColor="white"
-                  outerContainerStyles={{
-                    height: "25%",
-                    paddingVertical: 5,
-                    marginBottom: 5
-                  }}
                   centerComponent={
                     <Text style={{ color: "gray", fontSize: 24 }}>
                       {this.state.selectedFriend.username}
@@ -602,7 +598,7 @@ export default class FriendsList extends React.Component {
                     />
                   }
                 />
-                <View style={{ flexDirection: "column" }}>
+                <View style={styles.modalColumn}>
                   <Input
                     placeholder="0"
                     leftIcon={
@@ -623,17 +619,12 @@ export default class FriendsList extends React.Component {
                     onPress={this.updateIndex}
                     selectedIndex={this.state.selectedIndex}
                     buttons={buttons}
-                    containerStyle={{ height: 35, marginTop: 5 }}
+                    containerStyle={styles.coinBtns}
                   />
-                  <View
-                    style={{
-                      flexDirection: "row",
-                      justifyContent: "space-around",
-                      marginTop: 5
-                    }}
-                  >
+                  <View style={styles.confirmBtns}>
                     <Button
                       text="Send"
+                      buttonStyle={styles.sendBtn}
                       onPress={() => {
                         Alert.alert("Confirm Transaction", null, [
                           {
@@ -645,7 +636,11 @@ export default class FriendsList extends React.Component {
                         ]);
                       }}
                     />
-                    <Button text="Cancel" onPress={this.handleCancel} />
+                    <Button
+                      buttonStyle={styles.cancelBtn}
+                      text="Cancel"
+                      onPress={this.handleCancel}
+                    />
                   </View>
                 </View>
               </View>
@@ -655,3 +650,27 @@ export default class FriendsList extends React.Component {
     );
   }
 }
+
+const styles = StyleSheet.create({
+  modalColumn: {
+    flexDirection: "column",
+    marginVertical: 15
+  },
+  coinBtns: {
+    height: 35,
+    marginTop: 15
+  },
+  confirmBtns: {
+    flexDirection: "row",
+    justifyContent: "space-around",
+    marginTop: 15
+  },
+  cancelBtn: {
+    backgroundColor: "tomato",
+    width: 70
+  },
+  sendBtn: {
+    backgroundColor: "limegreen",
+    width: 70
+  }
+});

@@ -253,7 +253,7 @@ export default class WalletsList extends React.Component {
             renderSectionHeader={({ section }) => {
               if (!section.data.length) return null;
               return (
-                <Text h4 style={{ marginLeft: 5 }}>
+                <Text h4 style={{ marginLeft: 5, marginVertical: 5 }}>
                   {section.key}
                 </Text>
               );
@@ -299,9 +299,16 @@ export default class WalletsList extends React.Component {
                     <ListItem
                       roundAvatar
                       title={`${item.coin}`}
-                      subtitle={`Balance: ${item.balance} | $${
-                        item.usdBalance
-                      }`}
+                      subtitle={
+                        <View style={{ flexDirection: "row" }}>
+                          <Text>Balance: </Text>
+                          <Text>{item.balance}</Text>
+                          <Text> | </Text>
+                          <Text style={{ color: "green" }}>
+                            ${item.usdBalance}{" "}
+                          </Text>
+                        </View>
+                      }
                       leftIcon={
                         <Image
                           style={{
