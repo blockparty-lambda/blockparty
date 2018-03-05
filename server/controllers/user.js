@@ -251,7 +251,7 @@ const sendRequestedFunds = (req, res) => {
   }
 }
 
-const acceptFundRequest = (req, res) => {
+const handleROF = (req, res) => {
   const { rofId, accepted } = req.body;
 
   if (accepted === false) {
@@ -260,12 +260,12 @@ const acceptFundRequest = (req, res) => {
       .then(rofObj => {
         if (rofObj) {
           res.json({
-            succes: true,
+            success: true,
             message: "fund request successfully rejected",
             id: rofObj
           });
         }
-        else res.json({ success: false, message: "no request of funds object found" });
+        else res.json({ success: true, message: "no request of funds object found" });
       })
       .catch(err => {
         res.json({ success: false, message: err });
@@ -290,7 +290,7 @@ module.exports = {
   getPartialUsers,
   getRequestedFunds,
   sendRequestedFunds,
-  acceptFundRequest,
+  handleROF,
   cloudinaryUpload,
   uploadAvatar
 };
