@@ -286,12 +286,18 @@ export default class WalletsList extends React.Component {
               [{ text: "OK", onPress: this.getROFS }]
             );
           }
-          // else {
-          //   // handle that user doenst have enough coins etc...
-          // }
+          else {
+            // handle that user doenst have enough coins etc...
+            if (resp.data.error.error === "insufficient funds") {
+              Alert.alert(
+                "Error",
+                `Insufficient funds.`,
+                [{ text: "OK", onPress: this.handleCancel }]
+              );
+            }
+          }
         })
         .catch(err => {
-          console.log(err);
           // alert there was an error with the post request
           Alert.alert(
             "Block Party Error",
@@ -395,6 +401,7 @@ export default class WalletsList extends React.Component {
                       onPressRightIcon={() => {
                         this.addWallet(item.coinAbbr);
                       }}
+                      // onPress={() => this.addWallet(item.coinAbbr)} // click anywhere on listitme to add wallet
                     />
                   );
                 }
