@@ -520,10 +520,7 @@ export default class FriendsList extends React.Component {
                 />
                 <View style={styles.modalColumn}>
                   <Input
-                    placeholder="0"
-                    leftIcon={
-                      <Icon name="attach-money" size={24} color="black" />
-                    }
+                    placeholder="amount..."
                     value={this.state.transactionAmount}
                     keyboardType="numeric"
                     onChangeText={text =>
@@ -589,10 +586,7 @@ export default class FriendsList extends React.Component {
                 />
                 <View style={styles.modalColumn}>
                   <Input
-                    placeholder="0"
-                    leftIcon={
-                      <Icon name="attach-money" size={24} color="black" />
-                    }
+                    placeholder="amount..."
                     value={this.state.transactionAmount}
                     keyboardType="numeric"
                     onChangeText={text =>
@@ -656,14 +650,14 @@ const styles = StyleSheet.create({
   },
   cancelBtn: {
     backgroundColor: "tomato",
-    width: '58%'
+    // width: '58%'
   },
   sendBtn: {
     backgroundColor: "limegreen",
-    width: '58%'
+    // width: '58%'
   },
   requestBtn: {
     backgroundColor: "limegreen",
-    width: '62%'
+    // width: '62%'
   }
 });
