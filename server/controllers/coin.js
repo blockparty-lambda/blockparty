@@ -259,9 +259,6 @@ const sendBtcTest = (user, toAddress, amount, subject) => {
   const privateKeyEncrypted = wallet.privateKey;
   const privateKeyDecrypted = decrypt(privateKeyEncrypted, "aes-256-ctr", process.env.salt);
 
-  // create a new promise that resolves to either:
-  // { success: false, error: <some error message> } or { success: true,  txId: <the txId> }
-  // TODO: use the .toSathosis .fromSatoshis methods
   return new Promise((resolve, reject) => {
 
     return insight.getUnspentUtxos(fromAddress, function (error, utxos) {
@@ -269,7 +266,9 @@ const sendBtcTest = (user, toAddress, amount, subject) => {
       else {
         let tx = bitcore.Transaction();
         tx.from(utxos);
-        tx.to(toAddress, amount * 100000000);
+
+        let satoshis = unit.fromBTC(amount).toSatoshis()
+        tx.to(toAddress, satoshis);
         tx.change(fromAddress);
         // tx.fee(5000);
         tx.sign(privateKeyDecrypted);
