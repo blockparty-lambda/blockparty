@@ -447,20 +447,25 @@ export default class WalletsList extends React.Component {
                         subtitle={`${item.amount} ${item.coin}`}
                         containerStyle={{ borderBottomWidth: 0 }}
                         rightIcon={
-                          <View>
-                            <Icon
-                              type="entypo"
-                              size={24}
-                              color="#bdc6cf"
-                              name="cross"
-                              onPress={() => this.handleROF(item._id, false)}
-                            />
-                            <Icon
-                              type="entypo"
-                              color="#bdc6cf"
-                              size={24}
-                              name="check"
+                          <View
+                            style={{
+                              flexDirection: "row",
+                              justifyContent: "center"
+                            }}
+                          >
+                            <Button
+                              clear
+                              textStyle={{ color: "limegreen" }}
+                              text="Accept"
+                              buttonStyle={styles.acceptROFBtn}
                               onPress={() => this.handleROF(item._id, true)}
+                            />
+                            <Button
+                              clear
+                              textStyle={{ color: "tomato" }}
+                              buttonStyle={styles.rejectROFBtn}
+                              text="Reject"
+                              onPress={() => this.handleROF(item._id, false)}
                             />
                           </View>
                         }
@@ -530,3 +535,20 @@ export default class WalletsList extends React.Component {
     );
   }
 }
+
+const styles = StyleSheet.create({
+  rejectROFBtn: {
+    borderColor: "tomato",
+    borderBottomWidth: 2,
+    alignSelf: "stretch",
+    borderRadius: 0,
+    marginRight: 10
+  },
+  acceptROFBtn: {
+    borderColor: "limegreen",
+    borderBottomWidth: 2,
+    alignSelf: "stretch",
+    borderRadius: 0,
+    marginRight: 40
+  }
+});
