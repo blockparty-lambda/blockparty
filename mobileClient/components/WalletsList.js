@@ -119,17 +119,29 @@ export default class WalletsList extends React.Component {
         headers: { Authorization: this.state.token }
       });
       const rofs = result.data;
-      await this.setState(
-        {
-          rofs,
-          loading: false,
-          refreshing: false
-        }
-      );
+
+      // an rof.coin currently had wrong naming convetion, right now rof.coin = "btc_test"
+      // where we want to display "test bitcoin" insteadn
+
+      const coinMap = {
+        btc: "bitcoin",
+        btc_test: "test bitcoin",
+        eth: "ether",
+        eth_test: "test ether"
+      }
+      rofs.forEach(rof => {
+        rof.coinFull = coinMap[rof.coin];
+      });
+
+      await this.setState({
+        rofs,
+        loading: false,
+        refreshing: false
+      });
     } catch (error) {
       console.log(error);
     }
-  }
+  };
 
   handleRefresh = async () => {
     await this.setState(
@@ -207,7 +219,8 @@ export default class WalletsList extends React.Component {
             borderWidth: 0,
             borderRadius: 5,
             marginBottom: 5,
-            marginTop: 5
+            marginTop: 5,
+            width: 500 // for whatever reason using 100% screw of the lining of the button text 
           }}
           onPress={async () => {
             if (buttonText === "Add New Wallets") {
@@ -273,12 +286,18 @@ export default class WalletsList extends React.Component {
               [{ text: "OK", onPress: this.getROFS }]
             );
           }
-          // else {
-          //   // handle that user doenst have enough coins etc...
-          // }
+          else {
+            // handle that user doenst have enough coins etc...
+            if (resp.data.error.error === "insufficient funds") {
+              Alert.alert(
+                "Error",
+                `Insufficient funds.`,
+                [{ text: "OK", onPress: this.handleCancel }]
+              );
+            }
+          }
         })
         .catch(err => {
-          console.log(err);
           // alert there was an error with the post request
           Alert.alert(
             "Block Party Error",
@@ -336,7 +355,7 @@ export default class WalletsList extends React.Component {
           borderBottomWidth: 0,
           height: "100%"
         }}
-      > 
+      >
         {this.state.searchResults && this.state.wallets && this.state.rofs ? (
           <SectionList
             ItemSeparatorComponent={this.renderSeparator}
@@ -349,7 +368,7 @@ export default class WalletsList extends React.Component {
             renderSectionHeader={({ section }) => {
               if (!section.data.length) return null;
               return (
-                <Text h4 style={{ marginLeft: 5 }}>
+                <Text h4 style={{ marginLeft: 5, marginVertical: 5 }}>
                   {section.key}
                 </Text>
               );
@@ -382,6 +401,7 @@ export default class WalletsList extends React.Component {
                       onPressRightIcon={() => {
                         this.addWallet(item.coinAbbr);
                       }}
+                      // onPress={() => this.addWallet(item.coinAbbr)} // click anywhere on listitme to add wallet
                     />
                   );
                 }
@@ -395,9 +415,16 @@ export default class WalletsList extends React.Component {
                     <ListItem
                       roundAvatar
                       title={`${item.coin}`}
-                      subtitle={`Balance: ${
-                        item.balance
-                      } | $${item.usdBalance}`}
+                      subtitle={
+                        <View style={{ flexDirection: "row" }}>
+                          <Text>Balance: </Text>
+                          <Text>{item.balance}</Text>
+                          <Text> | </Text>
+                          <Text style={{ color: "green" }}>
+                            ${item.usdBalance}{" "}
+                          </Text>
+                        </View>
+                      }
                       leftIcon={
                         <Image
                           style={{
@@ -427,43 +454,46 @@ export default class WalletsList extends React.Component {
                     return (
                       <ListItem
                         roundAvatar
-                        backgroundColor='blue'
+                        backgroundColor="blue"
                         title={`To ${item.receiver.username}`}
-                        subtitle={`${item.amount} ${item.coin}`}
+                        subtitle={`${item.amount} ${item.coinFull}`}
                         containerStyle={{ borderBottomWidth: 0 }}
                       />
                     );
-                  }
-                  else {
+                  } else {
                     return (
                       <ListItem
                         roundAvatar
-                        backgroundColor='violet'
+                        backgroundColor="violet"
                         title={`From ${item.sender.username}`}
-                        subtitle={`${item.amount} ${item.coin}`}
+                        subtitle={`${item.amount} ${item.coinFull}`}
                         containerStyle={{ borderBottomWidth: 0 }}
                         rightIcon={
-                          <View>
-                            <Icon
-                              type="entypo"
-                              size={24}
-                              color="#bdc6cf"
-                              name="cross"
-                              onPress={() => this.handleROF(item._id, false)}
-                            />
-                            <Icon
-                              type="entypo"
-                              color="#bdc6cf"
-                              size={24}
-                              name="check"
+                          <View
+                            style={{
+                              flexDirection: "row",
+                              justifyContent: "center"
+                            }}
+                          >
+                            <Button
+                              clear
+                              textStyle={{ color: "limegreen" }}
+                              text="Accept"
+                              buttonStyle={styles.acceptROFBtn}
                               onPress={() => this.handleROF(item._id, true)}
+                            />
+                            <Button
+                              clear
+                              textStyle={{ color: "tomato" }}
+                              buttonStyle={styles.rejectROFBtn}
+                              text="Reject"
+                              onPress={() => this.handleROF(item._id, false)}
                             />
                           </View>
                         }
                       />
                     );
                   }
-
                 }
               }
             ]}
@@ -527,3 +557,20 @@ export default class WalletsList extends React.Component {
     );
   }
 }
+
+const styles = StyleSheet.create({
+  rejectROFBtn: {
+    borderColor: "tomato",
+    borderBottomWidth: 2,
+    alignSelf: "stretch",
+    borderRadius: 0,
+    marginRight: 10
+  },
+  acceptROFBtn: {
+    borderColor: "limegreen",
+    borderBottomWidth: 2,
+    alignSelf: "stretch",
+    borderRadius: 0,
+    marginRight: 40
+  }
+});

@@ -15,11 +15,11 @@ import SettingsScreen from "./screens/SettingsScreen";
 
 export const SignedOut = StackNavigator(
   {
-    Register: {
-      screen: Register
-    },
     SignIn: {
       screen: SignIn
+    },
+    Register: {
+      screen: Register
     }
   },
   {

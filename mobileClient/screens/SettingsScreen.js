@@ -140,8 +140,7 @@ export default class SettingsScreen extends React.Component {
         <Header
           outerContainerStyles={{
             height: "8%",
-            paddingBottom: 5,
-            marginBottom: 5
+            paddingBottom: 5
           }}
           centerComponent={
             <Text style={{ color: "white", fontSize: 24 }}>Settings</Text>
@@ -212,7 +211,7 @@ export default class SettingsScreen extends React.Component {
                 }
                 rightComponent={
                   <Icon
-                    color="gray"
+                    color="tomato"
                     size={24}
                     type="entypo"
                     name="cross"
@@ -239,12 +238,26 @@ export default class SettingsScreen extends React.Component {
                   >
                     <Button
                       text="Open Gallery"
-                      buttonStyle={{ marginRight: 5 }}
+                      clear
+                      textStyle={{ color: "dodgerblue" }}
+                      buttonStyle={{
+                        marginRight: 5,
+                        borderColor: "dodgerblue",
+                        borderRadius: 0,
+                        borderBottomWidth: 2
+                      }}
                       onPress={this.pickImage}
                     />
                     <Button
                       text="Open Camera"
-                      buttonStyle={{ marginLeft: 5 }}
+                      clear
+                      textStyle={{ color: "dodgerblue" }}
+                      buttonStyle={{
+                        marginLeft: 5,
+                        borderColor: "dodgerblue",
+                        borderRadius: 0,
+                        borderBottomWidth: 2
+                      }}
                       onPress={this.takePhoto}
                     />
                   </View>
@@ -265,22 +278,41 @@ export default class SettingsScreen extends React.Component {
                       rounded
                       source={{ uri: this.state.pickedImage.uri }}
                     />
-                    <Text>Update profile picture?</Text>
+                    <Text style={{ marginTop: 10 }}>
+                      Update profile picture?
+                    </Text>
                     <View
                       style={{
                         flexDirection: "row",
                         justifyContent: "center",
-                        marginTop: 5
+                        marginTop: 10
                       }}
                     >
                       <Button
-                        buttonStyle={{ marginRight: 5 }}
+                        buttonStyle={{
+                          marginRight: 5,
+                          // backgroundColor: "tomato",
+                          borderColor: "tomato",
+                          borderBottomWidth: 2,
+                          borderRadius: 0,
+                          width: 70
+                        }}
+                        textStyle={{ color: "tomato" }}
                         text="No"
+                        clear
                         onPress={() => this.setState({ pickedImage: null })}
                       />
                       <Button
-                        buttonStyle={{ marginLeft: 5 }}
+                        buttonStyle={{
+                          marginLeft: 5,
+                          borderColor: "limegreen",
+                          borderBottomWidth: 2,
+                          borderRadius: 0,
+                          width: 70
+                        }}
+                        clear
                         text="Yes"
+                        textStyle={{ color: "limegreen" }}
                         onPress={this.handleUpload}
                       />
                     </View>
@@ -297,9 +329,18 @@ export default class SettingsScreen extends React.Component {
         )}
 
         {!this.state.buttonhidden && (
-          <View>
+          <View style={{ alignSelf: "stretch", justifyContent: "center" }}>
             <Button
-              buttonStyle={{ marginTop: 5 }}
+              clear
+              textStyle={{ color: "dodgerblue" }}
+              buttonStyle={{
+                marginTop: 15,
+                borderColor: "dodgerblue",
+                borderRadius: 0,
+                borderBottomWidth: 2,
+                // width: "100%"
+              }}
+              // containerStyle={{ width: "100%" }}
               text="Logout"
               onPress={this.logout}
             />

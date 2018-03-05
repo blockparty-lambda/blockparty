@@ -4,10 +4,10 @@ import {
   Text,
   View,
   TextInput,
-  Button,
   AsyncStorage,
   Keyboard
 } from "react-native";
+import { Button } from "react-native-elements";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import axios from "axios";
 import { apiUrl } from "../config";
@@ -36,7 +36,9 @@ export default class SignIn extends React.Component {
       })
       .then(async response => {
         const token = response.data.token;
-        onSignIn(token, this.state.username).then(() => this.props.navigation.navigate("SignedIn"));
+        onSignIn(token, this.state.username).then(() =>
+          this.props.navigation.navigate("SignedIn")
+        );
       })
       .catch(error => {
         if (error.response.status === 401) {
@@ -84,18 +86,32 @@ export default class SignIn extends React.Component {
           returnKeyType="done"
           secureTextEntry={true}
         />
-        <Button
-          title={"Submit"}
-          onPress={this.signIn}
-          style={styles.submitBtn}
-        />
-
-        <Text
-          onPress={() => this.props.navigation.navigate("Register")}
-          style={styles.registerSignInHereText}
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "space-between",
+            width: "85%",
+            marginTop: 5
+          }}
         >
-          Register Here!
-        </Text>
+          <Button
+            text={"Sign In"}
+            onPress={this.signIn}
+            clear
+            containerStyle={styles.btnContainer}
+            textStyle={{ color: "dodgerblue" }}
+            buttonStyle={styles.submitBtn}
+          />
+
+          <Button
+            text="Sign Up"
+            containerStyle={styles.btnContainer}
+            clear
+            textStyle={{ color: "dodgerblue" }}
+            buttonStyle={styles.submitBtn}
+            onPress={() => this.props.navigation.navigate("Register")}
+          />
+        </View>
       </KeyboardAwareScrollView>
     );
   }
@@ -119,11 +135,14 @@ const styles = StyleSheet.create({
   },
   registerSignInHereText: {
     // fontFamily: "sans-serif",
-    fontSize: 20,
-    fontWeight: "bold"
+    fontSize: 20
   },
   submitBtn: {
-    marginTop: 140
+    marginBottom: 5,
+    borderColor: "dodgerblue",
+    borderRadius: 0,
+    borderBottomWidth: 2,
+    alignSelf: "stretch"
   },
   signInTxt: {
     fontSize: 25
@@ -131,5 +150,12 @@ const styles = StyleSheet.create({
   headerTxt: {
     fontSize: 35,
     marginBottom: 35
+  },
+  registerButton: {
+    marginTop: 10
+  },
+  btnContainer: {
+    flex: 1,
+    alignSelf: "stretch"
   }
 });
