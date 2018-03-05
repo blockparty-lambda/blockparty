@@ -297,7 +297,7 @@ export default class FriendsList extends React.Component {
     );
 
     if (transaction.data.success) {
-      Alert.alert("Request Sent", `Success: ${transaction.data.message}`, [
+      Alert.alert("Request Sent", `${transaction.data.message}`, [
         { text: "OK", onPress: this.handleCancel }
       ]);
     } else {
@@ -444,29 +444,7 @@ export default class FriendsList extends React.Component {
                     title={`${item.friend.username}`}
                     avatar={{ uri: item.friend.avatarUrl }}
                     containerStyle={{ borderBottomWidth: 0 }}
-                    rightIcon={
-                      <View style={{ flexDirection: "row" }}>
-                        <Text
-                          style={{ fontSize: 18, color: "gray" }}
-                          onPress={() => {
-                            this.handleFriendClick(item.friend);
-                          }}
-                        >
-                          Send / Request
-                        </Text>
-                        <Icon
-                          name="chevron-right"
-                          color="gray"
-                          size={24}
-                          onPress={() => {
-                            this.handleFriendClick(item.friend);
-                          }}
-                        />
-                      </View>
-                    }
-                    onPressRightIcon={() => {
-                      this.handleFriendClick(item.friend);
-                    }}
+                    onPress={() => this.handleFriendClick(item.friend)}
                   />
                 );
               }

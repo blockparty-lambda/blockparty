@@ -119,6 +119,20 @@ export default class WalletsList extends React.Component {
         headers: { Authorization: this.state.token }
       });
       const rofs = result.data;
+
+      // an rof.coin currently had wrong naming convetion, right now rof.coin = "btc_test"
+      // where we want to display "test bitcoin" insteadn
+
+      const coinMap = {
+        btc: "bitcoin",
+        btc_test: "test bitcoin",
+        eth: "ether",
+        eth_test: "test ether"
+      }
+      rofs.forEach(rof => {
+        rof.coinFull = coinMap[rof.coin];
+      });
+
       await this.setState({
         rofs,
         loading: false,
@@ -205,7 +219,8 @@ export default class WalletsList extends React.Component {
             borderWidth: 0,
             borderRadius: 5,
             marginBottom: 5,
-            marginTop: 5
+            marginTop: 5,
+            width: 500 // for whatever reason using 100% screw of the lining of the button text 
           }}
           onPress={async () => {
             if (buttonText === "Add New Wallets") {
@@ -434,7 +449,7 @@ export default class WalletsList extends React.Component {
                         roundAvatar
                         backgroundColor="blue"
                         title={`To ${item.receiver.username}`}
-                        subtitle={`${item.amount} ${item.coin}`}
+                        subtitle={`${item.amount} ${item.coinFull}`}
                         containerStyle={{ borderBottomWidth: 0 }}
                       />
                     );
@@ -444,7 +459,7 @@ export default class WalletsList extends React.Component {
                         roundAvatar
                         backgroundColor="violet"
                         title={`From ${item.sender.username}`}
-                        subtitle={`${item.amount} ${item.coin}`}
+                        subtitle={`${item.amount} ${item.coinFull}`}
                         containerStyle={{ borderBottomWidth: 0 }}
                         rightIcon={
                           <View

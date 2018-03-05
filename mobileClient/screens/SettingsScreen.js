@@ -334,13 +334,13 @@ export default class SettingsScreen extends React.Component {
               clear
               textStyle={{ color: "dodgerblue" }}
               buttonStyle={{
-                marginTop: 5,
+                marginTop: 15,
                 borderColor: "dodgerblue",
                 borderRadius: 0,
                 borderBottomWidth: 2,
-                width: "100%"
+                // width: "100%"
               }}
-              containerStyle={{ width: "100%" }}
+              // containerStyle={{ width: "100%" }}
               text="Logout"
               onPress={this.logout}
             />
