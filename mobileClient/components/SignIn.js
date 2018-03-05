@@ -86,19 +86,32 @@ export default class SignIn extends React.Component {
           returnKeyType="done"
           secureTextEntry={true}
         />
-        <Button
-          text={"Sign In"}
-          onPress={this.signIn}
-          buttonStyle={styles.submitBtn}
-        />
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "space-between",
+            width: "85%",
+            marginTop: 5
+          }}
+        >
+          <Button
+            text={"Sign In"}
+            onPress={this.signIn}
+            clear
+            containerStyle={styles.btnContainer}
+            textStyle={{ color: "dodgerblue" }}
+            buttonStyle={styles.submitBtn}
+          />
 
-        <Text style={styles.registerSignInHereText}>Need an account?</Text>
-
-        <Button
-          text="Sign Up"
-          buttonStyle={styles.registerButton}
-          onPress={() => this.props.navigation.navigate("Register")}
-        />
+          <Button
+            text="Sign Up"
+            containerStyle={styles.btnContainer}
+            clear
+            textStyle={{ color: "dodgerblue" }}
+            buttonStyle={styles.submitBtn}
+            onPress={() => this.props.navigation.navigate("Register")}
+          />
+        </View>
       </KeyboardAwareScrollView>
     );
   }
@@ -125,7 +138,11 @@ const styles = StyleSheet.create({
     fontSize: 20
   },
   submitBtn: {
-    marginBottom: 5
+    marginBottom: 5,
+    borderColor: "dodgerblue",
+    borderRadius: 0,
+    borderBottomWidth: 2,
+    alignSelf: "stretch"
   },
   signInTxt: {
     fontSize: 25
@@ -136,5 +153,9 @@ const styles = StyleSheet.create({
   },
   registerButton: {
     marginTop: 10
+  },
+  btnContainer: {
+    flex: 1,
+    alignSelf: "stretch"
   }
 });

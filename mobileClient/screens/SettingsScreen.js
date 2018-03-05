@@ -239,12 +239,26 @@ export default class SettingsScreen extends React.Component {
                   >
                     <Button
                       text="Open Gallery"
-                      buttonStyle={{ marginRight: 5 }}
+                      clear
+                      textStyle={{ color: "dodgerblue" }}
+                      buttonStyle={{
+                        marginRight: 5,
+                        borderColor: "dodgerblue",
+                        borderRadius: 0,
+                        borderBottomWidth: 2
+                      }}
                       onPress={this.pickImage}
                     />
                     <Button
                       text="Open Camera"
-                      buttonStyle={{ marginLeft: 5 }}
+                      clear
+                      textStyle={{ color: "dodgerblue" }}
+                      buttonStyle={{
+                        marginLeft: 5,
+                        borderColor: "dodgerblue",
+                        borderRadius: 0,
+                        borderBottomWidth: 2
+                      }}
                       onPress={this.takePhoto}
                     />
                   </View>
@@ -278,19 +292,28 @@ export default class SettingsScreen extends React.Component {
                       <Button
                         buttonStyle={{
                           marginRight: 5,
-                          backgroundColor: "tomato",
+                          // backgroundColor: "tomato",
+                          borderColor: "tomato",
+                          borderBottomWidth: 2,
+                          borderRadius: 0,
                           width: 70
                         }}
+                        textStyle={{ color: "tomato" }}
                         text="No"
+                        clear
                         onPress={() => this.setState({ pickedImage: null })}
                       />
                       <Button
                         buttonStyle={{
                           marginLeft: 5,
-                          backgroundColor: "limegreen",
+                          borderColor: "limegreen",
+                          borderBottomWidth: 2,
+                          borderRadius: 0,
                           width: 70
                         }}
+                        clear
                         text="Yes"
+                        textStyle={{ color: "limegreen" }}
                         onPress={this.handleUpload}
                       />
                     </View>
@@ -309,7 +332,15 @@ export default class SettingsScreen extends React.Component {
         {!this.state.buttonhidden && (
           <View>
             <Button
-              buttonStyle={{ marginTop: 5 }}
+              clear
+              textStyle={{ color: "dodgerblue" }}
+              buttonStyle={{
+                marginTop: 5,
+                borderColor: "dodgerblue",
+                borderRadius: 0,
+                borderBottomWidth: 2,
+                width: "100%"
+              }}
               text="Logout"
               onPress={this.logout}
             />

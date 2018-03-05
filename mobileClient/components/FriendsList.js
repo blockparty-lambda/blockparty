@@ -370,8 +370,27 @@ export default class FriendsList extends React.Component {
                     avatar={{ uri: item.friend.avatarUrl }}
                     containerStyle={{ borderBottomWidth: 0 }}
                     rightIcon={
-                      <View style={{ flexDirection: "row" }}>
-                        <Icon
+                      <View
+                        style={{
+                          flexDirection: "row",
+                          justifyContent: "center"
+                        }}
+                      >
+                        <Button
+                          clear
+                          textStyle={{ color: "limegreen" }}
+                          text="Yes"
+                          buttonStyle={styles.sendBtn}
+                          onPress={() => this.acceptFriendRequest(item)}
+                        />
+                        <Button
+                          clear
+                          textStyle={{ color: "tomato" }}
+                          buttonStyle={styles.cancelBtn}
+                          text="No"
+                          onPress={() => this.rejectFriendRequest(item)}
+                        />
+                        {/* <Icon
                           type="entypo"
                           size={32}
                           color="tomato"
@@ -384,7 +403,7 @@ export default class FriendsList extends React.Component {
                           size={32}
                           name="check"
                           onPress={() => this.acceptFriendRequest(item)}
-                        />
+                        /> */}
                       </View>
                     }
                   />
@@ -402,10 +421,15 @@ export default class FriendsList extends React.Component {
                     subtitle="Friend Request Sent"
                     avatar={{ uri: item.friend.avatarUrl }}
                     containerStyle={{ borderBottomWidth: 0 }}
-                    rightIcon={{ type: "entypo", name: "cross" }}
-                    onPressRightIcon={() => {
-                      this.rejectFriendRequest(item);
-                    }}
+                    rightIcon={
+                      <Button
+                        clear
+                        textStyle={{ color: "tomato" }}
+                        buttonStyle={styles.cancelBtn}
+                        text="Cancel"
+                        onPress={() => this.rejectFriendRequest(item)}
+                      />
+                    }
                   />
                 );
               }
@@ -474,22 +498,32 @@ export default class FriendsList extends React.Component {
                   <View
                     style={{
                       flexDirection: "row",
-                      justifyContent: "space-around",
+                      justifyContent: "space-between",
                       marginTop: 5
                     }}
                   >
                     <Button
                       text="Send"
+                      clear
+                      textStyle={{ color: "limegreen" }}
                       buttonStyle={styles.sendBtn}
+                      containerStyle={styles.btnContainer}
                       onPress={this.handleToSendClick}
                     />
                     <Button
                       text="Request"
+                      clear
+                      textStyle={{ color: "dodgerblue" }}
+                      buttonStyle={styles.requestBtn}
+                      containerStyle={styles.btnContainer}
                       onPress={this.handleToRequestClick}
                     />
                     <Button
                       text="Cancel"
+                      clear
+                      textStyle={{ color: "tomato" }}
                       buttonStyle={styles.cancelBtn}
+                      containerStyle={styles.btnContainer}
                       onPress={this.handleCancel}
                     />
                   </View>
@@ -539,12 +573,24 @@ export default class FriendsList extends React.Component {
                     onPress={this.updateIndex}
                     selectedIndex={this.state.selectedIndex}
                     buttons={buttons}
+                    selectedButtonStyle={{
+                      backgroundColor: "white",
+                      borderBottomWidth: 2,
+                      borderColor: "dodgerblue"
+                    }}
+                    selectedTextStyle={{
+                      color: "dodgerblue",
+                      fontWeight: "bold"
+                    }}
                     containerStyle={styles.coinBtns}
                   />
                   <View style={styles.confirmBtns}>
                     <Button
                       text="Request"
                       buttonStyle={styles.requestBtn}
+                      clear
+                      textStyle={{ color: "dodgerblue" }}
+                      containerStyle={styles.btnContainer}
                       onPress={() => {
                         Alert.alert("Confirm Request", null, [
                           {
@@ -559,6 +605,9 @@ export default class FriendsList extends React.Component {
                     <Button
                       buttonStyle={styles.cancelBtn}
                       text="Cancel"
+                      clear
+                      textStyle={{ color: "tomato" }}
+                      containerStyle={styles.btnContainer}
                       onPress={this.handleCancel}
                     />
                   </View>
@@ -608,12 +657,24 @@ export default class FriendsList extends React.Component {
                     onPress={this.updateIndex}
                     selectedIndex={this.state.selectedIndex}
                     buttons={buttons}
+                    selectedButtonStyle={{
+                      backgroundColor: "white",
+                      borderBottomWidth: 2,
+                      borderColor: "dodgerblue"
+                    }}
+                    selectedTextStyle={{
+                      color: "dodgerblue",
+                      fontWeight: "bold"
+                    }}
                     containerStyle={styles.coinBtns}
                   />
                   <View style={styles.confirmBtns}>
                     <Button
                       text="Send"
                       buttonStyle={styles.sendBtn}
+                      containerStyle={styles.btnContainer}
+                      clear
+                      textStyle={{ color: "limegreen" }}
                       onPress={() => {
                         Alert.alert("Confirm Transaction", null, [
                           {
@@ -627,7 +688,10 @@ export default class FriendsList extends React.Component {
                     />
                     <Button
                       buttonStyle={styles.cancelBtn}
+                      clear
+                      containerStyle={styles.btnContainer}
                       text="Cancel"
+                      textStyle={{ color: "tomato" }}
                       onPress={this.handleCancel}
                     />
                   </View>
@@ -655,15 +719,28 @@ const styles = StyleSheet.create({
     marginTop: 15
   },
   cancelBtn: {
-    backgroundColor: "tomato",
-    width: '58%'
+    // backgroundColor: "tomato",
+    borderColor: "tomato",
+    borderBottomWidth: 2,
+    alignSelf: "stretch",
+    borderRadius: 0
   },
   sendBtn: {
-    backgroundColor: "limegreen",
-    width: '58%'
+    // backgroundColor: "limegreen"
+    borderColor: "limegreen",
+    borderBottomWidth: 2,
+    alignSelf: "stretch",
+    borderRadius: 0
   },
   requestBtn: {
-    backgroundColor: "limegreen",
-    width: '62%'
+    // backgroundColor: "limegreen"
+    borderColor: "dodgerblue",
+    borderBottomWidth: 2,
+    alignSelf: "stretch",
+    borderRadius: 0
+  },
+  btnContainer: {
+    flex: 1,
+    alignSelf: "stretch"
   }
 });

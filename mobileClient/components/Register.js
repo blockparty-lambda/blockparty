@@ -90,19 +90,32 @@ export default class Register extends React.Component {
           returnKeyType="done"
           secureTextEntry={true}
         />
-        <Button
-          text={"Sign Up"}
-          buttonStyle={styles.registerBtn}
-          onPress={this.register}
-        />
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "space-between",
+            width: "85%",
+            marginTop: 5
+          }}
+        >
+          <Button
+            text={"Sign Up"}
+            buttonStyle={styles.registerBtn}
+            clear
+            textStyle={{ color: "dodgerblue" }}
+            containerStyle={styles.btnContainer}
+            onPress={this.register}
+          />
 
-        <Text style={styles.registerSignInHereText}>Have an account?</Text>
-
-        <Button
-          text="Sign In"
-          buttonStyle={styles.signInBtn}
-          onPress={() => this.props.navigation.navigate("SignIn")}
-        />
+          <Button
+            text="Sign In"
+            clear
+            textStyle={{ color: "dodgerblue" }}
+            containerStyle={styles.btnContainer}
+            buttonStyle={styles.registerBtn}
+            onPress={() => this.props.navigation.navigate("SignIn")}
+          />
+        </View>
       </KeyboardAwareScrollView>
     );
   }
@@ -138,6 +151,14 @@ const styles = StyleSheet.create({
     marginTop: 10
   },
   registerBtn: {
-    marginBottom: 5
+    marginBottom: 5,
+    borderColor: "dodgerblue",
+    borderRadius: 0,
+    borderBottomWidth: 2,
+    alignSelf: "stretch"
+  },
+  btnContainer: {
+    flex: 1,
+    alignSelf: "stretch"
   }
 });
