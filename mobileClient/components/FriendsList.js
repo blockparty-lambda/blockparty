@@ -544,7 +544,7 @@ export default class FriendsList extends React.Component {
                   <View style={styles.confirmBtns}>
                     <Button
                       text="Request"
-                      buttonStyle={styles.sendBtn}
+                      buttonStyle={styles.requestBtn}
                       onPress={() => {
                         Alert.alert("Confirm Request", null, [
                           {
@@ -656,10 +656,14 @@ const styles = StyleSheet.create({
   },
   cancelBtn: {
     backgroundColor: "tomato",
-    width: 70
+    width: '58%'
   },
   sendBtn: {
     backgroundColor: "limegreen",
-    width: 70
+    width: '58%'
+  },
+  requestBtn: {
+    backgroundColor: "limegreen",
+    width: '62%'
   }
 });
