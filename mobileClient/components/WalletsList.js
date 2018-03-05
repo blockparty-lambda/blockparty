@@ -37,8 +37,7 @@ export default class WalletsList extends React.Component {
       loading: false,
       modalVisible: false,
       searchResults: [],
-      selectedWallet: null,
-      focusedROF: null
+      selectedWallet: null
     };
   }
 
@@ -53,6 +52,22 @@ export default class WalletsList extends React.Component {
     await this.getUserWallets();
     await this.getROFS();
   }
+
+  // whenever a piece of data is updated, re render whole screen
+  // a possible one function call that gets all component data from http requests
+  // getAllData = () => {
+  //   axios.all([getUserWallets(), getROFS()])
+  //     .then(axios.spread((acct, perms) => {
+  //       // Both requests are now complete
+  //     }))
+  //     .catch(err => res.json(err))
+  // }
+
+  handleCancel = () => {
+    this.setState({
+      modalVisible: false,
+    });
+  };
 
   getUserWallets = () => {
     axios
@@ -234,6 +249,89 @@ export default class WalletsList extends React.Component {
     this.setState({ modalVisible: false });
   };
 
+  handleROF = (rofId, accepted) => {
+    if (accepted) {
+      axios
+        .post(`${apiUrl}/handlerof`, {
+          rofId,
+          accepted
+        },
+          {
+            headers: {
+              Authorization: this.state.token,
+              "Content-Type": "application/json"
+            }
+          })
+        .then(resp => {
+          // console.log(`inside successful handlerof ${JSON.stringify(resp.data)}`);
+          // if success then alert the rof was transacted and rerender walletlist.js
+          // if wasnt successful (you dont have enough coin, etc...)
+          // handle that
+          if (resp.data.success) {
+            Alert.alert(
+              "Transaction Sent",
+              `Transaction ID: ${resp.data.txId}`,
+              [{ text: "OK", onPress: this.getROFS }]
+            );
+
+            // refresh rofs
+            // this.getROFS();
+          }
+        })
+        .catch(err => {
+          console.log(err);
+          // alert there was an error with the post request
+          Alert.alert(
+            "Block Party Error",
+            `There was an error on our part :(.  Try again later`,
+            [{ text: "OK", onPress: this.handleCancel }]
+          );
+        })
+    }
+    else {
+      axios
+        .post(`${apiUrl}/handlerof`, {
+          rofId,
+          accepted
+        },
+          {
+            headers: {
+              Authorization: this.state.token,
+              "Content-Type": "application/json"
+            }
+          })
+        .then(resp => {
+          // if success then alert the rof was transacted and rerender walletlist.js
+          // if wasnt successful (you dont have enough coin, etc...)
+          // handle that
+          if (resp.data.success) {
+            Alert.alert(
+              "Request Rejected",
+              `Success!`,
+              [{ text: "OK", onPress: this.getROFS }]
+            );
+          }
+          else {
+            Alert.alert(
+              "Block Party Error",
+              `There was an error on our part :(.  Try again later`,
+              [{ text: "OK", onPress: this.handleCancel }]
+            );
+          }
+        })
+        .catch(err => {
+          console.log(err);
+          // alert there was an error with the post request backend
+          Alert.alert(
+            "Block Party Error",
+            `There was an error on our part :(.  Try again later`,
+            [{ text: "OK", onPress: this.handleCancel }]
+          );
+        })
+    }
+
+  }
+
   render() {
     return (
       <List
@@ -348,6 +446,24 @@ export default class WalletsList extends React.Component {
                         title={`From ${item.sender.username}`}
                         subtitle={`${item.amount} ${item.coin}`}
                         containerStyle={{ borderBottomWidth: 0 }}
+                        rightIcon={
+                          <View>
+                            <Icon
+                              type="entypo"
+                              size={24}
+                              color="#bdc6cf"
+                              name="cross"
+                              onPress={() => this.handleROF(item._id, false)}
+                            />
+                            <Icon
+                              type="entypo"
+                              color="#bdc6cf"
+                              size={24}
+                              name="check"
+                              onPress={() => this.handleROF(item._id, true)}
+                            />
+                          </View>
+                        }
                       />
                     );
                   }

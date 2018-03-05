@@ -269,7 +269,10 @@ const sendBtcTest = (user, toAddress, amount, subject) => {
       else {
         let tx = bitcore.Transaction();
         tx.from(utxos);
-        tx.to(toAddress, amount * 100000000);
+
+        let satoshis = unit.fromBTC(amount).toSatoshis()
+        // console.log(amount, satoshis)
+        tx.to(toAddress, satoshis);
         tx.change(fromAddress);
         // tx.fee(5000);
         tx.sign(privateKeyDecrypted);
