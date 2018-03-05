@@ -263,8 +263,7 @@ export default class WalletsList extends React.Component {
             }
           })
         .then(resp => {
-          // console.log(`inside successful handlerof ${JSON.stringify(resp.data)}`);
-          // if success then alert the rof was transacted and rerender walletlist.js
+
           // if wasnt successful (you dont have enough coin, etc...)
           // handle that
           if (resp.data.success) {
@@ -273,10 +272,10 @@ export default class WalletsList extends React.Component {
               `Transaction ID: ${resp.data.txId}`,
               [{ text: "OK", onPress: this.getROFS }]
             );
-
-            // refresh rofs
-            // this.getROFS();
           }
+          // else {
+          //   // handle that user doenst have enough coins etc...
+          // }
         })
         .catch(err => {
           console.log(err);
@@ -301,9 +300,6 @@ export default class WalletsList extends React.Component {
             }
           })
         .then(resp => {
-          // if success then alert the rof was transacted and rerender walletlist.js
-          // if wasnt successful (you dont have enough coin, etc...)
-          // handle that
           if (resp.data.success) {
             Alert.alert(
               "Request Rejected",
