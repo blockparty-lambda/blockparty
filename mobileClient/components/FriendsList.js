@@ -713,7 +713,6 @@ const styles = StyleSheet.create({
     marginTop: 15
   },
   cancelBtn: {
-<<<<<<< HEAD
     // backgroundColor: "tomato",
     borderColor: "tomato",
     borderBottomWidth: 2,
@@ -737,17 +736,5 @@ const styles = StyleSheet.create({
   btnContainer: {
     flex: 1,
     alignSelf: "stretch"
-=======
-    backgroundColor: "tomato",
-    // width: '58%'
-  },
-  sendBtn: {
-    backgroundColor: "limegreen",
-    // width: '58%'
-  },
-  requestBtn: {
-    backgroundColor: "limegreen",
-    // width: '62%'
->>>>>>> a296038dfb349657a8a5bfacdff4e68c558838ef
   }
 });

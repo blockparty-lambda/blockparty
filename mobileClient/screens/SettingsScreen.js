@@ -140,8 +140,7 @@ export default class SettingsScreen extends React.Component {
         <Header
           outerContainerStyles={{
             height: "8%",
-            paddingBottom: 5,
-            marginBottom: 5
+            paddingBottom: 5
           }}
           centerComponent={
             <Text style={{ color: "white", fontSize: 24 }}>Settings</Text>
@@ -330,7 +329,7 @@ export default class SettingsScreen extends React.Component {
         )}
 
         {!this.state.buttonhidden && (
-          <View>
+          <View style={{ alignSelf: "stretch", justifyContent: "center" }}>
             <Button
               clear
               textStyle={{ color: "dodgerblue" }}
@@ -341,6 +340,7 @@ export default class SettingsScreen extends React.Component {
                 borderBottomWidth: 2,
                 width: "100%"
               }}
+              containerStyle={{ width: "100%" }}
               text="Logout"
               onPress={this.logout}
             />
