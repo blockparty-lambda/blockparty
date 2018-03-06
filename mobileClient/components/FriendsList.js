@@ -271,7 +271,6 @@ export default class FriendsList extends React.Component {
         [{ text: "OK", onPress: this.handleCancel }]
       );
     } else {
-      // console.log(transaction.data);
       if (transaction.data.error.error === "insufficient funds") {
         Alert.alert("Transaction Failed", "Insufficient funds", [
           { text: "OK", onPress: this.handleCancel }
