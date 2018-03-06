@@ -353,7 +353,6 @@ export default class FriendsList extends React.Component {
                     }
                     avatar={{ uri: item.avatarUrl }}
                     containerStyle={{ borderBottomWidth: 0 }}
-                    // rightTitle="Add Friend"
                     rightIcon={{
                       type: "entypo",
                       name: "add-user",
@@ -417,7 +416,6 @@ export default class FriendsList extends React.Component {
                 return (
                   <ListItem
                     roundAvatar
-                    // title={`${item.friend.username}`}
                     title={
                       <View style={{ marginLeft: 15 }}>
                         <Text style={{ fontFamily: "space-mono-bold", fontSize: 20 }}>
@@ -448,7 +446,6 @@ export default class FriendsList extends React.Component {
                 return (
                   <ListItem
                     roundAvatar
-                    // title={`${item.friend.username}`}
                     title={
                       <View style={{ marginLeft: 15 }}>
                         <Text style={{ fontFamily: "space-mono-bold", fontSize: 20 }}>

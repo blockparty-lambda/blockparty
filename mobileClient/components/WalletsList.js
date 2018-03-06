@@ -23,7 +23,6 @@ import {
   Icon
 } from "react-native-elements";
 import { icons } from "../assets/icons";
-// import { Font } from 'expo';
 
 export default class WalletsList extends React.Component {
   constructor(props) {
