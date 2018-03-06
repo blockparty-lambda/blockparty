@@ -98,6 +98,7 @@ export default class SignIn extends React.Component {
               placeholder="username"
               returnKeyType="next"
               autoCapitalize="none"
+              placeholderTextColor="#c5c6c7"
               leftIcon={
                 <Icon type="entypo" name="user" size={24} color="#45a29e" />
               }
@@ -109,6 +110,7 @@ export default class SignIn extends React.Component {
               onChangeText={password => this.setState({ password })}
               value={this.state.password}
               placeholder="password"
+              placeholderTextColor="#c5c6c7"
               leftIcon={<Icon name="lock" size={24} color="#45a29e" />}
               autoCorrect={false}
               autoCapitalize="none"
@@ -130,6 +132,7 @@ export default class SignIn extends React.Component {
               leftIcon={<Icon name="email" size={24} color="#45a29e" />}
               value={this.state.email}
               placeholder="email"
+              placeholderTextColor="#c5c6c7"
             />
             <Input
               inputStyle={styles.textInput}
@@ -143,6 +146,7 @@ export default class SignIn extends React.Component {
               }
               value={this.state.username}
               placeholder="username"
+              placeholderTextColor="#c5c6c7"
             />
             <Input
               inputStyle={styles.textInput}
@@ -161,6 +165,7 @@ export default class SignIn extends React.Component {
               value={this.state.passwordRepeat}
               leftIcon={<Icon name="lock" size={24} color="#45a29e" />}
               placeholder="repeat password"
+              placeholderTextColor="#c5c6c7"
               returnKeyType="done"
               secureTextEntry={true}
             />
