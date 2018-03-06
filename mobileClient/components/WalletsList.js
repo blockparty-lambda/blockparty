@@ -37,8 +37,7 @@ export default class WalletsList extends React.Component {
       loading: false,
       modalVisible: false,
       searchResults: [],
-      selectedWallet: null,
-      focusedROF: null
+      selectedWallet: null
     };
   }
 
@@ -53,6 +52,22 @@ export default class WalletsList extends React.Component {
     await this.getUserWallets();
     await this.getROFS();
   }
+
+  // whenever a piece of data is updated, re render whole screen
+  // a possible one function call that gets all component data from http requests
+  // getAllData = () => {
+  //   axios.all([getUserWallets(), getROFS()])
+  //     .then(axios.spread((acct, perms) => {
+  //       // Both requests are now complete
+  //     }))
+  //     .catch(err => res.json(err))
+  // }
+
+  handleCancel = () => {
+    this.setState({
+      modalVisible: false,
+    });
+  };
 
   getUserWallets = () => {
     axios
@@ -104,6 +119,20 @@ export default class WalletsList extends React.Component {
         headers: { Authorization: this.state.token }
       });
       const rofs = result.data;
+
+      // an rof.coin currently had wrong naming convetion, right now rof.coin = "btc_test"
+      // where we want to display "test bitcoin" insteadn
+
+      const coinMap = {
+        btc: "bitcoin",
+        btc_test: "test bitcoin",
+        eth: "ether",
+        eth_test: "test ether"
+      }
+      rofs.forEach(rof => {
+        rof.coinFull = coinMap[rof.coin];
+      });
+
       await this.setState({
         rofs,
         loading: false,
@@ -190,7 +219,8 @@ export default class WalletsList extends React.Component {
             borderWidth: 0,
             borderRadius: 5,
             marginBottom: 5,
-            marginTop: 5
+            marginTop: 5,
+            width: 500 // for whatever reason using 100% screw of the lining of the button text 
           }}
           onPress={async () => {
             if (buttonText === "Add New Wallets") {
@@ -231,6 +261,91 @@ export default class WalletsList extends React.Component {
   closeROFModal = () => {
     this.setState({ modalVisible: false });
   };
+
+  handleROF = (rofId, accepted) => {
+    if (accepted) {
+      axios
+        .post(`${apiUrl}/handlerof`, {
+          rofId,
+          accepted
+        },
+          {
+            headers: {
+              Authorization: this.state.token,
+              "Content-Type": "application/json"
+            }
+          })
+        .then(resp => {
+
+          // if wasnt successful (you dont have enough coin, etc...)
+          // handle that
+          if (resp.data.success) {
+            Alert.alert(
+              "Transaction Sent",
+              `Transaction ID: ${resp.data.txId}`,
+              [{ text: "OK", onPress: this.getROFS }]
+            );
+          }
+          else {
+            // handle that user doenst have enough coins etc...
+            if (resp.data.error.error === "insufficient funds") {
+              Alert.alert(
+                "Error",
+                `Insufficient funds.`,
+                [{ text: "OK", onPress: this.handleCancel }]
+              );
+            }
+          }
+        })
+        .catch(err => {
+          // alert there was an error with the post request
+          Alert.alert(
+            "Block Party Error",
+            `There was an error on our part :(.  Try again later`,
+            [{ text: "OK", onPress: this.handleCancel }]
+          );
+        })
+    }
+    else {
+      axios
+        .post(`${apiUrl}/handlerof`, {
+          rofId,
+          accepted
+        },
+          {
+            headers: {
+              Authorization: this.state.token,
+              "Content-Type": "application/json"
+            }
+          })
+        .then(resp => {
+          if (resp.data.success) {
+            Alert.alert(
+              "Request Rejected",
+              `Success!`,
+              [{ text: "OK", onPress: this.getROFS }]
+            );
+          }
+          else {
+            Alert.alert(
+              "Block Party Error",
+              `There was an error on our part :(.  Try again later`,
+              [{ text: "OK", onPress: this.handleCancel }]
+            );
+          }
+        })
+        .catch(err => {
+          console.log(err);
+          // alert there was an error with the post request backend
+          Alert.alert(
+            "Block Party Error",
+            `There was an error on our part :(.  Try again later`,
+            [{ text: "OK", onPress: this.handleCancel }]
+          );
+        })
+    }
+
+  }
 
   render() {
     return (
@@ -286,6 +401,7 @@ export default class WalletsList extends React.Component {
                       onPressRightIcon={() => {
                         this.addWallet(item.coinAbbr);
                       }}
+                      // onPress={() => this.addWallet(item.coinAbbr)} // click anywhere on listitme to add wallet
                     />
                   );
                 }
@@ -340,8 +456,24 @@ export default class WalletsList extends React.Component {
                         roundAvatar
                         backgroundColor="blue"
                         title={`To ${item.receiver.username}`}
-                        subtitle={`${item.amount} ${item.coin}`}
+                        subtitle={`${item.amount} ${item.coinFull}`}
                         containerStyle={{ borderBottomWidth: 0 }}
+                        rightIcon={
+                          <View
+                            style={{
+                              flexDirection: "row",
+                              justifyContent: "center"
+                            }}
+                          >
+                            <Button
+                              clear
+                              textStyle={{ color: "tomato" }}
+                              buttonStyle={styles.rejectROFBtn}
+                              text="Cancel"
+                              onPress={() => this.handleROF(item._id, false)} // TODO: alert says "Rejected Success"  should say "Removed Success"
+                            />
+                          </View>
+                        }
                       />
                     );
                   } else {
@@ -350,8 +482,31 @@ export default class WalletsList extends React.Component {
                         roundAvatar
                         backgroundColor="violet"
                         title={`From ${item.sender.username}`}
-                        subtitle={`${item.amount} ${item.coin}`}
+                        subtitle={`${item.amount} ${item.coinFull}`}
                         containerStyle={{ borderBottomWidth: 0 }}
+                        rightIcon={
+                          <View
+                            style={{
+                              flexDirection: "row",
+                              justifyContent: "center"
+                            }}
+                          >
+                            <Button
+                              clear
+                              textStyle={{ color: "limegreen" }}
+                              text="Accept"
+                              buttonStyle={styles.acceptROFBtn}
+                              onPress={() => this.handleROF(item._id, true)}
+                            />
+                            <Button
+                              clear
+                              textStyle={{ color: "tomato" }}
+                              buttonStyle={styles.rejectROFBtn}
+                              text="Reject"
+                              onPress={() => this.handleROF(item._id, false)}
+                            />
+                          </View>
+                        }
                       />
                     );
                   }
@@ -418,3 +573,20 @@ export default class WalletsList extends React.Component {
     );
   }
 }
+
+const styles = StyleSheet.create({
+  rejectROFBtn: {
+    borderColor: "tomato",
+    borderBottomWidth: 2,
+    alignSelf: "stretch",
+    borderRadius: 0,
+    marginRight: 10
+  },
+  acceptROFBtn: {
+    borderColor: "limegreen",
+    borderBottomWidth: 2,
+    alignSelf: "stretch",
+    borderRadius: 0,
+    marginRight: 40
+  }
+});

@@ -57,8 +57,8 @@ module.exports = app => {
     .post(authController.requireAuth, userController.sendRequestedFunds)
 
   app
-    .route("/acceptrequest")
-    .post(authController.requireAuth, userController.acceptFundRequest)
+    .route("/handlerof")
+    .post(authController.requireAuth, userController.handleROF)
 
   app.route("/helloworld").get((req, res) => {
     res.send("haaayyy guurrrllll haaayyyy!");

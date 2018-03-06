@@ -259,17 +259,31 @@ const sendBtcTest = (user, toAddress, amount, subject) => {
   const privateKeyEncrypted = wallet.privateKey;
   const privateKeyDecrypted = decrypt(privateKeyEncrypted, "aes-256-ctr", process.env.salt);
 
-  // create a new promise that resolves to either:
-  // { success: false, error: <some error message> } or { success: true,  txId: <the txId> }
-  // TODO: use the .toSathosis .fromSatoshis methods
   return new Promise((resolve, reject) => {
 
-    return insight.getUnspentUtxos(fromAddress, function (error, utxos) {
-      if (error) return reject({ success: false, error });
+    return insight.getUnspentUtxos(fromAddress, (error, utxos) => {
+      if (error) {
+        return reject({ success: false, error });
+      }
       else {
         let tx = bitcore.Transaction();
         tx.from(utxos);
-        tx.to(toAddress, amount * 100000000);
+
+        // const balance = euros.reduce((total, amount) => total + amount); 
+        // could use a reduce function
+        let userSatoshiBalance = 0;
+        for (var i = 0; i < utxos.length; i++) {
+          userSatoshiBalance += utxos[i]['satoshis'];
+        }
+        const userNormalBalance = unit.fromSatoshis(userSatoshiBalance).toBTC();
+
+        let amountToSendSatoshis = unit.fromBTC(amount).toSatoshis()
+
+        if (userNormalBalance < amountToSendSatoshis) {
+          return reject({success: false, error: "insufficient funds"})
+        }
+
+        tx.to(toAddress, amountToSendSatoshis);
         tx.change(fromAddress);
         // tx.fee(5000);
         tx.sign(privateKeyDecrypted);
