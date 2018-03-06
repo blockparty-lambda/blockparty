@@ -83,14 +83,13 @@ export default class SignIn extends React.Component {
         scrollEnabled={false}
       >
         <Text style={styles.headerTxt}>Block Party</Text>
-        {/* <Text style={styles.signInTxt}>Sign In</Text> */}
-        <Text>
+        <Text style={{ color: "#fc6670" }}>
           {this.state.error && this.state.error.length
             ? this.state.error
             : null}
         </Text>
         {this.state.signIn && (
-          <View style={styles.inputView}>
+          <View style={styles.signInView}>
             <Input
               inputStyle={styles.textInput}
               containerStyle={styles.textInputContainer}
@@ -120,7 +119,7 @@ export default class SignIn extends React.Component {
         )}
 
         {!this.state.signIn && (
-          <View style={styles.inputView}>
+          <View style={styles.registerView}>
             <Input
               inputStyle={styles.textInput}
               containerStyle={styles.textInputContainer}
@@ -219,30 +218,6 @@ export default class SignIn extends React.Component {
             />
           </View>
         )}
-
-        {/* <View
-          style={{
-            position: "absolute",
-            bottom: 5,
-            flexDirection: "column",
-            justifyContent: "center",
-            alignContent: "center"
-          }}
-        >
-          <Text>Don't have an account?</Text>
-          <Button
-            text="REGISTER"
-            // containerStyle={styles.btnContainer}
-            clear
-            textStyle={{
-              color: "dodgerblue",
-              fontWeight: "normal",
-              paddingBottom: -5
-            }}
-            buttonStyle={styles.registerBtn}
-            onPress={() => this.props.navigation.navigate("Register")}
-          />
-        </View> */}
       </KeyboardAwareScrollView>
     );
   }
@@ -275,17 +250,22 @@ const styles = StyleSheet.create({
     marginHorizontal: 2.5,
     alignSelf: "stretch"
   },
-  inputView: {
+  registerView: {
     paddingVertical: 15,
     borderTopWidth: 1,
     borderBottomWidth: 1,
+    marginTop: 35,
+    borderColor: "#1f2833"
+  },
+  signInView: {
+    paddingVertical: 15,
+    borderTopWidth: 1,
+    borderBottomWidth: 1,
+    marginTop: 125,
     borderColor: "#1f2833"
   },
   headerTxt: {
     fontSize: 35,
-    marginBottom: 35,
-    position: "absolute",
-    top: 75,
     fontWeight: "bold",
     color: "#66fcf1"
   },
