@@ -257,11 +257,8 @@ const styles = StyleSheet.create({
   },
   textInput: {
     height: 35,
-    // backgroundColor: "#1f2833",
     borderColor: "transparent",
     color: "#45a29e",
-    // borderWidth: 1,
-    // paddingLeft: 5,
     width: 300,
     marginVertical: 5
   },
@@ -277,18 +274,6 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     marginHorizontal: 2.5,
     alignSelf: "stretch"
-  },
-  registerBtn: {
-    marginBottom: 5,
-    borderColor: "#66fcf1",
-    borderRadius: 0,
-    borderWidth: 1.5,
-    marginHorizontal: 2.5
-    // alignSelf: "flex-end"
-  },
-  signInTxt: {
-    fontSize: 25,
-    color: "#747474"
   },
   inputView: {
     paddingVertical: 15,

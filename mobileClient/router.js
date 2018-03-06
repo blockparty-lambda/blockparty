@@ -17,9 +17,6 @@ export const SignedOut = StackNavigator(
   {
     SignIn: {
       screen: SignIn
-    },
-    Register: {
-      screen: Register
     }
   },
   {
@@ -81,6 +78,13 @@ export const SignedIn = TabNavigator(
       }
     }),
     tabBarComponent: TabBarBottom,
+    tabBarOptions: {
+      style: {
+        backgroundColor: Colors.tabBar
+      },
+      activeTintColor: Colors.tintColor,
+      inactiveTintColor: "#c5c6c7"
+    },
     tabBarPosition: "bottom",
     animationEnabled: false,
     swipeEnabled: false
