@@ -474,7 +474,7 @@ export default class FriendsList extends React.Component {
                 <Header
                   backgroundColor="white"
                   centerComponent={
-                    <Text style={{ color: "gray", fontSize: 24 }}>
+                    <Text style={{ color: "gray", fontSize: 24, fontFamily: "space-mono-regular" }}>
                       {this.state.selectedFriend.username}
                     </Text>
                   }
@@ -497,7 +497,7 @@ export default class FriendsList extends React.Component {
                     <Button
                       text="Send"
                       clear
-                      textStyle={{ color: "limegreen" }}
+                      textStyle={{ color: "limegreen", fontFamily: "space-mono-bold" }}
                       buttonStyle={styles.sendBtn}
                       containerStyle={styles.btnContainer}
                       onPress={this.handleToSendClick}
@@ -505,7 +505,7 @@ export default class FriendsList extends React.Component {
                     <Button
                       text="Request"
                       clear
-                      textStyle={{ color: "dodgerblue" }}
+                      textStyle={{ color: "dodgerblue", fontFamily: "space-mono-bold" }}
                       buttonStyle={styles.requestBtn}
                       containerStyle={styles.btnContainer}
                       onPress={this.handleToRequestClick}
@@ -513,7 +513,7 @@ export default class FriendsList extends React.Component {
                     <Button
                       text="Cancel"
                       clear
-                      textStyle={{ color: "tomato" }}
+                      textStyle={{ color: "tomato", fontFamily: "space-mono-bold" }}
                       buttonStyle={styles.cancelBtn}
                       containerStyle={styles.btnContainer}
                       onPress={this.handleCancel}
@@ -532,7 +532,7 @@ export default class FriendsList extends React.Component {
                 <Header
                   backgroundColor="white"
                   centerComponent={
-                    <Text style={{ color: "gray", fontSize: 24 }}>
+                    <Text style={{ color: "gray", fontSize: 24, fontFamily: "space-mono-regular" }}>
                       {this.state.selectedFriend.username}
                     </Text>
                   }
@@ -569,7 +569,7 @@ export default class FriendsList extends React.Component {
                     }}
                     selectedTextStyle={{
                       color: "dodgerblue",
-                      fontWeight: "bold"
+                      fontFamily: "space-mono-bold"
                     }}
                     containerStyle={styles.coinBtns}
                   />
@@ -578,7 +578,7 @@ export default class FriendsList extends React.Component {
                       text="Request"
                       buttonStyle={styles.requestBtn}
                       clear
-                      textStyle={{ color: "dodgerblue" }}
+                      textStyle={{ color: "dodgerblue", fontFamily: "space-mono-bold" }}
                       containerStyle={styles.btnContainer}
                       onPress={() => {
                         Alert.alert("Confirm Request", null, [
@@ -595,7 +595,7 @@ export default class FriendsList extends React.Component {
                       buttonStyle={styles.cancelBtn}
                       text="Cancel"
                       clear
-                      textStyle={{ color: "tomato" }}
+                      textStyle={{ color: "tomato", fontFamily: "space-mono-bold" }}
                       containerStyle={styles.btnContainer}
                       onPress={this.handleCancel}
                     />
@@ -613,7 +613,7 @@ export default class FriendsList extends React.Component {
                 <Header
                   backgroundColor="white"
                   centerComponent={
-                    <Text style={{ color: "gray", fontSize: 24 }}>
+                    <Text style={{ color: "gray", fontSize: 24, fontFamily: "space-mono-regular" }}>
                       {this.state.selectedFriend.username}
                     </Text>
                   }
@@ -650,7 +650,7 @@ export default class FriendsList extends React.Component {
                     }}
                     selectedTextStyle={{
                       color: "dodgerblue",
-                      fontWeight: "bold"
+                      fontFamily: "space-mono-bold"
                     }}
                     containerStyle={styles.coinBtns}
                   />
@@ -660,7 +660,7 @@ export default class FriendsList extends React.Component {
                       buttonStyle={styles.sendBtn}
                       containerStyle={styles.btnContainer}
                       clear
-                      textStyle={{ color: "limegreen" }}
+                      textStyle={{ color: "limegreen", fontFamily: "space-mono-bold" }}
                       onPress={() => {
                         Alert.alert("Confirm Transaction", null, [
                           {
@@ -677,7 +677,7 @@ export default class FriendsList extends React.Component {
                       clear
                       containerStyle={styles.btnContainer}
                       text="Cancel"
-                      textStyle={{ color: "tomato" }}
+                      textStyle={{ color: "tomato", fontFamily: "space-mono-bold" }}
                       onPress={this.handleCancel}
                     />
                   </View>

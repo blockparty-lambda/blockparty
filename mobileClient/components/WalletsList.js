@@ -215,11 +215,7 @@ export default class WalletsList extends React.Component {
       <View>
         <Button
           text={buttonText}
-          // text={
-          //   <Text style={{ fontFamily: "space-mono-regular"}}>
-          //     {buttonText}
-          //   </Text>
-          // }
+          textStyle={{ fontFamily: "space-mono-bold" }}
           buttonStyle={{
             height: 45,
             borderColor: "transparent",
