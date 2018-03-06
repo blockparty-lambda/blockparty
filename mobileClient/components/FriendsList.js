@@ -331,7 +331,7 @@ export default class FriendsList extends React.Component {
           renderSectionHeader={({ section }) => {
             if (!section.data.length) return null;
             return (
-              <Text h4 style={{ marginLeft: 5, marginVertical: 5 }}>
+              <Text h4 style={{ marginLeft: 15, marginVertical: 5, fontFamily: "megrim" }}>
                 {section.key}
               </Text>
             );
@@ -344,10 +344,16 @@ export default class FriendsList extends React.Component {
                 return (
                   <ListItem
                     roundAvatar
-                    title={`${item.username}`}
+                    title={
+                      <View style={{ marginLeft: 15 }}>
+                        <Text style={{ fontFamily: "space-mono-bold", fontSize: 20 }}>
+                          {item.username}
+                        </Text>
+                      </View>
+                    }
                     avatar={{ uri: item.avatarUrl }}
                     containerStyle={{ borderBottomWidth: 0 }}
-                    rightTitle="Add Friend"
+                    // rightTitle="Add Friend"
                     rightIcon={{
                       type: "entypo",
                       name: "add-user",
@@ -367,7 +373,13 @@ export default class FriendsList extends React.Component {
                 return (
                   <ListItem
                     roundAvatar
-                    title={`${item.friend.username}`}
+                    title={
+                      <View style={{ marginLeft: 15 }}>
+                        <Text style={{ fontFamily: "space-mono-bold", fontSize: 20 }}>
+                          {item.friend.username}
+                        </Text>
+                      </View>
+                    }
                     subtitle="Friend Request Received"
                     avatar={{ uri: item.friend.avatarUrl }}
                     containerStyle={{ borderBottomWidth: 0 }}
@@ -392,20 +404,6 @@ export default class FriendsList extends React.Component {
                           text="No"
                           onPress={() => this.rejectFriendRequest(item)}
                         />
-                        {/* <Icon
-                          type="entypo"
-                          size={32}
-                          color="tomato"
-                          name="cross"
-                          onPress={() => this.rejectFriendRequest(item)}
-                        />
-                        <Icon
-                          type="entypo"
-                          color="limegreem"
-                          size={32}
-                          name="check"
-                          onPress={() => this.acceptFriendRequest(item)}
-                        /> */}
                       </View>
                     }
                   />
@@ -419,7 +417,14 @@ export default class FriendsList extends React.Component {
                 return (
                   <ListItem
                     roundAvatar
-                    title={`${item.friend.username}`}
+                    // title={`${item.friend.username}`}
+                    title={
+                      <View style={{ marginLeft: 15 }}>
+                        <Text style={{ fontFamily: "space-mono-bold", fontSize: 20 }}>
+                          {item.friend.username}
+                        </Text>
+                      </View>
+                    }
                     subtitle="Friend Request Sent"
                     avatar={{ uri: item.friend.avatarUrl }}
                     containerStyle={{ borderBottomWidth: 0 }}
@@ -443,7 +448,14 @@ export default class FriendsList extends React.Component {
                 return (
                   <ListItem
                     roundAvatar
-                    title={`${item.friend.username}`}
+                    // title={`${item.friend.username}`}
+                    title={
+                      <View style={{ marginLeft: 15 }}>
+                        <Text style={{ fontFamily: "space-mono-bold", fontSize: 20 }}>
+                          {item.friend.username}
+                        </Text>
+                      </View>
+                    }
                     avatar={{ uri: item.friend.avatarUrl }}
                     containerStyle={{ borderBottomWidth: 0 }}
                     onPress={() => this.handleFriendClick(item.friend)}
