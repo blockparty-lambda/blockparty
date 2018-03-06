@@ -458,6 +458,22 @@ export default class WalletsList extends React.Component {
                         title={`To ${item.receiver.username}`}
                         subtitle={`${item.amount} ${item.coinFull}`}
                         containerStyle={{ borderBottomWidth: 0 }}
+                        rightIcon={
+                          <View
+                            style={{
+                              flexDirection: "row",
+                              justifyContent: "center"
+                            }}
+                          >
+                            <Button
+                              clear
+                              textStyle={{ color: "tomato" }}
+                              buttonStyle={styles.rejectROFBtn}
+                              text="Cancel"
+                              onPress={() => this.handleROF(item._id, false)} // TODO: alert says "Rejected Success"  should say "Removed Success"
+                            />
+                          </View>
+                        }
                       />
                     );
                   } else {
