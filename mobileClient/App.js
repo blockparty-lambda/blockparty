@@ -27,12 +27,13 @@ export default class App extends React.Component {
 // add fonts
   // TODO: possibly do we add a fontLoaded prop for handling loading custom fonts? reference: https://docs.expo.io/versions/latest/guides/using-custom-fonts.html
   async componentDidMount() {
-    Font.loadAsync({
+    await Font.loadAsync({
       'space-mono-regular': require('./assets/fonts/SpaceMono-Regular.ttf'),
       'space-mono-bold': require('./assets/fonts/SpaceMono-Bold.ttf'),
       'megrim': require('./assets/fonts/Megrim.ttf'),
     });
 
+    // apparently you can set default props with 'defaultProps'
     // Text.defaultProps.style = { fontFamily: 'space-mono-regular' };
   }
 
