@@ -461,8 +461,20 @@ export default class WalletsList extends React.Component {
                       <ListItem
                         roundAvatar
                         backgroundColor="blue"
-                        title={`To ${item.receiver.username}`}
-                        subtitle={`${item.amount} ${item.coinFull}`}
+                        title={
+                          <View style={{ marginLeft: 5 }}>
+                            <Text style={{ fontFamily: "space-mono-bold", fontSize: 18 }}>
+                              {item.receiver.username}
+                            </Text>
+                          </View>
+                        }
+                        subtitle={
+                          <View style={{ flexDirection: "row", marginLeft: 10 }}>
+                            <Text style={{ fontFamily: "space-mono-regular", fontSize: 14 }}>
+                              {item.amount} {item.coinFull}
+                            </Text>
+                          </View>
+                        }
                         containerStyle={{ borderBottomWidth: 0 }}
                         rightIcon={
                           <View
