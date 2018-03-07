@@ -6,7 +6,8 @@ import {
   AsyncStorage,
   ActivityIndicator,
   Alert,
-  Keyboard
+  Keyboard,
+  TouchableWithoutFeedback
 } from "react-native";
 import axios from "axios";
 import { apiUrl } from "../config";
@@ -319,6 +320,7 @@ export default class FriendsList extends React.Component {
   render() {
     const buttons = ["Eth", "Btc", "Eth Test", "Btc Test"];
     return (
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
       <List
         containerStyle={{
           borderTopWidth: 0,
@@ -791,6 +793,7 @@ export default class FriendsList extends React.Component {
             </Overlay>
           )}
       </List>
+      </TouchableWithoutFeedback>
     );
   }
 }
