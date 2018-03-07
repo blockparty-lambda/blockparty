@@ -22,10 +22,6 @@ import axios from "axios";
 import { apiUrl } from "../config";
 
 export default class SettingsScreen extends React.Component {
-  static navigationOptions = {
-    title: "Settings"
-  };
-
   constructor(props) {
     super(props);
 
@@ -141,19 +137,25 @@ export default class SettingsScreen extends React.Component {
           outerContainerStyles={{
             height: "8%",
             paddingBottom: 5,
-            // backgroundColor: "#0b0c10",
             backgroundColor: "#1f2833",
             borderBottomColor: "#45a29e"
           }}
           style={{ borderBottomColor: "#45a29e" }}
           leftComponent={
-            <Text style={{ color: "#66fcf1", fontSize: 24 }}>Settings</Text>
+            <Text
+              style={{
+                color: "#66fcf1",
+                fontSize: 24,
+                fontFamily: "space-mono-bold"
+              }}
+            >
+              Settings
+            </Text>
           }
         />
         <List
           containerStyle={{
             marginTop: 0,
-            // backgroundColor: "#1f2833",
             backgroundColor: "#0b0c10",
             borderTopColor: "#45a29e"
           }}
@@ -168,7 +170,12 @@ export default class SettingsScreen extends React.Component {
             onPress={this.toggleProfileSettings}
           />
           <ListItem
-            titleStyle={styles.itemTitle}
+            titleStyle={{
+              color: "#66fcf1",
+              marginLeft: 8,
+              fontSize: 20,
+              fontFamily: "space-mono-bold"
+            }}
             containerStyle={{ borderBottomColor: "#45a29e" }}
             wrapperStyle={{ borderBottomColor: "#45a29e" }}
             leftIcon={{
@@ -197,7 +204,13 @@ export default class SettingsScreen extends React.Component {
                 }}
                 style={{ borderBottomColor: "#45a29e" }}
                 leftComponent={
-                  <Text style={{ color: "#45a29e", fontSize: 20 }}>
+                  <Text
+                    style={{
+                      color: "#45a29e",
+                      fontSize: 20,
+                      fontFamily: "space-mono-bold"
+                    }}
+                  >
                     Profile Settings
                   </Text>
                 }
@@ -362,16 +375,13 @@ export default class SettingsScreen extends React.Component {
           <View style={{ alignSelf: "stretch", justifyContent: "center" }}>
             <Button
               clear
-              textStyle={{ color: "#fc6670" }}
+              textStyle={{ color: "#fc6670", fontFamily: "space-mono-bold" }}
               buttonStyle={{
                 marginTop: 15,
                 borderColor: "#fc6670",
-                // backgroundColor: "#fc6670",
                 borderRadius: 0,
                 borderBottomWidth: 2
-                // width: "100%"
               }}
-              // containerStyle={{ width: "100%" }}
               text="Log Out"
               onPress={this.logout}
             />
@@ -389,6 +399,9 @@ const styles = StyleSheet.create({
     backgroundColor: "#0b0c10"
   },
   itemTitle: {
-    color: "#66fcf1"
+    color: "#66fcf1",
+    marginLeft: 15,
+    fontSize: 20,
+    fontFamily: "space-mono-bold"
   }
 });

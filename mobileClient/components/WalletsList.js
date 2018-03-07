@@ -45,6 +45,7 @@ export default class WalletsList extends React.Component {
   // set result to state
   // Example of how to access backend and pass the jwt in headers
   async componentDidMount() {
+
     Keyboard.dismiss();
     await this.setState({ token: await AsyncStorage.getItem("jwt") });
     await this.setState({ username: await AsyncStorage.getItem("bpUsername") });
@@ -213,6 +214,7 @@ export default class WalletsList extends React.Component {
       <View>
         <Button
           text={buttonText}
+          textStyle={{ fontFamily: "space-mono-bold" }}
           buttonStyle={{
             height: 45,
             borderColor: "transparent",
@@ -368,7 +370,7 @@ export default class WalletsList extends React.Component {
             renderSectionHeader={({ section }) => {
               if (!section.data.length) return null;
               return (
-                <Text h4 style={{ marginLeft: 5, marginVertical: 5 }}>
+                <Text h4 style={{ marginLeft: 15, marginVertical: 5, fontFamily: "megrim"}}>
                   {section.key}
                 </Text>
               );
@@ -414,13 +416,17 @@ export default class WalletsList extends React.Component {
                   return (
                     <ListItem
                       roundAvatar
-                      title={`${item.coin}`}
+                      title={
+                        <View style={{ marginLeft: 15}}>
+                          <Text style={{ fontFamily: "space-mono-bold" }}>
+                            {item.coin}
+                          </Text>
+                        </View>
+                      }
                       subtitle={
-                        <View style={{ flexDirection: "row" }}>
-                          <Text>Balance: </Text>
-                          <Text>{item.balance}</Text>
-                          <Text> | </Text>
-                          <Text style={{ color: "green" }}>
+                        <View style={{ flexDirection: "row", marginLeft: 15 }}>
+                          <Text style={{ fontFamily: "space-mono-regular"}}>Balance: {item.balance} | </Text>
+                          <Text style={{ color: "green", fontFamily: "space-mono-regular" }}>
                             ${item.usdBalance}{" "}
                           </Text>
                         </View>
