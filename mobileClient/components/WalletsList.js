@@ -219,10 +219,11 @@ export default class WalletsList extends React.Component {
       <View>
         <Button
           text={buttonText}
-          textStyle={{ fontFamily: "space-mono-bold" }}
+          textStyle={{ fontFamily: "space-mono-bold", color: "#0b0c10" }}
           buttonStyle={{
             height: 45,
             borderColor: "transparent",
+            backgroundColor: "#45a29e",
             borderWidth: 0,
             borderRadius: 5,
             marginBottom: 5,
@@ -288,6 +289,7 @@ export default class WalletsList extends React.Component {
         .then(resp => {
           // if wasnt successful (you dont have enough coin, etc...)
           // handle that
+          console.log(resp.data);
           if (resp.data.success) {
             Alert.alert(
               "Transaction Sent",
@@ -431,19 +433,23 @@ export default class WalletsList extends React.Component {
                       roundAvatar
                       title={
                         <View style={{ marginLeft: 15 }}>
-                          <Text style={{ fontFamily: "space-mono-bold" }}>
-                            {item.coin}
-                          </Text>
+                          <Text style={styles.itemTitle}>{item.coin}</Text>
                         </View>
                       }
+                      titleStyle={{ color: "#66fcf1" }}
                       subtitle={
                         <View style={{ flexDirection: "row", marginLeft: 15 }}>
-                          <Text style={{ fontFamily: "space-mono-regular" }}>
+                          <Text
+                            style={{
+                              fontFamily: "space-mono-regular",
+                              color: "#45a29e"
+                            }}
+                          >
                             Balance: {item.balance} |{" "}
                           </Text>
                           <Text
                             style={{
-                              color: "green",
+                              color: "#66fca7",
                               fontFamily: "space-mono-regular"
                             }}
                           >
@@ -452,19 +458,18 @@ export default class WalletsList extends React.Component {
                         </View>
                       }
                       leftIcon={
-                        <Image
-                          style={{
-                            height: 42,
-                            width: 42,
-                            marginRight: 5,
-                            marginLeft: -5
-                          }}
-                          source={icons[item.coinAbbr]}
+                        <Icon
+                          size={28}
+                          color="#45a29e"
+                          name={WalletsList.coinIcons[item.coinAbbr].name}
+                          type={WalletsList.coinIcons[item.coinAbbr].type}
                           resizeMode="contain"
                         />
                       }
+                      underlayColor="#45a29e"
+                      chevronColor="#66fcf1"
                       containerStyle={{ borderBottomWidth: 0 }}
-                      onPressRightIcon={() => {
+                      onPress={() => {
                         this.handleWalletClick(item);
                       }}
                     />
@@ -480,7 +485,6 @@ export default class WalletsList extends React.Component {
                     return (
                       <ListItem
                         roundAvatar
-                        backgroundColor="blue"
                         title={`To ${item.receiver.username}`}
                         subtitle={`${item.amount} ${item.coinFull}`}
                         containerStyle={{ borderBottomWidth: 0 }}
@@ -493,7 +497,10 @@ export default class WalletsList extends React.Component {
                           >
                             <Button
                               clear
-                              textStyle={{ color: "tomato" }}
+                              textStyle={{
+                                color: "#fc6670",
+                                fontFamily: "space-mono-bold"
+                              }}
                               buttonStyle={styles.rejectROFBtn}
                               text="Cancel"
                               onPress={() => this.handleROF(item._id, false)} // TODO: alert says "Rejected Success"  should say "Removed Success"
@@ -506,9 +513,13 @@ export default class WalletsList extends React.Component {
                     return (
                       <ListItem
                         roundAvatar
-                        backgroundColor="violet"
                         title={`From ${item.sender.username}`}
+                        titleStyle={styles.itemTitle}
                         subtitle={`${item.amount} ${item.coinFull}`}
+                        subtitleStyle={{
+                          fontFamily: "space-mono-regular",
+                          color: "#45a29e"
+                        }}
                         containerStyle={{ borderBottomWidth: 0 }}
                         rightIcon={
                           <View
@@ -519,14 +530,23 @@ export default class WalletsList extends React.Component {
                           >
                             <Button
                               clear
-                              textStyle={{ color: "limegreen" }}
+                              textStyle={{
+                                color: "#66fcf1",
+                                fontFamily: "space-mono-bold"
+                              }}
                               text="Accept"
                               buttonStyle={styles.acceptROFBtn}
-                              onPress={() => this.handleROF(item._id, true)}
+                              onPress={() => {
+                                console.log("CLICKED");
+                                this.handleROF(item._id, true);
+                              }}
                             />
                             <Button
                               clear
-                              textStyle={{ color: "tomato" }}
+                              textStyle={{
+                                color: "#fc6670",
+                                fontFamily: "space-mono-bold"
+                              }}
                               buttonStyle={styles.rejectROFBtn}
                               text="Reject"
                               onPress={() => this.handleROF(item._id, false)}
@@ -545,35 +565,38 @@ export default class WalletsList extends React.Component {
           />
         ) : null}
         {this.state.selectedWallet && (
-          <Overlay isVisible height="auto">
+          <Overlay isVisible height="auto" overlayBackgroundColor="#0b0c10">
             <View style={{ flexDirection: "column" }}>
               <Header
-                backgroundColor="white"
+                backgroundColor="#0b0c10"
                 outerContainerStyles={{
                   height: "30%",
                   paddingVertical: 5,
-                  marginBottom: 5
+                  marginBottom: 5,
+                  borderBottomColor: "#45a29e"
                 }}
                 centerComponent={
-                  <Text style={{ color: "gray", fontSize: 24 }}>
+                  <Text style={{ color: "#66fcf1", fontSize: 24 }}>
                     {this.state.selectedWallet.coin}
                   </Text>
                 }
                 leftComponent={
-                  <Image
-                    style={{
-                      height: 32,
-                      width: 32,
-                      marginRight: 5,
-                      marginLeft: -5
-                    }}
-                    source={icons[this.state.selectedWallet.coinAbbr]}
-                    resizeMode="contain"
+                  <Icon
+                    size={28}
+                    color="#45a29e"
+                    name={
+                      WalletsList.coinIcons[this.state.selectedWallet.coinAbbr]
+                        .name
+                    }
+                    type={
+                      WalletsList.coinIcons[this.state.selectedWallet.coinAbbr]
+                        .type
+                    }
                   />
                 }
                 rightComponent={
                   <Icon
-                    color="gray"
+                    color="#fc6670"
                     size={24}
                     type="entypo"
                     name="cross"
@@ -581,11 +604,17 @@ export default class WalletsList extends React.Component {
                   />
                 }
               />
-              <Text style={{ marginVertical: 15 }}>
+              <Text style={{ marginVertical: 15, color: "#45a29e" }}>
                 Address: {this.state.selectedWallet.address}
               </Text>
               <Button
-                // style={{marginTop: 15}}
+                clear
+                buttonStyle={{
+                  borderColor: "#66fcf1",
+                  borderBottomWidth: 2,
+                  borderRadius: 0
+                }}
+                textStyle={{ color: "#66fcf1", fontFamily: "space-mono-bold" }}
                 text="Copy Address"
                 onPress={async () => {
                   await Clipboard.setString(this.state.selectedWallet.address);
@@ -602,18 +631,18 @@ export default class WalletsList extends React.Component {
 
 const styles = StyleSheet.create({
   rejectROFBtn: {
-    borderColor: "tomato",
+    borderColor: "#fc6670",
     borderBottomWidth: 2,
     alignSelf: "stretch",
     borderRadius: 0,
     marginRight: 10
   },
   acceptROFBtn: {
-    borderColor: "limegreen",
+    borderColor: "#66fcf1",
     borderBottomWidth: 2,
     alignSelf: "stretch",
     borderRadius: 0,
-    marginRight: 40
+    marginRight: 15
   },
   itemTitle: {
     fontFamily: "space-mono-regular",

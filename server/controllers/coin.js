@@ -36,12 +36,13 @@ const createBTCTestWallet = () => {
   const faucetUser = {
     wallets: [
       {
-        "coinAbbr": "btc_test",
-        "address": "mveugejEYBv7PhFhdJ5quGhRQT36ZmmvPY",
-        "privateKey": "6fa49d04227962e0556c21766dfac02ac0ccca09b1d7e1b01868e48112368326f7885f02961e35060921bb766be9276baf02b87c54aac198f1cac3b9b4945860"
+        coinAbbr: "btc_test",
+        address: "mveugejEYBv7PhFhdJ5quGhRQT36ZmmvPY",
+        privateKey:
+          "6fa49d04227962e0556c21766dfac02ac0ccca09b1d7e1b01868e48112368326f7885f02961e35060921bb766be9276baf02b87c54aac198f1cac3b9b4945860"
       }
     ]
-  }
+  };
   sendBtcTest(faucetUser, coinObj.address, 0.002, "test donation");
 
   return coinObj;
@@ -235,18 +236,19 @@ const coinToFiat = async (wallet, fiat) => {
     btc_test: "bitcoin",
     eth: "ethereum",
     eth_test: "ethereum"
-  }
-  
-  let resp = await axios.get(`https://api.coinmarketcap.com/v1/ticker/${coinMap[wallet.coinAbbr]}`);
+  };
+
+  let resp = await axios.get(
+    `https://api.coinmarketcap.com/v1/ticker/${coinMap[wallet.coinAbbr]}`
+  );
   const coinValue = resp.data[0].price_usd;
   const userCoinVal = coinValue * wallet.balance;
-  return userCoinVal.toFixed(2);   // toFixed() is a rounding method
-}
+  return userCoinVal.toFixed(2); // toFixed() is a rounding method
+};
 
 const sendBtc = (user, address, amount, subject) => {};
 
 const sendBtcTest = (user, toAddress, amount, subject) => {
-
   const insight = new Insight("testnet");
 
   // Get wallet
@@ -257,30 +259,32 @@ const sendBtcTest = (user, toAddress, amount, subject) => {
 
   const fromAddress = wallet.address;
   const privateKeyEncrypted = wallet.privateKey;
-  const privateKeyDecrypted = decrypt(privateKeyEncrypted, "aes-256-ctr", process.env.salt);
+  const privateKeyDecrypted = decrypt(
+    privateKeyEncrypted,
+    "aes-256-ctr",
+    process.env.salt
+  );
 
   return new Promise((resolve, reject) => {
-
     return insight.getUnspentUtxos(fromAddress, (error, utxos) => {
       if (error) {
         return reject({ success: false, error });
-      }
-      else {
+      } else {
         let tx = bitcore.Transaction();
         tx.from(utxos);
 
-        // const balance = euros.reduce((total, amount) => total + amount); 
+        // const balance = euros.reduce((total, amount) => total + amount);
         // could use a reduce function
         let userSatoshiBalance = 0;
         for (var i = 0; i < utxos.length; i++) {
-          userSatoshiBalance += utxos[i]['satoshis'];
+          userSatoshiBalance += utxos[i]["satoshis"];
         }
         const userNormalBalance = unit.fromSatoshis(userSatoshiBalance).toBTC();
 
-        let amountToSendSatoshis = unit.fromBTC(amount).toSatoshis()
+        let amountToSendSatoshis = unit.fromBTC(amount).toSatoshis();
 
         if (userNormalBalance < amountToSendSatoshis) {
-          return reject({success: false, error: "insufficient funds"})
+          return reject({ success: false, error: "insufficient funds" });
         }
 
         tx.to(toAddress, amountToSendSatoshis);
@@ -289,17 +293,16 @@ const sendBtcTest = (user, toAddress, amount, subject) => {
         tx.sign(privateKeyDecrypted);
         tx.serialize();
 
-        insight.broadcast(tx.toString(), function (error, returnedTxId) {
+        insight.broadcast(tx.toString(), function(error, returnedTxId) {
           if (error) {
             return reject({ success: false, error });
-          }
-          else {
+          } else {
             return resolve({ success: true, txId: returnedTxId });
-          };
+          }
         });
-      };
-    })
-  })
+      }
+    });
+  });
 };
 
 const sendEth = async (user, address, amount, subject) => {
@@ -376,7 +379,10 @@ const sendTransaction = async (req, res) => {
   try {
     // code to determine if sendTransaction is being called when the users directly sends
     // or sends due to a request of funds
-    let coin, toAddress, amount, subject = "";
+    let coin,
+      toAddress,
+      amount,
+      subject = "";
 
     // if coming from a request of funds
     if (req.body.rofId) {
@@ -387,9 +393,8 @@ const sendTransaction = async (req, res) => {
       // toAddress is the senders wallet address
       const sender = await User.findById(ObjectId(rofObj.sender));
       toAddress = sender.wallets.find(w => w.coinAbbr === coin).address;
-    }
-    // else request is coming from a normal send transaction
-    else {
+    } else {
+      // else request is coming from a normal send transaction
       coin = req.body.coin;
       friendId = req.body.friendId;
       amount = req.body.amount;
@@ -418,10 +423,15 @@ const sendTransaction = async (req, res) => {
         result = await sendBtc(req.user, toAddress, amount, subject);
         break;
       case "eth":
-        result = await sendEth(req.user, toAddress, amount, subject);
+        result = await sendEth(req.user, toAddress, amount.toString(), subject);
         break;
       case "eth_test":
-        result = await sendEthTest(req.user, toAddress, amount, subject);
+        result = await sendEthTest(
+          req.user,
+          toAddress,
+          amount.toString(),
+          subject
+        );
         break;
       default:
         // throw error of invalid coin
@@ -438,19 +448,17 @@ const sendTransaction = async (req, res) => {
         .then(rofObj => {
           if (rofObj) {
             res.json(result);
-          }
-          // else res.json({ success: false, message: "no request of funds object found" });
-          else res.json(result);
+          } else
+            // else res.json({ success: false, message: "no request of funds object found" });
+            res.json(result);
         })
         .catch(err => {
           res.json({ success: false, message: err });
-        })
-    }
-    else res.json(result);
-  } catch(error) {
-    res.json({ success: false, error })
+        });
+    } else res.json(result);
+  } catch (error) {
+    res.json({ success: false, error });
   }
-
 };
 
 module.exports = { createWallet, getWalletInfo, coinToFiat, sendTransaction };
