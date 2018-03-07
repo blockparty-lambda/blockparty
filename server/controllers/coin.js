@@ -279,12 +279,11 @@ const sendBtcTest = (user, toAddress, amount, subject) => {
         for (var i = 0; i < utxos.length; i++) {
           userSatoshiBalance += utxos[i]["satoshis"];
         }
-        const userNormalBalance = unit.fromSatoshis(userSatoshiBalance).toBTC();
 
         let amountToSendSatoshis = unit.fromBTC(amount).toSatoshis();
 
-        if (userNormalBalance < amountToSendSatoshis) {
-          return reject({ success: false, error: "insufficient funds" });
+        if (userSatoshiBalance < amountToSendSatoshis) {
+          return reject({success: false, error: "insufficient funds"})
         }
 
         tx.to(toAddress, amountToSendSatoshis);
