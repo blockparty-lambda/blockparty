@@ -157,6 +157,7 @@ export default class SettingsScreen extends React.Component {
                 My Profile Settings
               </Text> 
             }
+            onPress={this.toggleProfileSettings}
             onPressRightIcon={this.toggleProfileSettings}
           />
           <ListItem
@@ -166,6 +167,7 @@ export default class SettingsScreen extends React.Component {
                 Update Profile Picture
               </Text>
             }
+            onPress={this.toggleUpdateAvatar}
             onPressRightIcon={this.toggleUpdateAvatar}
           />
         </List>
