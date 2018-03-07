@@ -24,6 +24,7 @@ import {
   Avatar,
   ButtonGroup
 } from "react-native-elements";
+import { Select, Option } from "react-native-chooser";
 
 export default class FriendsList extends React.Component {
   constructor(props) {
@@ -33,7 +34,8 @@ export default class FriendsList extends React.Component {
       query: "",
       transactionAmount: "",
       reason: "",
-      selectedIndex: 0,
+      selectedCoin: "",
+      coinLabel: "Select a Currency",
       acceptedFriends: [],
       requestedFriends: [],
       pendingFriends: [],
@@ -64,7 +66,6 @@ export default class FriendsList extends React.Component {
         }
       })
       .then(response => {
-        // Ternary insanity
         const {
           acceptedFriends,
           pendingFriends,
@@ -158,7 +159,7 @@ export default class FriendsList extends React.Component {
         style={{
           height: 1,
           width: "86%",
-          backgroundColor: "#CED0CE",
+          backgroundColor: "#45a29e",
           marginLeft: "14%"
         }}
       />
@@ -172,6 +173,8 @@ export default class FriendsList extends React.Component {
         onSubmitEditing={this.handleSearch}
         autoCapitalize="none"
         autoCorrect={false}
+        containerStyle={{ backgroundColor: "#0b0c10" }}
+        inputStyle={{ backgroundColor: "#1f2833" }}
         value={this.state.query}
         onChangeText={text => {
           this.setState({ query: text }, () => {
@@ -180,7 +183,6 @@ export default class FriendsList extends React.Component {
         }}
         onClearText={this.getFriendData}
         clearIcon
-        lightTheme
         round
       />
     );
@@ -194,7 +196,7 @@ export default class FriendsList extends React.Component {
         style={{
           paddingVertical: 20,
           borderTopWidth: 1,
-          borderColor: "#CED0CE"
+          borderColor: "#45a29e"
         }}
       >
         <ActivityIndicator animating size="large" />
@@ -208,7 +210,7 @@ export default class FriendsList extends React.Component {
         style={{
           height: 1,
           width: "100%",
-          backgroundColor: "#CED0CE"
+          backgroundColor: "#45a29e"
         }}
       />
     );
@@ -238,6 +240,8 @@ export default class FriendsList extends React.Component {
       requestModalVisible: false,
       sendModalVisible: false,
       sendRequestModalVisible: false,
+      coinLabel: "Select a Currency",
+      selectedCoin: "",
       transactionAmount: "",
       reason: ""
     });
@@ -248,13 +252,13 @@ export default class FriendsList extends React.Component {
   };
 
   handleSend = async () => {
-    const selectedCoin = ["eth", "btc", "eth_test", "btc_test"];
+    // const selectedCoin = ["eth", "btc", "eth_test", "btc_test"];
 
     const transaction = await axios.post(
       `${apiUrl}/send`,
       {
         friendId: this.state.selectedFriend._id,
-        coin: selectedCoin[this.state.selectedIndex],
+        coin: this.state.selectedCoin,
         amount: this.state.transactionAmount,
         subject: this.state.reason
       },
@@ -267,11 +271,9 @@ export default class FriendsList extends React.Component {
     );
 
     if (transaction.data.success) {
-      Alert.alert(
-        "Transaction Sent",
-        `Transaction ID: ${transaction.data.txId}`,
-        [{ text: "OK", onPress: this.handleCancel }]
-      );
+      Alert.alert("Transaction Sent", `Transaction Sent Successfully`, [
+        { text: "OK", onPress: this.handleCancel }
+      ]);
     } else {
       if (transaction.data.error.error === "insufficient funds") {
         Alert.alert("Transaction Failed", "Insufficient funds", [
@@ -282,13 +284,13 @@ export default class FriendsList extends React.Component {
   };
 
   handleROF = async () => {
-    const selectedCoin = ["eth", "btc", "eth_test", "btc_test"];
+    // const selectedCoin = ["eth", "btc", "eth_test", "btc_test"];
 
     const transaction = await axios.post(
       `${apiUrl}/requestfunds`,
       {
         receiver: this.state.selectedFriend._id,
-        coin: selectedCoin[this.state.selectedIndex],
+        coin: this.state.selectedCoin,
         amount: this.state.transactionAmount,
         subject: this.state.reason
       },
@@ -311,6 +313,10 @@ export default class FriendsList extends React.Component {
     }
   };
 
+  onSelect = (value, label) => {
+    this.setState({ selectedCoin: value, coinLabel: label });
+  };
+
   render() {
     const buttons = ["Eth", "Btc", "Eth Test", "Btc Test"];
     return (
@@ -319,7 +325,8 @@ export default class FriendsList extends React.Component {
         containerStyle={{
           borderTopWidth: 0,
           borderBottomWidth: 0,
-          height: "100%"
+          height: "100%",
+          backgroundColor: "#0b0c10"
         }}
       >
         <SectionList
@@ -334,9 +341,20 @@ export default class FriendsList extends React.Component {
           renderSectionHeader={({ section }) => {
             if (!section.data.length) return null;
             return (
-              <Text h4 style={{ marginLeft: 15, marginVertical: 5, fontFamily: "megrim" }}>
-                {section.key}
-              </Text>
+              <View style={{ backgroundColor: "#1f2833" }}>
+                <Text
+                  // h4
+                  style={{
+                    marginLeft: 15,
+                    marginVertical: 5,
+                    fontSize: 26,
+                    fontFamily: "space-mono-regular",
+                    color: "#66fcf1"
+                  }}
+                >
+                  {section.key}
+                </Text>
+              </View>
             );
           }}
           sections={[
@@ -349,9 +367,7 @@ export default class FriendsList extends React.Component {
                     roundAvatar
                     title={
                       <View style={{ marginLeft: 15 }}>
-                        <Text style={{ fontFamily: "space-mono-bold", fontSize: 20 }}>
-                          {item.username}
-                        </Text>
+                        <Text style={styles.itemTitle}>{item.username}</Text>
                       </View>
                     }
                     avatar={{ uri: item.avatarUrl }}
@@ -359,9 +375,9 @@ export default class FriendsList extends React.Component {
                     rightIcon={{
                       type: "entypo",
                       name: "add-user",
-                      color: "limegreen"
+                      color: "#66fcf1"
                     }}
-                    onPressRightIcon={() => {
+                    onPress={() => {
                       this.acceptFriendRequest(item);
                     }}
                   />
@@ -377,12 +393,13 @@ export default class FriendsList extends React.Component {
                     roundAvatar
                     title={
                       <View style={{ marginLeft: 15 }}>
-                        <Text style={{ fontFamily: "space-mono-bold", fontSize: 20 }}>
+                        <Text style={styles.itemTitle}>
                           {item.friend.username}
                         </Text>
                       </View>
                     }
-                    subtitle="Friend Request Received"
+                    subtitle="Accept Friend Request?"
+                    subtitleStyle={{ marginLeft: 15 }}
                     avatar={{ uri: item.friend.avatarUrl }}
                     containerStyle={{ borderBottomWidth: 0 }}
                     rightIcon={
@@ -394,17 +411,18 @@ export default class FriendsList extends React.Component {
                       >
                         <Button
                           clear
-                          textStyle={{ color: "limegreen" }}
-                          text="Yes"
-                          buttonStyle={styles.sendBtn}
-                          onPress={() => this.acceptFriendRequest(item)}
-                        />
-                        <Button
-                          clear
-                          textStyle={{ color: "tomato" }}
+                          textStyle={{ color: "#fc6670" }}
                           buttonStyle={styles.cancelBtn}
                           text="No"
                           onPress={() => this.rejectFriendRequest(item)}
+                        />
+                        <Button
+                          clear
+                          textStyle={{ color: "#66fcf1" }}
+                          text="Yes"
+                          buttonStyle={styles.sendBtn}
+                          containerStyle={{ marginLeft: 2 }}
+                          onPress={() => this.acceptFriendRequest(item)}
                         />
                       </View>
                     }
@@ -421,18 +439,17 @@ export default class FriendsList extends React.Component {
                     roundAvatar
                     title={
                       <View style={{ marginLeft: 15 }}>
-                        <Text style={{ fontFamily: "space-mono-bold", fontSize: 20 }}>
+                        <Text style={styles.itemTitle}>
                           {item.friend.username}
                         </Text>
                       </View>
                     }
-                    subtitle="Friend Request Sent"
                     avatar={{ uri: item.friend.avatarUrl }}
                     containerStyle={{ borderBottomWidth: 0 }}
                     rightIcon={
                       <Button
                         clear
-                        textStyle={{ color: "tomato" }}
+                        textStyle={{ color: "#fc6670" }}
                         buttonStyle={styles.cancelBtn}
                         text="Cancel"
                         onPress={() => this.rejectFriendRequest(item)}
@@ -451,11 +468,13 @@ export default class FriendsList extends React.Component {
                     roundAvatar
                     title={
                       <View style={{ marginLeft: 15 }}>
-                        <Text style={{ fontFamily: "space-mono-bold", fontSize: 20 }}>
+                        <Text style={styles.itemTitle}>
                           {item.friend.username}
                         </Text>
                       </View>
                     }
+                    chevronColor="#66fcf1"
+                    underlayColor="#45a29e"
                     avatar={{ uri: item.friend.avatarUrl }}
                     containerStyle={{ borderBottomWidth: 0 }}
                     onPress={() => this.handleFriendClick(item.friend)}
@@ -469,12 +488,19 @@ export default class FriendsList extends React.Component {
         {/* send or request funds modal */}
         {this.state.sendRequestModalVisible &&
           this.state.selectedFriend && (
-            <Overlay isVisible height="auto">
+            <Overlay isVisible height="auto" overlayBackgroundColor="#0b0c10">
               <View>
                 <Header
-                  backgroundColor="white"
+                  backgroundColor="#0b0c10"
+                  outerContainerStyles={{ borderBottomColor: "#45a29e" }}
                   centerComponent={
-                    <Text style={{ color: "gray", fontSize: 24, fontFamily: "space-mono-regular" }}>
+                    <Text
+                      style={{
+                        color: "#66fcf1",
+                        fontSize: 24,
+                        fontFamily: "space-mono-regular"
+                      }}
+                    >
                       {this.state.selectedFriend.username}
                     </Text>
                   }
@@ -497,7 +523,10 @@ export default class FriendsList extends React.Component {
                     <Button
                       text="Send"
                       clear
-                      textStyle={{ color: "limegreen", fontFamily: "space-mono-bold" }}
+                      textStyle={{
+                        color: "#66fcf1",
+                        fontFamily: "space-mono-bold"
+                      }}
                       buttonStyle={styles.sendBtn}
                       containerStyle={styles.btnContainer}
                       onPress={this.handleToSendClick}
@@ -505,7 +534,10 @@ export default class FriendsList extends React.Component {
                     <Button
                       text="Request"
                       clear
-                      textStyle={{ color: "dodgerblue", fontFamily: "space-mono-bold" }}
+                      textStyle={{
+                        color: "#66bbfc",
+                        fontFamily: "space-mono-bold"
+                      }}
                       buttonStyle={styles.requestBtn}
                       containerStyle={styles.btnContainer}
                       onPress={this.handleToRequestClick}
@@ -513,7 +545,10 @@ export default class FriendsList extends React.Component {
                     <Button
                       text="Cancel"
                       clear
-                      textStyle={{ color: "tomato", fontFamily: "space-mono-bold" }}
+                      textStyle={{
+                        color: "#fc6670",
+                        fontFamily: "space-mono-bold"
+                      }}
                       buttonStyle={styles.cancelBtn}
                       containerStyle={styles.btnContainer}
                       onPress={this.handleCancel}
@@ -527,12 +562,24 @@ export default class FriendsList extends React.Component {
         {/* request money modal */}
         {this.state.requestModalVisible &&
           this.state.selectedFriend && (
-            <Overlay isVisible height="auto" width="auto">
+            <Overlay
+              isVisible
+              height="auto"
+              width="auto"
+              overlayBackgroundColor="#0b0c10"
+            >
               <View>
                 <Header
-                  backgroundColor="white"
+                  backgroundColor="#0b0c10"
+                  outerContainerStyles={{ borderBottomColor: "#45a29e" }}
                   centerComponent={
-                    <Text style={{ color: "gray", fontSize: 24, fontFamily: "space-mono-regular" }}>
+                    <Text
+                      style={{
+                        color: "#66fcf1",
+                        fontSize: 24,
+                        fontFamily: "space-mono-regular"
+                      }}
+                    >
                       {this.state.selectedFriend.username}
                     </Text>
                   }
@@ -547,40 +594,62 @@ export default class FriendsList extends React.Component {
                 <View style={styles.modalColumn}>
                   <Input
                     placeholder="amount..."
+                    placeholderTextColor="#c5c6c7"
                     value={this.state.transactionAmount}
+                    inputStyle={styles.textInput}
+                    containerStyle={styles.textInputContainer}
                     keyboardType="numeric"
+                    returnKeyType="done"
                     onChangeText={text =>
                       this.setState({ transactionAmount: text })
                     }
                   />
                   <Input
                     placeholder="What's it for?"
+                    placeholderTextColor="#c5c6c7"
+                    inputStyle={styles.textInput}
+                    containerStyle={styles.textInputContainer}
                     value={this.state.reason}
                     onChangeText={text => this.setState({ reason: text })}
                   />
-                  <ButtonGroup
-                    onPress={this.updateIndex}
-                    selectedIndex={this.state.selectedIndex}
-                    buttons={buttons}
-                    selectedButtonStyle={{
-                      backgroundColor: "white",
-                      borderBottomWidth: 2,
-                      borderColor: "dodgerblue"
-                    }}
-                    textStyle={{ fontFamily: "space-mono-regular", fontSize: 13 }}
-                    selectedTextStyle={{
-                      color: "dodgerblue",
-                      fontFamily: "space-mono-bold",
-                      fontSize: 13
-                    }}
-                    containerStyle={styles.coinBtns}
-                  />
+                  <View>
+                    <Select
+                      defaultText={this.state.coinLabel}
+                      optionListStyle={{ backgroundColor: "#1f2833" }}
+                      style={{
+                        borderColor: "#45a29e",
+                        width: 265,
+                        marginVertical: 5
+                      }}
+                      textStyle={{ color: "#45a29e" }}
+                      transparent
+                      indicator="down"
+                      indicatorColor="#45a29e"
+                      onSelect={this.onSelect}
+                    >
+                      <Option value="eth" styleText={styles.optionTxt}>
+                        Ether
+                      </Option>
+                      <Option value="eth_test" styleText={styles.optionTxt}>
+                        Ether Test
+                      </Option>
+                      <Option value="btc" styleText={styles.optionTxt}>
+                        Bitcoin
+                      </Option>
+                      <Option value="btc_test" styleText={styles.optionTxt}>
+                        Bitcoin Test
+                      </Option>
+                    </Select>
+                  </View>
                   <View style={styles.confirmBtns}>
                     <Button
                       text="Request"
                       buttonStyle={styles.requestBtn}
                       clear
-                      textStyle={{ color: "dodgerblue", fontFamily: "space-mono-bold" }}
+                      textStyle={{
+                        color: "#66bbfc",
+                        fontFamily: "space-mono-bold"
+                      }}
                       containerStyle={styles.btnContainer}
                       onPress={() => {
                         Alert.alert("Confirm Request", null, [
@@ -597,7 +666,10 @@ export default class FriendsList extends React.Component {
                       buttonStyle={styles.cancelBtn}
                       text="Cancel"
                       clear
-                      textStyle={{ color: "tomato", fontFamily: "space-mono-bold" }}
+                      textStyle={{
+                        color: "#fc6670",
+                        fontFamily: "space-mono-bold"
+                      }}
                       containerStyle={styles.btnContainer}
                       onPress={this.handleCancel}
                     />
@@ -610,12 +682,19 @@ export default class FriendsList extends React.Component {
         {/* send money modal */}
         {this.state.sendModalVisible &&
           this.state.selectedFriend && (
-            <Overlay isVisible height="auto">
+            <Overlay isVisible height="auto" overlayBackgroundColor="#0b0c10">
               <View>
                 <Header
-                  backgroundColor="white"
+                  backgroundColor="#0b0c10"
+                  outerContainerStyles={{ borderBottomColor: "#45a29e" }}
                   centerComponent={
-                    <Text style={{ color: "gray", fontSize: 24, fontFamily: "space-mono-regular" }}>
+                    <Text
+                      style={{
+                        color: "#66fcf1",
+                        fontSize: 24,
+                        fontFamily: "space-mono-regular"
+                      }}
+                    >
                       {this.state.selectedFriend.username}
                     </Text>
                   }
@@ -631,6 +710,9 @@ export default class FriendsList extends React.Component {
                   <Input
                     placeholder="amount..."
                     value={this.state.transactionAmount}
+                    inputStyle={styles.textInput}
+                    containerStyle={styles.textInputContainer}
+                    placeholderTextColor="#c5c6c7"
                     keyboardType="numeric"
                     onChangeText={text =>
                       this.setState({ transactionAmount: text })
@@ -638,33 +720,51 @@ export default class FriendsList extends React.Component {
                   />
                   <Input
                     placeholder="What's it for?"
+                    inputStyle={styles.textInput}
+                    containerStyle={styles.textInputContainer}
+                    placeholderTextColor="#c5c6c7"
                     value={this.state.reason}
                     onChangeText={text => this.setState({ reason: text })}
                   />
-                  <ButtonGroup
-                    onPress={this.updateIndex}
-                    selectedIndex={this.state.selectedIndex}
-                    buttons={buttons}
-                    selectedButtonStyle={{
-                      backgroundColor: "white",
-                      borderBottomWidth: 2,
-                      borderColor: "dodgerblue"
-                    }}
-                    textStyle={{ fontFamily: "space-mono-regular", fontSize: 13 }}
-                    selectedTextStyle={{
-                      color: "dodgerblue",
-                      fontFamily: "space-mono-bold",
-                      fontSize: 13
-                    }}
-                    containerStyle={styles.coinBtns}
-                  />
+                  <View>
+                    <Select
+                      defaultText={this.state.coinLabel}
+                      optionListStyle={{ backgroundColor: "#1f2833" }}
+                      style={{
+                        borderColor: "#45a29e",
+                        width: 265,
+                        marginVertical: 5
+                      }}
+                      textStyle={{ color: "#45a29e" }}
+                      transparent
+                      indicator="down"
+                      indicatorColor="#45a29e"
+                      onSelect={this.onSelect}
+                    >
+                      <Option value="eth" styleText={styles.optionTxt}>
+                        Ether
+                      </Option>
+                      <Option value="eth_test" styleText={styles.optionTxt}>
+                        Ether Test
+                      </Option>
+                      <Option value="btc" styleText={styles.optionTxt}>
+                        Bitcoin
+                      </Option>
+                      <Option value="btc_test" styleText={styles.optionTxt}>
+                        Bitcoin Test
+                      </Option>
+                    </Select>
+                  </View>
                   <View style={styles.confirmBtns}>
                     <Button
                       text="Send"
                       buttonStyle={styles.sendBtn}
                       containerStyle={styles.btnContainer}
                       clear
-                      textStyle={{ color: "limegreen", fontFamily: "space-mono-bold" }}
+                      textStyle={{
+                        color: "#66fcf1",
+                        fontFamily: "space-mono-bold"
+                      }}
                       onPress={() => {
                         Alert.alert("Confirm Transaction", null, [
                           {
@@ -681,7 +781,10 @@ export default class FriendsList extends React.Component {
                       clear
                       containerStyle={styles.btnContainer}
                       text="Cancel"
-                      textStyle={{ color: "tomato", fontFamily: "space-mono-bold" }}
+                      textStyle={{
+                        color: "#fc6670",
+                        fontFamily: "space-mono-bold"
+                      }}
                       onPress={this.handleCancel}
                     />
                   </View>
@@ -702,7 +805,13 @@ const styles = StyleSheet.create({
   },
   coinBtns: {
     height: 35,
-    marginTop: 15
+    marginTop: 15,
+    borderRadius: 0,
+    borderWidth: 0,
+    paddingBottom: 5,
+    backgroundColor: "transparent",
+    borderBottomWidth: 1,
+    borderBottomColor: "#45a29e"
   },
   confirmBtns: {
     flexDirection: "row",
@@ -710,22 +819,19 @@ const styles = StyleSheet.create({
     marginTop: 15
   },
   cancelBtn: {
-    // backgroundColor: "tomato",
-    borderColor: "tomato",
+    borderColor: "#fc6670",
     borderBottomWidth: 2,
     alignSelf: "stretch",
     borderRadius: 0
   },
   sendBtn: {
-    // backgroundColor: "limegreen"
-    borderColor: "limegreen",
+    borderColor: "#66fcf1",
     borderBottomWidth: 2,
     alignSelf: "stretch",
     borderRadius: 0
   },
   requestBtn: {
-    // backgroundColor: "limegreen"
-    borderColor: "dodgerblue",
+    borderColor: "#66bbfc",
     borderBottomWidth: 2,
     alignSelf: "stretch",
     borderRadius: 0
@@ -733,5 +839,26 @@ const styles = StyleSheet.create({
   btnContainer: {
     flex: 1,
     alignSelf: "stretch"
+  },
+  itemTitle: {
+    fontFamily: "space-mono-regular",
+    fontSize: 20,
+    color: "#66fcf1"
+  },
+  textInput: {
+    height: 35,
+    borderColor: "transparent",
+    color: "#45a29e",
+    width: 300,
+    marginVertical: 5
+  },
+  textInputContainer: {
+    // backgroundColor: "#1f2833",
+    borderColor: "#45a29e",
+    marginVertical: 2.5
+  },
+  optionTxt: {
+    color: "#45a29e",
+    fontFamily: "space-mono-regular"
   }
 });

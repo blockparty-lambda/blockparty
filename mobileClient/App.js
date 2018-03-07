@@ -6,7 +6,7 @@ import SignIn from "./components/SignIn";
 import Home from "./components/Home";
 import { createRootNavigator } from "./router";
 import { isSignedIn } from "./auth";
-import { Font } from 'expo';
+import { Font } from "expo";
 
 export default class App extends React.Component {
   constructor(props) {
@@ -14,7 +14,8 @@ export default class App extends React.Component {
 
     this.state = {
       signedIn: false,
-      checkedSignIn: false
+      checkedSignIn: false,
+      fontLoaded: false
     };
   }
 
@@ -24,14 +25,16 @@ export default class App extends React.Component {
       .catch(error => alert("An error occurred"));
   }
 
-// add fonts
+  // add fonts
   // TODO: possibly do we add a fontLoaded prop for handling loading custom fonts? reference: https://docs.expo.io/versions/latest/guides/using-custom-fonts.html
   async componentDidMount() {
     await Font.loadAsync({
-      'space-mono-regular': require('./assets/fonts/SpaceMono-Regular.ttf'),
-      'space-mono-bold': require('./assets/fonts/SpaceMono-Bold.ttf'),
-      'megrim': require('./assets/fonts/Megrim.ttf'),
+      "space-mono-regular": require("./assets/fonts/SpaceMono-Regular.ttf"),
+      "space-mono-bold": require("./assets/fonts/SpaceMono-Bold.ttf"),
+      megrim: require("./assets/fonts/Megrim.ttf")
     });
+
+    this.setState({ fontLoaded: true });
 
     // apparently you can set default props with 'defaultProps'
     // Text.defaultProps.style = { fontFamily: 'space-mono-regular' };
@@ -44,9 +47,7 @@ export default class App extends React.Component {
     }
 
     const Layout = createRootNavigator(signedIn);
-    return (
-      <Layout />
-    )
+    return this.state.fontLoaded ? <Layout /> : null;
   }
 }
 

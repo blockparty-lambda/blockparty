@@ -22,13 +22,6 @@ import axios from "axios";
 import { apiUrl } from "../config";
 
 export default class SettingsScreen extends React.Component {
-  static navigationOptions = {
-    // styling the header is more difficult than you think lol
-    // still havent figured it out
-    headerTitle: "Settings",
-    headerTitleStyle: { fontFamily: "space-mono-bold" }
-  };
-
   constructor(props) {
     super(props);
 
@@ -143,53 +136,89 @@ export default class SettingsScreen extends React.Component {
         <Header
           outerContainerStyles={{
             height: "8%",
-            paddingBottom: 5
+            paddingBottom: 5,
+            backgroundColor: "#1f2833",
+            borderBottomColor: "#45a29e"
           }}
-          centerComponent={
-            <Text style={{ color: "white", fontSize: 24 }}>Settings</Text>
+          style={{ borderBottomColor: "#45a29e" }}
+          leftComponent={
+            <Text
+              style={{
+                color: "#66fcf1",
+                fontSize: 28,
+                fontFamily: "space-mono-regular"
+              }}
+            >
+              Settings
+            </Text>
           }
         />
-        <List containerStyle={{ marginTop: 0 }}>
+        <List
+          containerStyle={{
+            marginTop: 0,
+            backgroundColor: "#0b0c10",
+            borderTopColor: "#45a29e"
+          }}
+        >
           <ListItem
-            leftIcon={{ type: "font-awesome", name: "user" }}
-            title={
-              <Text style={{ marginLeft: 15, fontSize: 20, fontFamily: "space-mono-bold" }}>
-                My Profile Settings
-              </Text> 
-            }
+            leftIcon={{ type: "font-awesome", name: "user", color: "#45a29e" }}
+            wrapperStyle={{ borderBottomColor: "#45a29e" }}
+            containerStyle={{ borderBottomColor: "#45a29e" }}
+            titleStyle={styles.itemTitle}
+            title="My Profile Settings"
+            underlayColor="#45a29e"
+            chevronColor="#66fcf1"
             onPress={this.toggleProfileSettings}
-            onPressRightIcon={this.toggleProfileSettings}
           />
           <ListItem
-            leftIcon={{ type: "font-awesome", name: "user-circle" }}
-            title={
-              <Text style={{ marginLeft: 8, fontSize: 20, fontFamily: "space-mono-bold" }}>
-                Update Profile Picture
-              </Text>
-            }
+            titleStyle={{
+              color: "#66fcf1",
+              marginLeft: 8,
+              fontSize: 20,
+              fontFamily: "space-mono-regular"
+            }}
+            underlayColor="#45a29e"
+            containerStyle={{ borderBottomColor: "#45a29e" }}
+            wrapperStyle={{ borderBottomColor: "#45a29e" }}
+            leftIcon={{
+              type: "font-awesome",
+              name: "user-circle",
+              size: 22,
+              color: "#45a29e"
+            }}
+            chevronColor="#66fcf1"
+            title="Update Profile Picture"
             onPress={this.toggleUpdateAvatar}
-            onPressRightIcon={this.toggleUpdateAvatar}
           />
         </List>
 
         {this.state.profileSettingsVisible && (
-          <Overlay isVisible fullScreen={true}>
+          <Overlay isVisible fullScreen={true} overlayBackgroundColor="#0b0c10">
             <View>
               <Header
-                backgroundColor="white"
                 outerContainerStyles={{
-                  height: "25%",
+                  // height: "12%",
                   paddingVertical: 5,
-                  marginBottom: 5
+                  width: "100%",
+                  marginBottom: 10,
+                  backgroundColor: "#0b0c10",
+                  borderBottomColor: "#45a29e"
                 }}
+                style={{ borderBottomColor: "#45a29e" }}
                 leftComponent={
-                  <Text style={{ color: "gray", fontSize: 20, fontFamily: "space-mono-bold" }}>
+                  <Text
+                    style={{
+                      color: "#45a29e",
+                      fontSize: 20,
+                      fontFamily: "space-mono-bold"
+                    }}
+                  >
                     Profile Settings
                   </Text>
                 }
                 rightComponent={
                   <Icon
-                    color="gray"
+                    color="#fc6670"
                     size={24}
                     type="entypo"
                     name="cross"
@@ -202,7 +231,7 @@ export default class SettingsScreen extends React.Component {
         )}
 
         {this.state.profilePictureModalVisible && (
-          <Overlay isVisible fullScreen={true}>
+          <Overlay isVisible fullScreen={true} overlayBackgroundColor="#0b0c10">
             <View
               style={{
                 justifyContent: "center",
@@ -210,21 +239,28 @@ export default class SettingsScreen extends React.Component {
               }}
             >
               <Header
-                backgroundColor="white"
                 outerContainerStyles={{
-                  height: "12%",
+                  // height: "12%",
                   paddingVertical: 5,
                   width: "100%",
-                  marginBottom: 10
+                  marginBottom: 15,
+                  backgroundColor: "#0b0c10",
+                  borderBottomColor: "#45a29e"
                 }}
                 leftComponent={
-                  <Text style={{ color: "gray", fontSize: 20 }}>
+                  <Text
+                    style={{
+                      color: "#45a29e",
+                      fontSize: 20,
+                      fontFamily: "space-mono-bold"
+                    }}
+                  >
                     Upload Profile Picture
                   </Text>
                 }
                 rightComponent={
                   <Icon
-                    color="tomato"
+                    color="#fc6670"
                     size={24}
                     type="entypo"
                     name="cross"
@@ -252,10 +288,13 @@ export default class SettingsScreen extends React.Component {
                     <Button
                       text="Open Gallery"
                       clear
-                      textStyle={{ color: "dodgerblue" }}
+                      textStyle={{
+                        color: "#66fcf1",
+                        fontFamily: "space-mono-bold"
+                      }}
                       buttonStyle={{
                         marginRight: 5,
-                        borderColor: "dodgerblue",
+                        borderColor: "#66fcf1",
                         borderRadius: 0,
                         borderBottomWidth: 2
                       }}
@@ -264,10 +303,13 @@ export default class SettingsScreen extends React.Component {
                     <Button
                       text="Open Camera"
                       clear
-                      textStyle={{ color: "dodgerblue" }}
+                      textStyle={{
+                        color: "#66fcf1",
+                        fontFamily: "space-mono-bold"
+                      }}
                       buttonStyle={{
                         marginLeft: 5,
-                        borderColor: "dodgerblue",
+                        borderColor: "#66fcf1",
                         borderRadius: 0,
                         borderBottomWidth: 2
                       }}
@@ -291,7 +333,13 @@ export default class SettingsScreen extends React.Component {
                       rounded
                       source={{ uri: this.state.pickedImage.uri }}
                     />
-                    <Text style={{ marginTop: 10 }}>
+                    <Text
+                      style={{
+                        marginTop: 10,
+                        color: "#45a29e",
+                        fontFamily: "space-mono-regular"
+                      }}
+                    >
                       Update profile picture?
                     </Text>
                     <View
@@ -304,13 +352,15 @@ export default class SettingsScreen extends React.Component {
                       <Button
                         buttonStyle={{
                           marginRight: 5,
-                          // backgroundColor: "tomato",
-                          borderColor: "tomato",
+                          borderColor: "#fc6670",
                           borderBottomWidth: 2,
                           borderRadius: 0,
                           width: 70
                         }}
-                        textStyle={{ color: "tomato" }}
+                        textStyle={{
+                          color: "#fc6670",
+                          fontFamily: "space-mono-bold"
+                        }}
                         text="No"
                         clear
                         onPress={() => this.setState({ pickedImage: null })}
@@ -318,14 +368,17 @@ export default class SettingsScreen extends React.Component {
                       <Button
                         buttonStyle={{
                           marginLeft: 5,
-                          borderColor: "limegreen",
+                          borderColor: "#66fcf1",
                           borderBottomWidth: 2,
                           borderRadius: 0,
                           width: 70
                         }}
                         clear
                         text="Yes"
-                        textStyle={{ color: "limegreen" }}
+                        textStyle={{
+                          color: "#66fcf1",
+                          fontFamily: "space-mono-bold"
+                        }}
                         onPress={this.handleUpload}
                       />
                     </View>
@@ -333,7 +386,14 @@ export default class SettingsScreen extends React.Component {
                 )}
                 {!!this.state.avatarMessage && (
                   <View>
-                    <Text>{this.state.avatarMessage}</Text>
+                    <Text
+                      style={{
+                        color: "#45a29e",
+                        fontFamily: "space-mono-regular"
+                      }}
+                    >
+                      {this.state.avatarMessage}
+                    </Text>
                   </View>
                 )}
               </View>
@@ -345,14 +405,14 @@ export default class SettingsScreen extends React.Component {
           <View style={{ alignSelf: "stretch", justifyContent: "center" }}>
             <Button
               clear
-              textStyle={{ color: "dodgerblue", fontFamily: "space-mono-bold" }}
+              textStyle={{ color: "#fc6670", fontFamily: "space-mono-bold" }}
               buttonStyle={{
                 marginTop: 15,
-                borderColor: "dodgerblue",
+                borderColor: "#fc6670",
                 borderRadius: 0,
-                borderBottomWidth: 2,
+                borderBottomWidth: 2
               }}
-              text="Logout"
+              text="Log Out"
               onPress={this.logout}
             />
           </View>
@@ -366,6 +426,12 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingTop: 20,
-    backgroundColor: "#fff"
+    backgroundColor: "#0b0c10"
+  },
+  itemTitle: {
+    color: "#66fcf1",
+    marginLeft: 15,
+    fontSize: 20,
+    fontFamily: "space-mono-regular"
   }
 });

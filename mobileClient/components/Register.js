@@ -99,7 +99,7 @@ export default class Register extends React.Component {
           }}
         >
           <Button
-            text={"Sign Up"}
+            text={"Register"}
             buttonStyle={styles.registerBtn}
             clear
             textStyle={{ color: "dodgerblue" }}
@@ -137,9 +137,6 @@ const styles = StyleSheet.create({
     width: 300,
     marginBottom: 15
   },
-  registerSignInHereText: {
-    fontSize: 20
-  },
   registerTxt: {
     fontSize: 25
   },
@@ -147,14 +144,12 @@ const styles = StyleSheet.create({
     fontSize: 35,
     marginBottom: 35
   },
-  signInBtn: {
-    marginTop: 10
-  },
   registerBtn: {
     marginBottom: 5,
     borderColor: "dodgerblue",
     borderRadius: 0,
     borderBottomWidth: 2,
+    marginHorizontal: 2.5,
     alignSelf: "stretch"
   },
   btnContainer: {
