@@ -564,9 +564,11 @@ export default class FriendsList extends React.Component {
                       borderBottomWidth: 2,
                       borderColor: "dodgerblue"
                     }}
+                    textStyle={{ fontFamily: "space-mono-regular", fontSize: 13 }}
                     selectedTextStyle={{
                       color: "dodgerblue",
-                      fontFamily: "space-mono-bold"
+                      fontFamily: "space-mono-bold",
+                      fontSize: 13
                     }}
                     containerStyle={styles.coinBtns}
                   />
@@ -645,9 +647,11 @@ export default class FriendsList extends React.Component {
                       borderBottomWidth: 2,
                       borderColor: "dodgerblue"
                     }}
+                    textStyle={{ fontFamily: "space-mono-regular", fontSize: 13 }}
                     selectedTextStyle={{
                       color: "dodgerblue",
-                      fontFamily: "space-mono-bold"
+                      fontFamily: "space-mono-bold",
+                      fontSize: 13
                     }}
                     containerStyle={styles.coinBtns}
                   />
