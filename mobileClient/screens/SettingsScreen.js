@@ -166,6 +166,7 @@ export default class SettingsScreen extends React.Component {
             containerStyle={{ borderBottomColor: "#45a29e" }}
             titleStyle={styles.itemTitle}
             title="My Profile Settings"
+            underlayColor="#45a29e"
             chevronColor="#66fcf1"
             onPress={this.toggleProfileSettings}
           />
@@ -176,6 +177,7 @@ export default class SettingsScreen extends React.Component {
               fontSize: 20,
               fontFamily: "space-mono-bold"
             }}
+            underlayColor="#45a29e"
             containerStyle={{ borderBottomColor: "#45a29e" }}
             wrapperStyle={{ borderBottomColor: "#45a29e" }}
             leftIcon={{
@@ -247,7 +249,13 @@ export default class SettingsScreen extends React.Component {
                   borderBottomColor: "#45a29e"
                 }}
                 leftComponent={
-                  <Text style={{ color: "#45a29e", fontSize: 20 }}>
+                  <Text
+                    style={{
+                      color: "#45a29e",
+                      fontSize: 20,
+                      fontFamily: "space-mono-bold"
+                    }}
+                  >
                     Upload Profile Picture
                   </Text>
                 }
@@ -281,7 +289,10 @@ export default class SettingsScreen extends React.Component {
                     <Button
                       text="Open Gallery"
                       clear
-                      textStyle={{ color: "#66fcf1" }}
+                      textStyle={{
+                        color: "#66fcf1",
+                        fontFamily: "space-mono-bold"
+                      }}
                       buttonStyle={{
                         marginRight: 5,
                         borderColor: "#66fcf1",
@@ -293,7 +304,10 @@ export default class SettingsScreen extends React.Component {
                     <Button
                       text="Open Camera"
                       clear
-                      textStyle={{ color: "#66fcf1" }}
+                      textStyle={{
+                        color: "#66fcf1",
+                        fontFamily: "space-mono-bold"
+                      }}
                       buttonStyle={{
                         marginLeft: 5,
                         borderColor: "#66fcf1",
@@ -320,7 +334,13 @@ export default class SettingsScreen extends React.Component {
                       rounded
                       source={{ uri: this.state.pickedImage.uri }}
                     />
-                    <Text style={{ marginTop: 10, color: "#45a29e" }}>
+                    <Text
+                      style={{
+                        marginTop: 10,
+                        color: "#45a29e",
+                        fontFamily: "space-mono-regular"
+                      }}
+                    >
                       Update profile picture?
                     </Text>
                     <View
@@ -338,7 +358,10 @@ export default class SettingsScreen extends React.Component {
                           borderRadius: 0,
                           width: 70
                         }}
-                        textStyle={{ color: "#fc6670" }}
+                        textStyle={{
+                          color: "#fc6670",
+                          fontFamily: "space-mono-bold"
+                        }}
                         text="No"
                         clear
                         onPress={() => this.setState({ pickedImage: null })}
@@ -353,7 +376,10 @@ export default class SettingsScreen extends React.Component {
                         }}
                         clear
                         text="Yes"
-                        textStyle={{ color: "#66fcf1" }}
+                        textStyle={{
+                          color: "#66fcf1",
+                          fontFamily: "space-mono-bold"
+                        }}
                         onPress={this.handleUpload}
                       />
                     </View>
@@ -361,7 +387,12 @@ export default class SettingsScreen extends React.Component {
                 )}
                 {!!this.state.avatarMessage && (
                   <View>
-                    <Text style={{ color: "#45a29e" }}>
+                    <Text
+                      style={{
+                        color: "#45a29e",
+                        fontFamily: "space-mono-regular"
+                      }}
+                    >
                       {this.state.avatarMessage}
                     </Text>
                   </View>

@@ -156,7 +156,7 @@ export default class FriendsList extends React.Component {
         style={{
           height: 1,
           width: "86%",
-          backgroundColor: "#CED0CE",
+          backgroundColor: "#45a29e",
           marginLeft: "14%"
         }}
       />
@@ -170,6 +170,8 @@ export default class FriendsList extends React.Component {
         onSubmitEditing={this.handleSearch}
         autoCapitalize="none"
         autoCorrect={false}
+        containerStyle={{ backgroundColor: "#0b0c10" }}
+        inputStyle={{ backgroundColor: "#1f2833" }}
         value={this.state.query}
         onChangeText={text => {
           this.setState({ query: text }, () => {
@@ -178,7 +180,6 @@ export default class FriendsList extends React.Component {
         }}
         onClearText={this.getFriendData}
         clearIcon
-        lightTheme
         round
       />
     );
@@ -192,7 +193,7 @@ export default class FriendsList extends React.Component {
         style={{
           paddingVertical: 20,
           borderTopWidth: 1,
-          borderColor: "#CED0CE"
+          borderColor: "#45a29e"
         }}
       >
         <ActivityIndicator animating size="large" />
@@ -206,7 +207,7 @@ export default class FriendsList extends React.Component {
         style={{
           height: 1,
           width: "100%",
-          backgroundColor: "#CED0CE"
+          backgroundColor: "#45a29e"
         }}
       />
     );
@@ -316,7 +317,8 @@ export default class FriendsList extends React.Component {
         containerStyle={{
           borderTopWidth: 0,
           borderBottomWidth: 0,
-          height: "100%"
+          height: "100%",
+          backgroundColor: "#0b0c10"
         }}
       >
         <SectionList
@@ -331,9 +333,19 @@ export default class FriendsList extends React.Component {
           renderSectionHeader={({ section }) => {
             if (!section.data.length) return null;
             return (
-              <Text h4 style={{ marginLeft: 15, marginVertical: 5, fontFamily: "megrim" }}>
-                {section.key}
-              </Text>
+              <View style={{ backgroundColor: "#1f2833" }}>
+                <Text
+                  h4
+                  style={{
+                    marginLeft: 15,
+                    marginVertical: 5,
+                    fontFamily: "megrim",
+                    color: "#66fcf1"
+                  }}
+                >
+                  {section.key}
+                </Text>
+              </View>
             );
           }}
           sections={[
@@ -346,9 +358,7 @@ export default class FriendsList extends React.Component {
                     roundAvatar
                     title={
                       <View style={{ marginLeft: 15 }}>
-                        <Text style={{ fontFamily: "space-mono-bold", fontSize: 20 }}>
-                          {item.username}
-                        </Text>
+                        <Text style={styles.itemTitle}>{item.username}</Text>
                       </View>
                     }
                     avatar={{ uri: item.avatarUrl }}
@@ -356,7 +366,7 @@ export default class FriendsList extends React.Component {
                     rightIcon={{
                       type: "entypo",
                       name: "add-user",
-                      color: "limegreen"
+                      color: "#66fcf1"
                     }}
                     onPressRightIcon={() => {
                       this.acceptFriendRequest(item);
@@ -374,12 +384,13 @@ export default class FriendsList extends React.Component {
                     roundAvatar
                     title={
                       <View style={{ marginLeft: 15 }}>
-                        <Text style={{ fontFamily: "space-mono-bold", fontSize: 20 }}>
+                        <Text style={styles.itemTitle}>
                           {item.friend.username}
                         </Text>
                       </View>
                     }
-                    subtitle="Friend Request Received"
+                    subtitle="Accept Friend Request?"
+                    subtitleStyle={{ marginLeft: 15 }}
                     avatar={{ uri: item.friend.avatarUrl }}
                     containerStyle={{ borderBottomWidth: 0 }}
                     rightIcon={
@@ -391,17 +402,18 @@ export default class FriendsList extends React.Component {
                       >
                         <Button
                           clear
-                          textStyle={{ color: "limegreen" }}
-                          text="Yes"
-                          buttonStyle={styles.sendBtn}
-                          onPress={() => this.acceptFriendRequest(item)}
-                        />
-                        <Button
-                          clear
-                          textStyle={{ color: "tomato" }}
+                          textStyle={{ color: "#fc6670" }}
                           buttonStyle={styles.cancelBtn}
                           text="No"
                           onPress={() => this.rejectFriendRequest(item)}
+                        />
+                        <Button
+                          clear
+                          textStyle={{ color: "#66fcf1" }}
+                          text="Yes"
+                          buttonStyle={styles.sendBtn}
+                          containerStyle={{ marginLeft: 2 }}
+                          onPress={() => this.acceptFriendRequest(item)}
                         />
                       </View>
                     }
@@ -418,18 +430,17 @@ export default class FriendsList extends React.Component {
                     roundAvatar
                     title={
                       <View style={{ marginLeft: 15 }}>
-                        <Text style={{ fontFamily: "space-mono-bold", fontSize: 20 }}>
+                        <Text style={styles.itemTitle}>
                           {item.friend.username}
                         </Text>
                       </View>
                     }
-                    subtitle="Friend Request Sent"
                     avatar={{ uri: item.friend.avatarUrl }}
                     containerStyle={{ borderBottomWidth: 0 }}
                     rightIcon={
                       <Button
                         clear
-                        textStyle={{ color: "tomato" }}
+                        textStyle={{ color: "#fc6670" }}
                         buttonStyle={styles.cancelBtn}
                         text="Cancel"
                         onPress={() => this.rejectFriendRequest(item)}
@@ -448,11 +459,13 @@ export default class FriendsList extends React.Component {
                     roundAvatar
                     title={
                       <View style={{ marginLeft: 15 }}>
-                        <Text style={{ fontFamily: "space-mono-bold", fontSize: 20 }}>
+                        <Text style={styles.itemTitle}>
                           {item.friend.username}
                         </Text>
                       </View>
                     }
+                    chevronColor="#66fcf1"
+                    underlayColor="#45a29e"
                     avatar={{ uri: item.friend.avatarUrl }}
                     containerStyle={{ borderBottomWidth: 0 }}
                     onPress={() => this.handleFriendClick(item.friend)}
@@ -471,7 +484,13 @@ export default class FriendsList extends React.Component {
                 <Header
                   backgroundColor="white"
                   centerComponent={
-                    <Text style={{ color: "gray", fontSize: 24, fontFamily: "space-mono-regular" }}>
+                    <Text
+                      style={{
+                        color: "gray",
+                        fontSize: 24,
+                        fontFamily: "space-mono-regular"
+                      }}
+                    >
                       {this.state.selectedFriend.username}
                     </Text>
                   }
@@ -494,7 +513,10 @@ export default class FriendsList extends React.Component {
                     <Button
                       text="Send"
                       clear
-                      textStyle={{ color: "limegreen", fontFamily: "space-mono-bold" }}
+                      textStyle={{
+                        color: "limegreen",
+                        fontFamily: "space-mono-bold"
+                      }}
                       buttonStyle={styles.sendBtn}
                       containerStyle={styles.btnContainer}
                       onPress={this.handleToSendClick}
@@ -502,7 +524,10 @@ export default class FriendsList extends React.Component {
                     <Button
                       text="Request"
                       clear
-                      textStyle={{ color: "dodgerblue", fontFamily: "space-mono-bold" }}
+                      textStyle={{
+                        color: "dodgerblue",
+                        fontFamily: "space-mono-bold"
+                      }}
                       buttonStyle={styles.requestBtn}
                       containerStyle={styles.btnContainer}
                       onPress={this.handleToRequestClick}
@@ -510,7 +535,10 @@ export default class FriendsList extends React.Component {
                     <Button
                       text="Cancel"
                       clear
-                      textStyle={{ color: "tomato", fontFamily: "space-mono-bold" }}
+                      textStyle={{
+                        color: "tomato",
+                        fontFamily: "space-mono-bold"
+                      }}
                       buttonStyle={styles.cancelBtn}
                       containerStyle={styles.btnContainer}
                       onPress={this.handleCancel}
@@ -529,7 +557,13 @@ export default class FriendsList extends React.Component {
                 <Header
                   backgroundColor="white"
                   centerComponent={
-                    <Text style={{ color: "gray", fontSize: 24, fontFamily: "space-mono-regular" }}>
+                    <Text
+                      style={{
+                        color: "gray",
+                        fontSize: 24,
+                        fontFamily: "space-mono-regular"
+                      }}
+                    >
                       {this.state.selectedFriend.username}
                     </Text>
                   }
@@ -575,7 +609,10 @@ export default class FriendsList extends React.Component {
                       text="Request"
                       buttonStyle={styles.requestBtn}
                       clear
-                      textStyle={{ color: "dodgerblue", fontFamily: "space-mono-bold" }}
+                      textStyle={{
+                        color: "dodgerblue",
+                        fontFamily: "space-mono-bold"
+                      }}
                       containerStyle={styles.btnContainer}
                       onPress={() => {
                         Alert.alert("Confirm Request", null, [
@@ -592,7 +629,10 @@ export default class FriendsList extends React.Component {
                       buttonStyle={styles.cancelBtn}
                       text="Cancel"
                       clear
-                      textStyle={{ color: "tomato", fontFamily: "space-mono-bold" }}
+                      textStyle={{
+                        color: "tomato",
+                        fontFamily: "space-mono-bold"
+                      }}
                       containerStyle={styles.btnContainer}
                       onPress={this.handleCancel}
                     />
@@ -610,7 +650,13 @@ export default class FriendsList extends React.Component {
                 <Header
                   backgroundColor="white"
                   centerComponent={
-                    <Text style={{ color: "gray", fontSize: 24, fontFamily: "space-mono-regular" }}>
+                    <Text
+                      style={{
+                        color: "gray",
+                        fontSize: 24,
+                        fontFamily: "space-mono-regular"
+                      }}
+                    >
                       {this.state.selectedFriend.username}
                     </Text>
                   }
@@ -657,7 +703,10 @@ export default class FriendsList extends React.Component {
                       buttonStyle={styles.sendBtn}
                       containerStyle={styles.btnContainer}
                       clear
-                      textStyle={{ color: "limegreen", fontFamily: "space-mono-bold" }}
+                      textStyle={{
+                        color: "limegreen",
+                        fontFamily: "space-mono-bold"
+                      }}
                       onPress={() => {
                         Alert.alert("Confirm Transaction", null, [
                           {
@@ -674,7 +723,10 @@ export default class FriendsList extends React.Component {
                       clear
                       containerStyle={styles.btnContainer}
                       text="Cancel"
-                      textStyle={{ color: "tomato", fontFamily: "space-mono-bold" }}
+                      textStyle={{
+                        color: "tomato",
+                        fontFamily: "space-mono-bold"
+                      }}
                       onPress={this.handleCancel}
                     />
                   </View>
@@ -702,21 +754,18 @@ const styles = StyleSheet.create({
     marginTop: 15
   },
   cancelBtn: {
-    // backgroundColor: "tomato",
-    borderColor: "tomato",
+    borderColor: "#fc6670",
     borderBottomWidth: 2,
     alignSelf: "stretch",
     borderRadius: 0
   },
   sendBtn: {
-    // backgroundColor: "limegreen"
-    borderColor: "limegreen",
+    borderColor: "#66fcf1",
     borderBottomWidth: 2,
     alignSelf: "stretch",
     borderRadius: 0
   },
   requestBtn: {
-    // backgroundColor: "limegreen"
     borderColor: "dodgerblue",
     borderBottomWidth: 2,
     alignSelf: "stretch",
@@ -725,5 +774,6 @@ const styles = StyleSheet.create({
   btnContainer: {
     flex: 1,
     alignSelf: "stretch"
-  }
+  },
+  itemTitle: { fontFamily: "space-mono-bold", fontSize: 20, color: "#66fcf1" }
 });
