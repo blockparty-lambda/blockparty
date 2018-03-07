@@ -289,7 +289,6 @@ export default class WalletsList extends React.Component {
         .then(resp => {
           // if wasnt successful (you dont have enough coin, etc...)
           // handle that
-          console.log(resp.data);
           if (resp.data.success) {
             Alert.alert(
               "Transaction Sent",
@@ -486,7 +485,12 @@ export default class WalletsList extends React.Component {
                       <ListItem
                         roundAvatar
                         title={`To ${item.receiver.username}`}
+                        titleStyle={styles.itemTitle}
                         subtitle={`${item.amount} ${item.coinFull}`}
+                        subtitleStyle={{
+                          fontFamily: "space-mono-regular",
+                          color: "#45a29e"
+                        }}
                         containerStyle={{ borderBottomWidth: 0 }}
                         rightIcon={
                           <View

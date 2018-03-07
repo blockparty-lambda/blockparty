@@ -172,14 +172,19 @@ export default class SignIn extends React.Component {
           </View>
         )}
         <View style={{ flexDirection: "row", marginTop: 15 }}>
-          <Text style={{ color: "#45a29e" }}>Register </Text>
+          <Text style={{ color: "#45a29e", fontFamily: "space-mono-regular" }}>
+            Register{" "}
+          </Text>
           <Switch
             value={this.state.signIn}
             tintColor="#45a29e"
             thumbTintColor="#45a29e"
             onValueChange={() => this.setState({ signIn: !this.state.signIn })}
           />
-          <Text style={{ color: "#45a29e" }}> Sign In</Text>
+          <Text style={{ color: "#45a29e", fontFamily: "space-mono-regular" }}>
+            {" "}
+            Sign In
+          </Text>
         </View>
 
         {this.state.signIn && (
@@ -197,7 +202,7 @@ export default class SignIn extends React.Component {
               onPress={this.signIn}
               clear
               containerStyle={styles.btnContainer}
-              textStyle={{ color: "#66fcf1" }}
+              textStyle={{ color: "#66fcf1", fontFamily: "space-mono-bold" }}
               buttonStyle={styles.submitBtn}
             />
           </View>
@@ -218,7 +223,7 @@ export default class SignIn extends React.Component {
               onPress={this.register}
               clear
               containerStyle={styles.btnContainer}
-              textStyle={{ color: "#66fcf1" }}
+              textStyle={{ color: "#66fcf1", fontFamily: "space-mono-bold" }}
               buttonStyle={styles.submitBtn}
             />
           </View>
@@ -271,7 +276,8 @@ const styles = StyleSheet.create({
   },
   headerTxt: {
     fontSize: 35,
-    fontWeight: "bold",
+    // fontWeight: "bold",
+    fontFamily: "space-mono-bold",
     color: "#66fcf1"
   },
   btnContainer: {

@@ -145,8 +145,8 @@ export default class SettingsScreen extends React.Component {
             <Text
               style={{
                 color: "#66fcf1",
-                fontSize: 24,
-                fontFamily: "space-mono-bold"
+                fontSize: 28,
+                fontFamily: "space-mono-regular"
               }}
             >
               Settings
@@ -175,7 +175,7 @@ export default class SettingsScreen extends React.Component {
               color: "#66fcf1",
               marginLeft: 8,
               fontSize: 20,
-              fontFamily: "space-mono-bold"
+              fontFamily: "space-mono-regular"
             }}
             underlayColor="#45a29e"
             containerStyle={{ borderBottomColor: "#45a29e" }}
@@ -244,7 +244,6 @@ export default class SettingsScreen extends React.Component {
                   paddingVertical: 5,
                   width: "100%",
                   marginBottom: 15,
-                  // backgroundColor: "#1f2833",
                   backgroundColor: "#0b0c10",
                   borderBottomColor: "#45a29e"
                 }}
@@ -433,6 +432,6 @@ const styles = StyleSheet.create({
     color: "#66fcf1",
     marginLeft: 15,
     fontSize: 20,
-    fontFamily: "space-mono-bold"
+    fontFamily: "space-mono-regular"
   }
 });
