@@ -335,11 +335,12 @@ export default class FriendsList extends React.Component {
             return (
               <View style={{ backgroundColor: "#1f2833" }}>
                 <Text
-                  h4
+                  // h4
                   style={{
                     marginLeft: 15,
                     marginVertical: 5,
-                    fontFamily: "megrim",
+                    fontSize: 26,
+                    fontFamily: "space-mono-regular",
                     color: "#66fcf1"
                   }}
                 >
@@ -598,7 +599,10 @@ export default class FriendsList extends React.Component {
                       borderBottomWidth: 2,
                       borderColor: "dodgerblue"
                     }}
-                    textStyle={{ fontFamily: "space-mono-regular", fontSize: 13 }}
+                    textStyle={{
+                      fontFamily: "space-mono-regular",
+                      fontSize: 13
+                    }}
                     selectedTextStyle={{
                       color: "dodgerblue",
                       fontFamily: "space-mono-bold",
@@ -693,7 +697,10 @@ export default class FriendsList extends React.Component {
                       borderBottomWidth: 2,
                       borderColor: "dodgerblue"
                     }}
-                    textStyle={{ fontFamily: "space-mono-regular", fontSize: 13 }}
+                    textStyle={{
+                      fontFamily: "space-mono-regular",
+                      fontSize: 13
+                    }}
                     selectedTextStyle={{
                       color: "dodgerblue",
                       fontFamily: "space-mono-bold",
@@ -779,5 +786,9 @@ const styles = StyleSheet.create({
     flex: 1,
     alignSelf: "stretch"
   },
-  itemTitle: { fontFamily: "space-mono-bold", fontSize: 20, color: "#66fcf1" }
+  itemTitle: {
+    fontFamily: "space-mono-regular",
+    fontSize: 20,
+    color: "#66fcf1"
+  }
 });

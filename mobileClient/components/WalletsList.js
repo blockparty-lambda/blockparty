@@ -25,6 +25,12 @@ import {
 import { icons } from "../assets/icons";
 
 export default class WalletsList extends React.Component {
+  static coinIcons = {
+    btc: { name: "currency-btc", type: "material-community" },
+    btc_test: { name: "currency-btc", type: "material-community" },
+    eth: { name: "currency-eth", type: "material-community" },
+    eth_test: { name: "currency-eth", type: "material-community" }
+  };
   constructor(props) {
     super(props);
     this.state = {
@@ -45,7 +51,6 @@ export default class WalletsList extends React.Component {
   // set result to state
   // Example of how to access backend and pass the jwt in headers
   async componentDidMount() {
-
     Keyboard.dismiss();
     await this.setState({ token: await AsyncStorage.getItem("jwt") });
     await this.setState({ username: await AsyncStorage.getItem("bpUsername") });
@@ -66,7 +71,7 @@ export default class WalletsList extends React.Component {
 
   handleCancel = () => {
     this.setState({
-      modalVisible: false,
+      modalVisible: false
     });
   };
 
@@ -129,7 +134,7 @@ export default class WalletsList extends React.Component {
         btc_test: "test bitcoin",
         eth: "ether",
         eth_test: "test ether"
-      }
+      };
       rofs.forEach(rof => {
         rof.coinFull = coinMap[rof.coin];
       });
@@ -187,7 +192,7 @@ export default class WalletsList extends React.Component {
         style={{
           height: 1,
           width: "86%",
-          backgroundColor: "#CED0CE",
+          backgroundColor: "#45a29e",
           marginLeft: "14%"
         }}
       />
@@ -200,7 +205,7 @@ export default class WalletsList extends React.Component {
         style={{
           height: 1,
           width: "100%",
-          backgroundColor: "#CED0CE"
+          backgroundColor: "#45a29e"
         }}
       />
     );
@@ -222,7 +227,7 @@ export default class WalletsList extends React.Component {
             borderRadius: 5,
             marginBottom: 5,
             marginTop: 5,
-            width: 500 // for whatever reason using 100% screw of the lining of the button text 
+            width: 500 // for whatever reason using 100% screw of the lining of the button text
           }}
           onPress={async () => {
             if (buttonText === "Add New Wallets") {
@@ -244,7 +249,7 @@ export default class WalletsList extends React.Component {
         style={{
           paddingVertical: 20,
           borderTopWidth: 1,
-          borderColor: "#CED0CE"
+          borderColor: "#45a29e"
         }}
       >
         <ActivityIndicator animating size="large" />
@@ -267,18 +272,20 @@ export default class WalletsList extends React.Component {
   handleROF = (rofId, accepted) => {
     if (accepted) {
       axios
-        .post(`${apiUrl}/handlerof`, {
-          rofId,
-          accepted
-        },
+        .post(
+          `${apiUrl}/handlerof`,
+          {
+            rofId,
+            accepted
+          },
           {
             headers: {
               Authorization: this.state.token,
               "Content-Type": "application/json"
             }
-          })
+          }
+        )
         .then(resp => {
-
           // if wasnt successful (you dont have enough coin, etc...)
           // handle that
           if (resp.data.success) {
@@ -287,15 +294,12 @@ export default class WalletsList extends React.Component {
               `Transaction ID: ${resp.data.txId}`,
               [{ text: "OK", onPress: this.getROFS }]
             );
-          }
-          else {
+          } else {
             // handle that user doenst have enough coins etc...
             if (resp.data.error.error === "insufficient funds") {
-              Alert.alert(
-                "Error",
-                `Insufficient funds.`,
-                [{ text: "OK", onPress: this.handleCancel }]
-              );
+              Alert.alert("Error", `Insufficient funds.`, [
+                { text: "OK", onPress: this.handleCancel }
+              ]);
             }
           }
         })
@@ -306,29 +310,28 @@ export default class WalletsList extends React.Component {
             `There was an error on our part :(.  Try again later`,
             [{ text: "OK", onPress: this.handleCancel }]
           );
-        })
-    }
-    else {
+        });
+    } else {
       axios
-        .post(`${apiUrl}/handlerof`, {
-          rofId,
-          accepted
-        },
+        .post(
+          `${apiUrl}/handlerof`,
+          {
+            rofId,
+            accepted
+          },
           {
             headers: {
               Authorization: this.state.token,
               "Content-Type": "application/json"
             }
-          })
+          }
+        )
         .then(resp => {
           if (resp.data.success) {
-            Alert.alert(
-              "Request Rejected",
-              `Success!`,
-              [{ text: "OK", onPress: this.getROFS }]
-            );
-          }
-          else {
+            Alert.alert("Request Rejected", `Success!`, [
+              { text: "OK", onPress: this.getROFS }
+            ]);
+          } else {
             Alert.alert(
               "Block Party Error",
               `There was an error on our part :(.  Try again later`,
@@ -344,10 +347,9 @@ export default class WalletsList extends React.Component {
             `There was an error on our part :(.  Try again later`,
             [{ text: "OK", onPress: this.handleCancel }]
           );
-        })
+        });
     }
-
-  }
+  };
 
   render() {
     return (
@@ -355,7 +357,8 @@ export default class WalletsList extends React.Component {
         containerStyle={{
           borderTopWidth: 0,
           borderBottomWidth: 0,
-          height: "100%"
+          height: "100%",
+          backgroundColor: "#0b0c10"
         }}
       >
         {this.state.searchResults && this.state.wallets && this.state.rofs ? (
@@ -370,9 +373,19 @@ export default class WalletsList extends React.Component {
             renderSectionHeader={({ section }) => {
               if (!section.data.length) return null;
               return (
-                <Text h4 style={{ marginLeft: 15, marginVertical: 5, fontFamily: "megrim"}}>
-                  {section.key}
-                </Text>
+                <View style={{ backgroundColor: "#1f2833" }}>
+                  <Text
+                    style={{
+                      marginLeft: 15,
+                      marginVertical: 5,
+                      fontSize: 26,
+                      fontFamily: "space-mono-regular",
+                      color: "#66fcf1"
+                    }}
+                  >
+                    {section.key}
+                  </Text>
+                </View>
               );
             }}
             sections={[
@@ -384,26 +397,26 @@ export default class WalletsList extends React.Component {
                   return (
                     <ListItem
                       roundAvatar
-                      title={`${item.coin}`}
+                      title={
+                        <View style={{ marginLeft: 15 }}>
+                          <Text style={styles.itemTitle}>{item.coin}</Text>
+                        </View>
+                      }
+                      titleStyle={{ color: "#66fcf1" }}
                       leftIcon={
-                        <Image
-                          style={{
-                            height: 42,
-                            width: 42,
-                            marginRight: 5,
-                            marginLeft: -5
-                          }}
-                          source={icons[item.coinAbbr]}
+                        <Icon
+                          size={28}
+                          color="#45a29e"
+                          name={WalletsList.coinIcons[item.coinAbbr].name}
+                          type={WalletsList.coinIcons[item.coinAbbr].type}
                           resizeMode="contain"
                         />
                       }
                       containerStyle={{ borderBottomWidth: 0 }}
-                      rightTitle="Add Wallet"
-                      rightIcon={{ name: "add" }}
-                      onPressRightIcon={() => {
+                      rightIcon={{ name: "add", color: "#45a29e" }}
+                      onPress={() => {
                         this.addWallet(item.coinAbbr);
                       }}
-                      // onPress={() => this.addWallet(item.coinAbbr)} // click anywhere on listitme to add wallet
                     />
                   );
                 }
@@ -417,7 +430,7 @@ export default class WalletsList extends React.Component {
                     <ListItem
                       roundAvatar
                       title={
-                        <View style={{ marginLeft: 15}}>
+                        <View style={{ marginLeft: 15 }}>
                           <Text style={{ fontFamily: "space-mono-bold" }}>
                             {item.coin}
                           </Text>
@@ -425,8 +438,15 @@ export default class WalletsList extends React.Component {
                       }
                       subtitle={
                         <View style={{ flexDirection: "row", marginLeft: 15 }}>
-                          <Text style={{ fontFamily: "space-mono-regular"}}>Balance: {item.balance} | </Text>
-                          <Text style={{ color: "green", fontFamily: "space-mono-regular" }}>
+                          <Text style={{ fontFamily: "space-mono-regular" }}>
+                            Balance: {item.balance} |{" "}
+                          </Text>
+                          <Text
+                            style={{
+                              color: "green",
+                              fontFamily: "space-mono-regular"
+                            }}
+                          >
                             ${item.usdBalance}{" "}
                           </Text>
                         </View>
@@ -594,5 +614,10 @@ const styles = StyleSheet.create({
     alignSelf: "stretch",
     borderRadius: 0,
     marginRight: 40
+  },
+  itemTitle: {
+    fontFamily: "space-mono-regular",
+    fontSize: 18,
+    color: "#66fcf1"
   }
 });
