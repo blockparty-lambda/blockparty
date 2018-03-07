@@ -23,7 +23,10 @@ import { apiUrl } from "../config";
 
 export default class SettingsScreen extends React.Component {
   static navigationOptions = {
-    title: "Settings"
+    // styling the header is more difficult than you think lol
+    // still havent figured it out
+    headerTitle: "Settings",
+    headerTitleStyle: { fontFamily: "space-mono-bold" }
   };
 
   constructor(props) {
@@ -149,12 +152,20 @@ export default class SettingsScreen extends React.Component {
         <List containerStyle={{ marginTop: 0 }}>
           <ListItem
             leftIcon={{ type: "font-awesome", name: "user" }}
-            title="My Profile Settings"
+            title={
+              <Text style={{ marginLeft: 15, fontSize: 20, fontFamily: "space-mono-bold" }}>
+                My Profile Settings
+              </Text> 
+            }
             onPressRightIcon={this.toggleProfileSettings}
           />
           <ListItem
             leftIcon={{ type: "font-awesome", name: "user-circle" }}
-            title="Update Profile Picture"
+            title={
+              <Text style={{ marginLeft: 8, fontSize: 20, fontFamily: "space-mono-bold" }}>
+                Update Profile Picture
+              </Text>
+            }
             onPressRightIcon={this.toggleUpdateAvatar}
           />
         </List>
@@ -170,7 +181,7 @@ export default class SettingsScreen extends React.Component {
                   marginBottom: 5
                 }}
                 leftComponent={
-                  <Text style={{ color: "gray", fontSize: 20 }}>
+                  <Text style={{ color: "gray", fontSize: 20, fontFamily: "space-mono-bold" }}>
                     Profile Settings
                   </Text>
                 }
@@ -332,15 +343,13 @@ export default class SettingsScreen extends React.Component {
           <View style={{ alignSelf: "stretch", justifyContent: "center" }}>
             <Button
               clear
-              textStyle={{ color: "dodgerblue" }}
+              textStyle={{ color: "dodgerblue", fontFamily: "space-mono-bold" }}
               buttonStyle={{
                 marginTop: 15,
                 borderColor: "dodgerblue",
                 borderRadius: 0,
                 borderBottomWidth: 2,
-                // width: "100%"
               }}
-              // containerStyle={{ width: "100%" }}
               text="Logout"
               onPress={this.logout}
             />
