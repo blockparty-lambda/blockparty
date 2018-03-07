@@ -269,11 +269,9 @@ export default class FriendsList extends React.Component {
     );
 
     if (transaction.data.success) {
-      Alert.alert(
-        "Transaction Sent",
-        `Transaction ID: ${transaction.data.txId}`,
-        [{ text: "OK", onPress: this.handleCancel }]
-      );
+      Alert.alert("Transaction Sent", `Transaction Sent Successfully`, [
+        { text: "OK", onPress: this.handleCancel }
+      ]);
     } else {
       if (transaction.data.error.error === "insufficient funds") {
         Alert.alert("Transaction Failed", "Insufficient funds", [
@@ -376,7 +374,7 @@ export default class FriendsList extends React.Component {
                       name: "add-user",
                       color: "#66fcf1"
                     }}
-                    onPressRightIcon={() => {
+                    onPress={() => {
                       this.acceptFriendRequest(item);
                     }}
                   />

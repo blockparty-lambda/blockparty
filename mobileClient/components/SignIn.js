@@ -155,6 +155,7 @@ export default class SignIn extends React.Component {
               value={this.state.password}
               leftIcon={<Icon name="lock" size={24} color="#45a29e" />}
               returnKeyType="next"
+              placeholderTextColor="#c5c6c7"
               placeholder="password"
               secureTextEntry={true}
             />

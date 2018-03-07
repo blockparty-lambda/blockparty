@@ -290,11 +290,9 @@ export default class WalletsList extends React.Component {
           // if wasnt successful (you dont have enough coin, etc...)
           // handle that
           if (resp.data.success) {
-            Alert.alert(
-              "Transaction Sent",
-              `Transaction ID: ${resp.data.txId}`,
-              [{ text: "OK", onPress: this.getROFS }]
-            );
+            Alert.alert("Transaction Sent", `Transaction Sent Successfully`, [
+              { text: "OK", onPress: this.getROFS }
+            ]);
           } else {
             // handle that user doenst have enough coins etc...
             if (resp.data.error.error === "insufficient funds") {
