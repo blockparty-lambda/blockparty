@@ -412,6 +412,7 @@ export default class WalletsList extends React.Component {
                         />
                       }
                       containerStyle={{ borderBottomWidth: 0 }}
+                      underlayColor="#45a29e"
                       rightIcon={{ name: "add", color: "#45a29e" }}
                       onPress={() => {
                         this.addWallet(item.coinAbbr);
