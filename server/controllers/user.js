@@ -207,6 +207,7 @@ const getPartialUsers = (req, res) => {
       const queriedUsers = await User.find({
         username: new RegExp(`^${query}`, "i")
       })
+        .where('_id').ne(req.user.id)
         .where("_id")
         .nin(friends)
         .select("username avatarUrl _id");

@@ -14,7 +14,8 @@ const localLogin = new LocalStrategy(
   localOptions,
   async (username, password, done) => {
     try {
-      const user = await User.findOne({ username });
+      // const user = await User.findOne({ username });
+      const user = await User.findOne({ username: new RegExp(`^${username}`, "i") });
       if (!user) return done(null, false);
       user.checkPassword(password, (err, isMatch) => {
         if (err) return done(err);

@@ -1,8 +1,8 @@
 {
   "expo": {
-    "name": "mobileclient",
-    "description": "This project is really great.",
-    "slug": "mobileclient",
+    "name": "Block Party",
+    "description": "Crypto Currency Social Payments",
+    "slug": "blockparty",
     "privacy": "public",
     "sdkVersion": "25.0.0",
     "platforms": ["ios", "android"],
